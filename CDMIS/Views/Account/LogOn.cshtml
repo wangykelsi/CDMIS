@@ -18,7 +18,7 @@
             <label class="col-sm-offset-1 col-sm-2 control-label" style="text-align: justify">
                 用户名：</label>
             <div class="col-sm-6">
-                @Html.TextBoxFor(model => model.UserId, new { id = "UserId", @class = "form-control", placeholder = "手机号/邮箱/用户ID"})
+                @Html.TextBoxFor(model => model.UserId, new { id = "UserId", @class = "form-control", placeholder = "手机号/用户ID"})
                 @Html.ValidationMessageFor(model => model.UserId)
                 @Html.ValidationMessage("errorUserId")
                 <label for="AlertUserId" id="AlertUserId" style="color:red; display:none">请输入11位手机号码</label>
