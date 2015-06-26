@@ -22,7 +22,7 @@
     }
      #simplemodal-container 
      {
-         height:400px; 
+         height:450px; 
          width:400px;
      }
      #reminder-container
@@ -52,14 +52,13 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label">
                     用户类别</label>
-                <div class="col-sm-3">
-                    @*@Html.TextBoxFor(model => model.Role, new { id = "SearchRole", @onkeydown = "onSearch()", @class = "form-control" })*@
+                <div class="col-sm-3"> 
                     @Html.DropDownListFor(m => m.Patient.Class, Model.UserClassList(), new { id = "SearchRole", @onchange = "onSearch()", style = "font-size:18px", @class = "form-control" })
                 </div>
                 <label class="col-sm-1 control-label">
                     手机号</label>
                 <div class="col-sm-3">
-                    @Html.TextBoxFor(model => model.SearchUserId, new { id = "SearchUserId", @onkeydown = "onSearch()", @class = "form-control" })
+                    @Html.TextBoxFor(model => model.SearchPhoneNo, new { id = "SearchPhoneNo", @onkeydown = "onSearch()", @class = "form-control" })
                 </div>
                 <label class="col-sm-1 control-label">
                     姓名</label>
@@ -76,32 +75,32 @@
 
     <fieldset style="width: 100%; height: 700px">
         <legend>用户信息列表</legend>
-        <div id="UserSearchContainer">@*style="width:50%;float:left"*@
+        <div id="UserSearchContainer">
             <table width="100%" id="UserListDT" class="display">
                 <thead class="fixedHeader">
                     <tr>
-                        <th width="160px">
+                        <th width="10%">
                             用户ID
                         </th>
-                        <th width="160px">
+                        <th width="10%">
                             姓名
                         </th>
-                        <th width="160px">
+                        <th width="10%">
                             密码
                         </th>
-                        <th width="160px" style="display: none;">
+                        <th  style="display: none;">
                             用户类别编码
                         </th>
-                        <th width="160px">
+                        <th width="10%">
                             用户类别
                         </th>
-                        <th width="160px">
+                        <th width="10%">
                             密码有效期
                         </th>
-                        <th width="160px">
+                        <th width="10%">
                             手机号
                         </th>
-                        <th width="160px">
+                        <th width="20%">
                             操作
                         </th>
                     </tr>
@@ -112,21 +111,31 @@
                         foreach (var item in Model.UserList)
                         {
                         <tr class="normalRow">
-                            <td width="160px">@item.UserId
+                            <td width="10%">@item.UserId
                             </td>
-                            <td width="90px">@item.UserName
+                            <td width="10%">@item.UserName
                             </td>
-                            <td width="110px">@item.Password
+                            <td width="10%">@item.Password
                             </td>
-                            <td width="110px" style="display: none;">@item.Class
+                            <td width="10%" style="display: none;">@item.Class
                             </td>
-                            <td width="110px">@item.ClassName
+                            <td width="10%">@item.ClassName
                             </td>
-                            <td width="110px">@item.EndDate
+                            <td width="10%">@item.EndDate
                             </td>
-                            <td width="110px">此处应填手机号
+                            <td width="10%">@item.PhoneNo
                             </td>
-                            <td>
+                            <td width="20%">
+                                @if(@item.Class=="Administrator")
+                                {
+                                    <input type="button" value="新建角色" class="btn btn-primary newroleBtn" disabled="disabled"/>
+                                }
+                                else
+                                {
+                                    <input type="button" value="新建角色" class="btn btn-primary newroleBtn" />
+                                
+                                }
+                                |
                                 <input type="button" value="编辑" class="btn btn-primary editBtn" />
                                 |
                                 <input type="button" value="删除" class="btn btn-primary deleteBtn" />
@@ -138,138 +147,41 @@
             </table>
         </div>
     </fieldset>
-    <div style="width: 100%; height: 500px;">
+@*    <div style="width: 100%; height: 500px;">
         @Html.ValidationSummary(true, "User Information update was unsuccessful. Please correct the errors and try again.")
-        @using (Html.BeginForm("Index", "UserManagement", FormMethod.Post, new { id = "Form1", @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
-        {
-@*
-                <div id="setUserInfo" >
-                <fieldset>
-                     <legend>用户信息设定</legend>   
-
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">
-                                用户ID</label>
-                            <div class="col-sm-8">
-                                @Html.TextBoxFor(m => m.Patient.UserId, new { @readonly="true" ,id = "txtUserId" , @class = "form-control"})
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">
-                                用户名</label>
-                            <div class="col-sm-8">
-                                @Html.TextBoxFor(m => m.Patient.UserName, new { id = "txtUserName", @class = "form-control" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">
-                                用户类别</label>
-                            <div class="col-sm-8">
-                                @Html.TextBoxFor(m => m.Patient.ClassName, new { @readonly = "true", id = "userClassList", @class = "form-control" })
-                                
-                            </div>
-                        </div>
-                        <div class="form-group" style="display:none">
-                            <label class="col-sm-4 control-label">
-                                用户类别代码</label>
-                            <div class="col-sm-8">
-                                @Html.TextBoxFor(m => m.Patient.Class, new { @readonly = "true", id = "userClassCode", @class = "form-control" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">
-                                密码</label>
-                            <div class="col-sm-8">
-                                @Html.TextBoxFor(m => m.Patient.Password, new { id = "txtPassword", @class = "form-control" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">
-                                密码有效期</label>
-                            <div class="col-sm-8">
-                                @Html.TextBoxFor(model => model.Patient.EndDate, new { id = "EndDate", @class = "form-control", @onclick = "WdatePicker({startDate:'1991-02-14',dateFmt:'yyyy-MM-dd'})" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">
-                                手机号</label>
-                            <div class="col-sm-8">
-                                @Html.TextBoxFor(model => model.Patient.PhoneNo, new { id = "PhoneNo", @class = "form-control" })
-                            </div>
-                        </div>
-
-                        <div id="CoachAndDoc" style="display:none" >
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">
-                                    工作单位</label>
-                                <div class="col-sm-8">
-                                    
-                                    @Html.DropDownListFor(m => m.UnitName, Model.GetHospitalList(), new { id = "UnitName", @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">
-                                    科室</label>
-                                <div class="col-sm-8">
-                                   
-                                    @Html.DropDownListFor(m => m.Dept, Model.GetDeptList(), new { id = "Dept", @class = "form-control" })
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">
-                                    职务</label>
-                                <div class="col-sm-8">
-                                    @Html.TextBoxFor(m => m.JobTitle, new { id = "JobTitle", @class = "form-control" })
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="DocMod"  class="form-group">
-                            <label class="col-sm-4 control-label">
-                                模块</label>
-                            <div class="col-sm-8">
-                                @Html.ListBoxFor(m => m.models, Model.ModelsTypeList, new { id = "Modules", @class = "form-control chzn-select", multiple = "multiple", style = "font-size:34px;width:100%;height:34px;" }) 
-                            </div>
-                        </div>
-
-
-                        <div class="form-group">
-                            <div class="col-sm-3">
-                            </div>
-                            <div class="col-sm-3">
-                                <input type="button" class="btn btn-primary" id="Save" value="保存" style="font-size: 16px;
-                                    margin-top: 30px" />
-                            </div>
-                            <div class="col-sm-3">
-                                <input type="button" class="btn btn-primary" id="Cancel" value="取消" style="font-size: 16px;
-                                    margin-top: 30px" />
-                            </div>
-                            <div class="col-sm-3">
-                            </div>
-                        </div>
-
-
-
-
-                </fieldset>
-                </div>
-                *@
-                  
-        }
-    </div>
+    </div>*@
 </div>
 <div id="setUserInfo" >
     <div class="modalHeader">
         <span>用户信息设定</span></div>
     <div class="modalContent">
-        <fieldset>
+        <fieldset> 
             <legend>用户信息设定</legend>
+            <div class="form-group" id="PhoneNo1Div">
+                <label class="col-sm-4 control-label">
+                    *手机号</label>
+                <div class="col-sm-8">
+                    @*@Html.TextBoxFor(model => model.Patient.PhoneNo, new { id = "PhoneNo1", name = "PhoneNo1", @class = "form-control" })*@
+
+                    <input  id = "PhoneNo1", name = "PhoneNo1", class = "form-control" ,value=""/> 
+                    <p id="phoneWrn1" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
+                </div>
+            </div>
+
+            <div class="form-group" id="New" style="display: none">
+                <label class="col-sm-4 control-label">
+                    用户类别</label>
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(m => m.Patient.Class, Model.RoleClassList(), new { id = "newUserClass", @onchange = "New()", style = "font-size:18px", @class = "form-control" })
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="col-sm-4 control-label">
-                    用户ID</label>
+                    *用户ID</label>
                 <div class="col-sm-8">
                     @Html.TextBoxFor(m => m.Patient.UserId, new { @readonly = "true", id = "txtUserId", @class = "form-control" })
+                    <p id="UIdWrn" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
                 </div>
             </div>
             <div class="form-group">
@@ -284,7 +196,6 @@
                     用户类别</label>
                 <div class="col-sm-8">
                     @Html.TextBoxFor(m => m.Patient.ClassName, new { @readonly = "true", id = "userClassList", @class = "form-control" })
-                    @*@Html.DropDownListFor(m => m.Patient.ClassName, Model.UserClassList(), new { id = "userClassList", style = "font-size:18px", @class = "form-control" })*@
                 </div>
             </div>
             <div class="form-group" style="display: none">
@@ -308,19 +219,21 @@
                     @Html.TextBoxFor(model => model.Patient.EndDate, new { id = "EndDate", @class = "form-control", @onclick = "WdatePicker({startDate:'1991-02-14',dateFmt:'yyyy-MM-dd'})" })
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="PhoneNoDiv">
                 <label class="col-sm-4 control-label">
-                    手机号</label>
+                    *手机号</label>
                 <div class="col-sm-8">
-                    @Html.TextBoxFor(model => model.Patient.PhoneNo, new { id = "PhoneNo", @class = "form-control" })
+                    @*@Html.TextBoxFor(model => model.Patient.PhoneNo, new { id = "PhoneNo", name="PhoneNo", @class = "form-control" })*@
+                    <input  id = "PhoneNo", name = "PhoneNo", class = "form-control", value=""/> 
+                    <p id="phoneWrn" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
                 </div>
             </div>
+            
             <div id="CoachAndDoc" style="display: none">
                 <div class="form-group">
                     <label class="col-sm-4 control-label">
                         工作单位</label>
                     <div class="col-sm-8">
-                        @*@Html.TextBoxFor(m => m.UnitName, new { id = "UnitName", @class = "form-control" })*@
                         @Html.DropDownListFor(m => m.UnitName, Model.GetHospitalList(), new { id = "UnitName", @class = "form-control" })
                     </div>
                 </div>
@@ -328,7 +241,6 @@
                     <label class="col-sm-4 control-label">
                         科室</label>
                     <div class="col-sm-8">
-                        @*@Html.TextBoxFor(m => m.Dept, new { id = "Dept", @class = "form-control" })*@
                         @Html.DropDownListFor(m => m.Dept, Model.GetDeptList(), new { id = "Dept", @class = "form-control" })
                     </div>
                 </div>
@@ -386,6 +298,7 @@
     </div>
 </div>
 <script type="text/javascript">
+    var newflag = 0;
     function hide() {
         var target = document.getElementById("UserListDT");
         target.style.display = "none";
@@ -424,7 +337,6 @@
         $('#DocMod').css("display", "none");
         $('#setUserInfo').css("display", "none");
 
-
         $.ajax({                                                //初始化日期控件为系统当前时间+1年（默认密码有效期为一年）
             url: "/Management/GetDefaultEndTime",
             type: "GET",
@@ -440,6 +352,14 @@
 
     //编辑按钮触发
     $(".editBtn").click(function () {
+        newflag = 0;
+        $('#PhoneNoDiv').css("display", "block");
+        $('#PhoneNo1Div').css("display", "none");
+
+        $('#New').css("display", "none");
+        $('#phoneWrn').css("display", "none");
+        $('#UIdWrn').css("display", "none");
+        
         trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
         var txtUserId = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
 
@@ -457,7 +377,7 @@
         var EndDate = $("#TableBody tr:eq(" + trSeq + ") td:eq(5)").text().trim();
 
         document.getElementById("EndDate").value = EndDate;
-        document.getElementById("PhoneNo").value = GetPhoneNo(userId);
+        $("#PhoneNo").val(GetPhoneNo(userId));
 
         if (userClassCode == 'HealthCoach') {
             $('#CoachAndDoc').css("display", "block");
@@ -490,6 +410,7 @@
 
         }
         else {
+            
             $('#CoachAndDoc').css("display", "none");
             $('#DocMod').css("display", "none");
             $('#setUserInfo').modal({
@@ -498,10 +419,6 @@
                 overlayClose: true     //点击蒙层关闭窗口
             });
         }
-
-
-
-
     });
 
 
@@ -513,55 +430,6 @@
         DeleteData(Code);
     });
 
-
-
-
-
-
-
-
-    //        $(document).on('dblclick', ".normalRow", function () {
-
-    //            document.getElementById("txtUserId").value = trim($(this).find("td:eq(0)").text());
-    //            var userId = trim($(this).find("td:eq(0)").text());
-    //            document.getElementById("txtUserName").value = trim($(this).find("td:eq(1)").text());
-    //            document.getElementById("txtPassword").value = trim($(this).find("td:eq(2)").text());
-    //            var userClassCode = trim($(this).find("td:eq(3)").text());
-    //            var userClass = trim($(this).find("td:eq(4)").text());
-    //            document.getElementById("userClassList").value = userClass;
-    //            document.getElementById("userClassCode").value = userClassCode;
-    //            //            var classCode = trim($(this).find("td:eq(3)").text());
-    //            //            $("#userClassList").val(classCode);
-    //            document.getElementById("EndDate").value = $(this).find("td:eq(5)").text();
-    //            document.getElementById("PhoneNo").value = GetPhoneNo(userId);
-
-    //            if (userClassCode == 'HealthCoach') {
-    //                $('#CoachAndDoc').css("display", "block");
-    //                $('#DocMod').css("display", "none");
-    //                GetDoctorDetailInfo(userId, userClassCode);
-    //            }
-    //            else if (userClassCode == 'Doctor') {
-    //                $('#CoachAndDoc').css("display", "block");
-    //                $('#DocMod').css("display", "block");
-    //                //$("#Modules").removeClass("chosen");
-    //                $("#Modules").trigger("liszt:updated");
-    //                $("#Modules").chosen();
-    //                GetDoctorDetailInfo(userId, userClassCode);
-    //            }
-    //            else {
-    //                $('#CoachAndDoc').css("display", "none");
-    //                $('#DocMod').css("display", "none");
-    //            }
-
-    //            $('#setUserInfo').modal({
-    //                        closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-    //                        containerId: 'simplemodal-container',
-    //                        overlayClose: true     //点击蒙层关闭窗口
-    //                    });
-
-    //           
-
-    //        });
 
     function trim(str) {  //删除左右两端的空格
         return str.replace(/(^\s*)|(\s*$)/g, "");
@@ -576,8 +444,13 @@
         window.location.href = window.location.href;
     }
     $("#NewRole").on('click', function () {
-        var clslist = document.getElementById("newUserClass");
-        var newrole = clslist.options[clslist.selectedIndex].value;
+        $('#PhoneNo1Div').css("display", "block");
+        $('#PhoneNoDiv').css("display", "none");
+
+        $('#phoneWrn1').css("display", "none");
+        $('#UIdWrn').css("display", "none");
+
+        newflag = 1;
         var defaultEndTime;
         $.ajax({                                                //初始化日期控件为系统当前时间+1年（默认密码有效期为一年）
             url: "/Management/GetDefaultEndTime",
@@ -589,47 +462,156 @@
                 defaultEndTime = res.toString();
             }
         });
-        $.ajax({
-            url: "/Management/GetRoleNo",
-            type: "GET",
-            dataType: "json",
-            async: false,
-            data: { userClass: newrole },
-            success: function (res) {
-                var userId = res;
-                if (userId != "") {
-                    document.getElementById("txtUserId").value = userId;
+
+        $('#New').css("display", "block");
+        $('#CoachAndDoc').css("display", "none");
+        $('#DocMod').css("display", "none");
+        document.getElementById("txtUserId").value = "";
+        document.getElementById("txtUserName").value = "";
+        document.getElementById("txtPassword").value = "";
+        $("#userClassList").val("");
+        $("#userClassCode").val("");
+      
+        document.getElementById("EndDate").value = defaultEndTime;
+        document.getElementById("PhoneNo").value = "";
+
+        $('#setUserInfo').modal({
+            closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
+            containerId: 'reminder-container',
+            overlayClose: true     //点击蒙层关闭窗口
+        });
+    });
+
+    function New() {
+        //$("#newUserClass").val("0");
+        var UId = "";
+        $('#phoneWrn1').css("display", "none");
+        var PhoneNo1 = document.getElementById("PhoneNo1").value;
+        if (PhoneNo1 == undefined) {PhoneNo1 = ""; }
+        if (PhoneNo1.match(/^\d{11}$/) == null) {
+            //alert("请输入11位手机号");
+            event.preventDefault();
+            var Text = "请输入11位手机号！";
+
+            $('#phoneWrn1').html(Text);
+            $('#phoneWrn1').css("display", "block");
+
+
+        }
+        else {
+            var clslist = document.getElementById("newUserClass");
+            var userClass = clslist.options[clslist.selectedIndex].text;
+            var userClassCode = clslist.options[clslist.selectedIndex].value;
+            var defaultEndTime;
+
+            //此处判断该手机号有无用户Id
+            $.ajax({
+                url: "/Management/GetUIdByPhoneNo",
+                type: "GET",
+                dataType: "json",
+                async: false,
+                data: { PhoneNo: PhoneNo1 },
+                success: function (res) {
+                    UId = res.toString();
+                }
+            });
+
+
+            $.ajax({                                                //初始化日期控件为系统当前时间+1年（默认密码有效期为一年）
+                url: "/Management/GetDefaultEndTime",
+                type: "GET",
+                dataType: "json",
+                async: false,
+                data: {},
+                success: function (res) {
+                    defaultEndTime = res.toString();
+                }
+            });
+
+            if (userClassCode == '0') {
+                document.getElementById("txtUserId").value = "";
+                document.getElementById("txtUserName").value = "";
+                document.getElementById("txtPassword").value = "";
+                $("#userClassList").val("");
+                $("#userClassCode").val("");
+                document.getElementById("EndDate").value = defaultEndTime;
+
+            }
+
+            else 
+            {
+                if (UId == "") {
+                    $.ajax({
+                        url: "/Management/GetRoleNo",
+                        type: "GET",
+                        dataType: "json",
+                        async: false,
+                        data: { userClass: userClassCode },
+                        success: function (res) {
+                            var userId = res;
+                            if (userId != "") 
+                            {
+                                document.getElementById("txtUserId").value = userId;
+                                document.getElementById("txtUserName").value = "";
+                                document.getElementById("txtPassword").value = "";
+                                $("#userClassList").val(userClass);
+                                $("#userClassCode").val(userClassCode);
+                                document.getElementById("EndDate").value = defaultEndTime;
+                                document.getElementById("PhoneNo").value = "";
+
+                                if (userClassCode == 'HealthCoach') {
+                                    $('#CoachAndDoc').css("display", "block");
+                                    $('#DocMod').css("display", "none");
+                                    GetDoctorDetailInfo(userId, userClassCode);
+
+
+                                }
+                                else if (userClassCode == 'Doctor') {
+                                    $('#CoachAndDoc').css("display", "block");
+                                    $('#DocMod').css("display", "block");
+                                    //                        $("#Modules").chosen();
+                                    //                        $("#Modules").trigger("chosen:updated");
+                                    GetDoctorDetailInfo(userId, userClassCode);
+
+
+                                    $("#Modules").trigger("liszt:updated");
+                                    $("#Modules").chosen();
+
+                                }
+                                else {
+                                    $('#CoachAndDoc').css("display", "none");
+                                    $('#DocMod').css("display", "none");
+
+                                }
+                            }
+
+                        }
+                    });
+                }
+                else 
+                {
+                    document.getElementById("txtUserId").value = UId;
                     document.getElementById("txtUserName").value = "";
                     document.getElementById("txtPassword").value = "";
-                    var userClass = clslist.options[clslist.selectedIndex].text;
-                    var userClassCode = clslist.options[clslist.selectedIndex].value;
                     $("#userClassList").val(userClass);
                     $("#userClassCode").val(userClassCode);
                     document.getElementById("EndDate").value = defaultEndTime;
                     document.getElementById("PhoneNo").value = "";
+
                     if (userClassCode == 'HealthCoach') {
                         $('#CoachAndDoc').css("display", "block");
                         $('#DocMod').css("display", "none");
-                        GetDoctorDetailInfo(userId, userClassCode);
+                        GetDoctorDetailInfo(UId, userClassCode);
 
-                        $('#setUserInfo').modal({
-                            closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                            containerId: 'reminder-container',
-                            overlayClose: true     //点击蒙层关闭窗口
-                        });
+
                     }
                     else if (userClassCode == 'Doctor') {
                         $('#CoachAndDoc').css("display", "block");
                         $('#DocMod').css("display", "block");
                         //                        $("#Modules").chosen();
                         //                        $("#Modules").trigger("chosen:updated");
-                        GetDoctorDetailInfo(userId, userClassCode);
+                        GetDoctorDetailInfo(UId, userClassCode);
 
-                        $('#setUserInfo').modal({
-                            closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                            containerId: 'reminder-container',
-                            overlayClose: true     //点击蒙层关闭窗口
-                        });
 
                         $("#Modules").trigger("liszt:updated");
                         $("#Modules").chosen();
@@ -638,19 +620,19 @@
                     else {
                         $('#CoachAndDoc').css("display", "none");
                         $('#DocMod').css("display", "none");
-                        $('#setUserInfo').modal({
-                            closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                            containerId: 'simplemodal-container',
-                            overlayClose: true     //点击蒙层关闭窗口
-                        });
-                    }
-                }
 
+                    }
+                 
+                }
             }
-        });
-    });
+        }
+    }
 
     $("#Cancel").on('click', function () {
+        $('#phoneWrn').css("display", "none");
+        $('#phoneWrn1').css("display", "none");
+        $('#UIdWrn').css("display", "none");
+
         var defaultEndTime;
         $.ajax({                                                //初始化日期控件为系统当前时间+1年（默认密码有效期为一年）
             url: "/Management/GetDefaultEndTime",
@@ -666,31 +648,65 @@
         document.getElementById("txtUserId").value = "";
         document.getElementById("txtUserName").value = "";
         document.getElementById("txtPassword").value = "";
+        $("#newUserClass").val("0");
         $("#userClassList").val("");
         $("#userClassCode").val("");
         document.getElementById("EndDate").value = defaultEndTime;
         document.getElementById("PhoneNo").value = "";
+        document.getElementById("PhoneNo1").value = "";
+
+        document.getElementById("UnitName").value = "";
+        document.getElementById("Dept").value = "";
+        document.getElementById("JobTitle").value = "";
+
         $('#txtUserId').attr('disabled', "disabled");
         $('#txtUserId').removeAttr('disabled');
-        window.location.href = window.location.href;
+//        window.location.href = window.location.href;
     });
 
     $("#Save").bind('click', function (event) {
-        //        alert("start");
+
+        $('#phoneWrn1').css("display", "none");
+        $('#phoneWrn').css("display", "none");
+        if (newflag == 1) {
+            var PhoneNo1 = document.getElementById("PhoneNo1").value;
+            if (PhoneNo1 == undefined) { PhoneNo1 = ""; }
+            if (PhoneNo1.match(/^\d{11}$/) == null) {
+                //alert("请输入11位手机号");
+                event.preventDefault();
+                var Text = "请输入11位手机号！";
+
+                $('#phoneWrn1').html(Text);
+                $('#phoneWrn1').css("display", "block");
+
+
+            }
+        }
+        else 
+        {
+            var PhoneNo = document.getElementById("PhoneNo").value;
+            if (PhoneNo == undefined) { PhoneNo = ""; }
+            if (PhoneNo.match(/^\d{11}$/) == null) {
+                //alert("请输入11位手机号");
+                event.preventDefault();
+                var Text = "请输入11位手机号！";
+
+                $('#phoneWrn').html(Text);
+                $('#phoneWrn').css("display", "block");
+
+
+            }
+        }
         var SetMstUserFlag = false;
         var userId = document.getElementById("txtUserId").value;
-        //        var clslist = document.getElementById("userClassList");
-        //        var userClass = clslist.options[clslist.selectedIndex].value;
+
         if (userId == "") {
-            //alert("请输入11位手机号");
+
             event.preventDefault();
             var Text = "请选择一个用户！";
-            $('#addDataP').html(Text);
-            $('#addDataDiv').modal({
-                closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                containerId: 'alert-container',
-                overlayClose: true     //点击蒙层关闭窗口
-            });
+            $('#UIdWrn').html(Text);
+            $('#UIdWrn').css("display", "block");
+
         }
         else {
             var UserName = document.getElementById("txtUserName").value;
@@ -703,12 +719,11 @@
                 //alert("请输入11位手机号");
                 event.preventDefault();
                 var Text = "请输入11位手机号！";
-                $('#addDataP').html(Text);
-                $('#addDataDiv').modal({
-                    closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                    containerId: 'alert-container',
-                    overlayClose: true     //点击蒙层关闭窗口
-                });
+
+                $('#phoneWrn').html(Text);
+                $('#phoneWrn').css("display", "block");
+
+
             }
             else {
 
@@ -718,7 +733,7 @@
                         type: "GET",
                         dataType: "json",
                         async: false,
-                        data: { UserId: userId, UserName: UserName, Password: Password, EndDate: EndDate, PhoneNo: PhoneNo, userClassCode: userClassCode },
+                        data: { UserId: userId, UserName: UserName, Password: Password, EndDate: EndDate, PhoneNo: PhoneNo, userClassCode: userClassCode, NewFlag: newflag },
                         success: function (res) {
                             SetMstUserFlag = res;
                             //                alert(res);
@@ -778,7 +793,7 @@
         setTimeout(function () {//因为是即时查询，需要用setTimeout进行延迟，让值写入到input内，再读取  
             var UserList = document.getElementById('UserListDT'); //获取table的id标识  
             var searchRole = $("#SearchRole").val();
-            var searchUserId = $("#SearchUserId").val();
+            var SearchPhoneNo = $("#SearchPhoneNo").val();
             var searchUserName = $("#SearchUserName").val();
             var searchText1;
             var searchText2;
@@ -786,7 +801,7 @@
 
             var rowsLength = UserList.rows.length; //表格总共有多少行  
             if (searchRole == "") {
-                if (searchUserId == "") {
+                if (SearchPhoneNo == "") {
                     for (var i = 1; i < rowsLength; i++) {//按表的行数进行循环，本例第一行是标题，所以i=1，从第二行开始筛选（从0数起）   
                         searchText3 = UserList.rows[i].cells[1].innerHTML; //取得table行，列的值  
                         if (searchText3.match(searchUserName)) {//用match函数进行筛选，如果input的值，即变量 key的值为空，返回的是ture，  
@@ -798,8 +813,8 @@
                 }
                 else if (searchUserName == "") {
                     for (var i = 1; i < rowsLength; i++) {
-                        searchText2 = UserList.rows[i].cells[0].innerHTML; //取得table行，列的值
-                        if (searchText2.match(searchUserId)) {
+                        searchText2 = UserList.rows[i].cells[6].innerHTML; //取得table行，列的值
+                        if (searchText2.match(SearchPhoneNo)) {
                             UserList.rows[i].style.display = ''; //显示行操作，  
                         } else {
                             UserList.rows[i].style.display = 'none'; //隐藏行操作  
@@ -808,9 +823,9 @@
                 }
                 else {
                     for (var i = 1; i < rowsLength; i++) {
-                        searchText2 = UserList.rows[i].cells[0].innerHTML;
+                        searchText2 = UserList.rows[i].cells[6].innerHTML;
                         searchText3 = UserList.rows[i].cells[1].innerHTML;
-                        if (searchText2.match(searchUserId) && searchText3.match(searchUserName)) {
+                        if (searchText2.match(SearchPhoneNo) && searchText3.match(searchUserName)) {
                             UserList.rows[i].style.display = ''; //显示行操作，  
                         } else {
                             UserList.rows[i].style.display = 'none'; //隐藏行操作  
@@ -819,7 +834,7 @@
                 }
             }
             else {
-                if (searchUserId == "") {
+                if (SearchPhoneNo == "") {
                     for (var i = 1; i < rowsLength; i++) {
                         searchText1 = UserList.rows[i].cells[3].innerHTML;
                         searchText3 = UserList.rows[i].cells[1].innerHTML;
@@ -833,8 +848,8 @@
                 else if (searchUserName == "") {
                     for (var i = 1; i < rowsLength; i++) {
                         searchText1 = UserList.rows[i].cells[3].innerHTML;
-                        searchText2 = UserList.rows[i].cells[0].innerHTML;
-                        if (searchText1.match(searchRole) && searchText2.match(searchUserId)) {
+                        searchText2 = UserList.rows[i].cells[6].innerHTML;
+                        if (searchText1.match(searchRole) && searchText2.match(SearchPhoneNo)) {
                             UserList.rows[i].style.display = ''; //显示行操作，  
                         } else {
                             UserList.rows[i].style.display = 'none'; //隐藏行操作  
@@ -844,9 +859,9 @@
                 else {
                     for (var i = 1; i < rowsLength; i++) {
                         searchText1 = UserList.rows[i].cells[3].innerHTML;
-                        searchText2 = UserList.rows[i].cells[0].innerHTML;
+                        searchText2 = UserList.rows[i].cells[6].innerHTML;
                         searchText3 = UserList.rows[i].cells[1].innerHTML;
-                        if (searchText1.match(searchRole) && searchText2.match(searchUserId) && searchText3.match(searchUserName)) {
+                        if (searchText1.match(searchRole) && searchText2.match(SearchPhoneNo) && searchText3.match(searchUserName)) {
                             UserList.rows[i].style.display = ''; //显示行操作，  
                         } else {
                             UserList.rows[i].style.display = 'none'; //隐藏行操作  

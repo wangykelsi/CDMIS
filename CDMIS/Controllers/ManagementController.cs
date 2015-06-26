@@ -207,11 +207,14 @@ namespace CDMIS.Controllers
         {
             List<User> userList = new List<User>();
             int Row = 0;
-
+            String UId="";
+            String PhoneNo="";
             System.Data.DataTable userListDT = _ServicesSoapClient.GetUserInfoList(id, name).Tables[0];
             foreach (DataRow row in userListDT.Rows)
             {
-                userList.Add(new User { UserId = row["UserId"].ToString(), UserName = row["UserName"].ToString(), Password = row["Password"].ToString(), Class = row["Class"].ToString(), ClassName = row["ClassName"].ToString(), StartDate = row["StartDate"].ToString(), EndDate = row["EndDate"].ToString().Substring(0, 4) + "-" + row["EndDate"].ToString().Substring(4, 2) + "-" + row["EndDate"].ToString().Substring(6, 2) });
+                UId = row["UserId"].ToString();
+                PhoneNo = _ServicesSoapClient.GetPhoneNoByUserId(UId);
+                userList.Add(new User { UserId = row["UserId"].ToString(), UserName = row["UserName"].ToString(), Password = row["Password"].ToString(), Class = row["Class"].ToString(), ClassName = row["ClassName"].ToString(), StartDate = row["StartDate"].ToString(), EndDate = row["EndDate"].ToString().Substring(0, 4) + "-" + row["EndDate"].ToString().Substring(4, 2) + "-" + row["EndDate"].ToString().Substring(6, 2), PhoneNo = PhoneNo });
                 Row++;
             }
 
@@ -245,6 +248,17 @@ namespace CDMIS.Controllers
             res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             return res;
         }
+        
+        //获取手机号对应用户ID
+        public JsonResult GetUIdByPhoneNo(string PhoneNo)
+        {
+            var res = new JsonResult();
+            string UserId = _ServicesSoapClient.GetIDByInput("PhoneNo",PhoneNo);
+
+            res.Data = UserId;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
 
         //获取医生详细信息_工作单位、科室、职务
         public JsonResult GetDoctorDetailInfo(string UserId, string userClassCode)
@@ -266,7 +280,7 @@ namespace CDMIS.Controllers
         }
 
         //保存基本信息
-        public JsonResult setCmMstUser(string UserId, string UserName, string Password, string EndDate, string PhoneNo, string userClassCode)
+        public JsonResult setCmMstUser(string UserId, string UserName, string Password, string EndDate, string PhoneNo, string userClassCode,int NewFlag)
         {
             var user = Session["CurrentUser"] as UserAndRole;
             EndDate = EndDate.Replace(" ", "");
@@ -285,19 +299,22 @@ namespace CDMIS.Controllers
             {
                 string Code = "";
                 IsSaved = _ServicesSoapClient.SetDocName(UserId, UserName);
-                if (userClassCode == "Administrator")
+                if (NewFlag == 1)
                 {
-                    flag = _ServicesSoapClient.SetPsRoleMatch(UserId, "Administrator", "", "0", "");
-                }
-                else if (userClassCode == "Doctor")
-                {
-                    Code = _ServicesSoapClient.GetNoByNumberingType(13);
-                    flag = _ServicesSoapClient.SetPsRoleMatch(UserId, "Doctor", Code, "1", "");
-                }
-                else if (userClassCode == "HealthCoach")
-                {
-                    Code = _ServicesSoapClient.GetNoByNumberingType(12);
-                    flag = _ServicesSoapClient.SetPsRoleMatch(UserId, "HealthCoach", Code, "1", "");
+                    if (userClassCode == "Administrator")
+                    {
+                        flag = _ServicesSoapClient.SetPsRoleMatch(UserId, "Administrator", "", "0", "");
+                    }
+                    else if (userClassCode == "Doctor")
+                    {
+                        Code = _ServicesSoapClient.GetNoByNumberingType(13);
+                        flag = _ServicesSoapClient.SetPsRoleMatch(UserId, "Doctor", Code, "1", "");
+                    }
+                    else if (userClassCode == "HealthCoach")
+                    {
+                        Code = _ServicesSoapClient.GetNoByNumberingType(12);
+                        flag = _ServicesSoapClient.SetPsRoleMatch(UserId, "HealthCoach", Code, "1", "");
+                    }
                 }
             }
             if (IsSaved == true)
@@ -424,6 +441,7 @@ namespace CDMIS.Controllers
             r2aInfoVM.AuthorityList = authorityList;
             r2aInfoVM.AuthorityRowCount = Row;
         }
+        
         //查询输出该角色（roleCode）已有权限列表
         public void GetRoleAuthorityList(string roleCode, ref Role2AuthorityViewModel r2aVM)
         {

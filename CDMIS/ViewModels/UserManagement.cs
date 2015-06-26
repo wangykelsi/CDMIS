@@ -26,6 +26,8 @@ namespace CDMIS.ViewModels
 
         public string SearchUserName { get; set; }                     //检索用户用户名
 
+        public string SearchPhoneNo { get; set; }                     //检索用户手机号
+
         public string UnitName { get; set; }
         public string JobTitle { get; set; }
         public string Dept { get; set; }
@@ -39,6 +41,11 @@ namespace CDMIS.ViewModels
         {
             return CommonVariables.GetUserClassList();
         }
+        public List<SelectListItem> RoleClassList()                    //用户类别下拉框
+        {
+            return CommonVariables.GetRoleClassList();
+        }
+         
         public List<SelectListItem> GetHospitalList()                    //GetHospitalList
         {
             return CommonVariables.GetHospitalList();

@@ -249,14 +249,44 @@ namespace CDMIS.ViewModels
         public static List<SelectListItem> GetUserClassList()
         {
             List<SelectListItem> UserClassList = new List<SelectListItem>();
-            UserClassList.Add(new SelectListItem { Text = "全部", Value = "" });
-            UserClassList.Add(new SelectListItem { Text = "管理员", Value = "Administrator" });
-            UserClassList.Add(new SelectListItem { Text = "医生", Value = "Doctor" });
-            UserClassList.Add(new SelectListItem { Text = "健康专员", Value = "HealthCoach" });
-            UserClassList.Add(new SelectListItem { Text = "患者", Value = "Patient" });
+            try
+            {
+                DataSet ds = _ServicesSoapClient.GetRoleList();
+                if (ds == null)
+                {
+                    return UserClassList;
+                }
+                UserClassList.Add(new SelectListItem { Text = "全部", Value = "" });
+                foreach (DataTable itemtable in ds.Tables)
+                {
+                    foreach (DataRow item in itemtable.Rows)
+                    {
+                        
+                        UserClassList.Add(new SelectListItem { Text = item["Name"].ToString(), Value = item["Code"].ToString() });
 
-            return UserClassList;
+                    }
+                }
+                return UserClassList;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+           
         }
+        public static List<SelectListItem> GetRoleClassList()
+        {
+            List<SelectListItem> RoleClassList = new List<SelectListItem>();
+            RoleClassList.Add(new SelectListItem { Text = "——请选择——", Value = "0" });
+            RoleClassList.Add(new SelectListItem { Text = "管理员", Value = "Administrator" });
+            RoleClassList.Add(new SelectListItem { Text = "医生", Value = "Doctor" });
+            RoleClassList.Add(new SelectListItem { Text = "健康专员", Value = "HealthCoach" });
+
+            return RoleClassList;
+        }
+
         public static List<SelectListItem> GetRoleNameList()
         {
             List<SelectListItem> RoleNameList = new List<SelectListItem>();
