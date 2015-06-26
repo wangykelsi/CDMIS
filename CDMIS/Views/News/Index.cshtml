@@ -17,7 +17,7 @@
 
 <h2>
     健康教育资料</h2>
-<table width="90%">
+<table width="100%">
     <tr>
         <td width="20%" class="col-sm-1 control-label">
             模块
@@ -53,6 +53,7 @@
                     上传时间
                 </th>
                 <th width="150px">
+                    操作
                 </th>
             </tr>
         </thead>
@@ -149,7 +150,8 @@
             "sScrollY": "420px",
             "iDisplayLength": 8,
             "bLengthChange": false,
-            "bFilter": true
+            "bFilter": true,
+            "columnDefs": [{ "bSortable": false, "aTargets": [6]}] //禁止某些列的排序功能
         });
 
         //删除按钮触发
@@ -186,7 +188,7 @@
             type: "GET",
             dataType: "json",
             async: false,
-            data: { Module: Module, Id:Id
+            data: { Module: Module, Id: Id
             },  //输入参数
             success: function (res) {
                 if (res == true) {
@@ -200,7 +202,7 @@
         });
     }
 
-    //操作成功提醒+关闭窗口+字典表刷新
+    //操作成功提醒+关闭窗口+界面刷新
     var wait = 1.5;
     function notice() {
         if (wait == 0) {
@@ -209,7 +211,7 @@
             wait = 1.5
         }
         else {
-            $('.notice').text("操作成功！字典表将立刻自动刷新");
+            $('.notice').text("操作成功！界面将立刻自动刷新");
             wait = wait - 0.5;
             setTimeout(notice, 500);
         }
