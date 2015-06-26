@@ -541,7 +541,7 @@
                 检查参数</label>
             <div class="col-sm-9">
                 @*<input type="text" class="form-control" id="ReportDate" />*@
-                @Html.TextBoxFor(model => model.ExamInfo.ExamPara, new { id = "readExamPara", @class = "form-control", disabled = "disabled" })
+                @Html.TextAreaFor(model => model.ExamInfo.ExamPara, new { id = "readExamPara", @class = "form-control", disabled = "disabled", style = "height:50px;" })
                 @Html.ValidationMessageFor(model => model.ExamInfo.ExamPara)
             </div>
         </div>
@@ -864,9 +864,9 @@
         $(".addExaminationInfoBtn").click(function () {
             //var VisitId =$("#VisitId").value(); NotExist
             var tbody = document.getElementById("TableBody");
-//            if (document.getElementById("NotExist")) {//存在 
-//                var tr = document.getElementById("NotExist");
-//                tbody.removeChild(tr);
+            //            if (document.getElementById("NotExist")) {//存在 
+            //                var tr = document.getElementById("NotExist");
+            //                tbody.removeChild(tr);
             //            }
 
             if ($("#TableBody tr").length == 1) {
@@ -910,7 +910,7 @@
                 if (Status == "") {
                     Status = "0";
                 }
-               
+
                 $.ajax({
                     url: "/DoctorHome/ExaminationInfoAdd",
                     type: "GET",
@@ -1125,7 +1125,7 @@
 
 </script>
 <script type="text/javascript">
-//20150617
+    //20150617
     $(document).on("click", ".readExaminationInfoBtn", function () {
         trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
         var SortNo = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();

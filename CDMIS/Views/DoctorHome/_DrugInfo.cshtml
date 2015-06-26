@@ -109,57 +109,57 @@
             foreach (var item in Model.DrugRecordList)
             {            
             <tr>
-                <td width="5%" style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.OrderNo
                 </td>
-                <td width="5%" style="border: 0; display: none;">
+                <td style="border: 0; display: none;">
                     @item.OrderSubNo
                 </td>
-                <td width="5%" style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.OrderClassCode
                 </td>
-                <td width="5%" style="border: 0;">
+                <td  style="border: 0;">
                     @item.OrderContent
                 </td>
-                <td width="5%" style="border: 0;">
+                <td  style="border: 0;">
                     @item.Dosage
                 </td>
-                <td width="5%" style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.DosageUnitsCode
                 </td>
-                <td width="5%" style="border: 0;">
+                <td  style="border: 0;">
                     @item.DosageUnits
                 </td>
-                <td width="5%" style="border: 0; display: none">
+                <td  style="border: 0; display: none">
                     @item.AdministrationCode
                 </td>
-                <td width="5%" style="border: 0; display: none">
+                <td  style="border: 0; display: none">
                     @item.RepeatIndicatorCode
                 </td>
-                <td width="5%" style="border: 0;">
+                <td  style="border: 0;">
                     @item.StartDateTime
                 </td>
-                <td width="5%" style="border: 0;">
+                <td  style="border: 0;">
                     @item.StopDateTime
                 </td>
-                <td width="5%" style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.FreqCounter
                 </td>
-                <td width="5%" style="border: 0; display: none">
+                <td  style="border: 0; display: none">
                     @item.Frequency
                 </td>
-                <td width="5%" style="border: 0; display: none">
+                <td  style="border: 0; display: none">
                     @item.FreqInteval
                 </td>
-                <td width="5%" style="border: 0; display: none">
+                <td  style="border: 0; display: none">
                     @item.FreqIntevalUnitCode
                 </td>
                 @if (item.IsAllowed == true)
                 {
-                    <td width="5%" style="border: 0;">
+                    <td style="border: 0;">
                         <input type="button" value="编辑" class="btn btn-primary editDrugInfoBtn" />
                     </td>
-                    <td width="5%" style="border: 0;">
+                    <td  style="border: 0;">
                         <input type="button" value="删除" class="btn btn-primary deleteDrugInfoBtn" />
                     </td>
                 }
@@ -178,10 +178,10 @@
                         无权限编辑
                     </td>                          
                 }
-                <td width="5%" style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.DeptCode
                 </td>
-                <td width="5%" style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.OrderCode
                 </td>
             </tr>
