@@ -12,6 +12,7 @@ using CDMIS.OtherCs;
 
 namespace CDMIS.Controllers
 {
+    [UserAuthorize]
     public class ManagementController : Controller
     {
         public static ServicesSoapClient _ServicesSoapClient = new ServicesSoapClient();

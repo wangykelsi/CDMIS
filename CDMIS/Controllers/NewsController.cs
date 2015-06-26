@@ -10,9 +10,11 @@ using System.Data;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using CDMIS.OtherCs;
 
 namespace CDMIS.Controllers
 {
+    [UserAuthorize]
     public class NewsController : Controller
     {
         public static ServicesSoapClient _ServicesSoapClient = new ServicesSoapClient();//WebService
@@ -23,7 +25,7 @@ namespace CDMIS.Controllers
         #region <ActionResult>
         public ActionResult Index()
         {
-           
+
             HealthEducationList HElist = new HealthEducationList();
             DataSet info = _ServicesSoapClient.GetAddressByTypeList(HElist.selectedModuleId, 5);
             foreach (DataRow row in info.Tables[0].Rows)
@@ -71,7 +73,7 @@ namespace CDMIS.Controllers
                 temp = head + newhe.news.htmlContent + "</body></html>";
                 sr.Close();
 
-                System.IO.File.WriteAllText(dir + newhe.news.FileName, temp,Encoding.GetEncoding("GB2312"));
+                System.IO.File.WriteAllText(dir + newhe.news.FileName, temp, Encoding.GetEncoding("GB2312"));
                 newhe.news.Author = user.UserId;
                 //
 
@@ -84,6 +86,10 @@ namespace CDMIS.Controllers
                 hostport = Request.ServerVariables.Get("Server_Port").ToString();
                 //newhe.news.Path = "http://" + hostAddress + ":" + hostport + "/HealthEducation/" + newhe.news.FileName;
                 newhe.news.Path = "/HealthEducation/" + newhe.news.FileName;
+                if (newhe.news.Title == null || newhe.news.Title == "")
+                {
+                    newhe.news.Title = "无主题";
+                }
                 bool flag = _ServicesSoapClient.SetHealthEducation(newhe.selectedModuleId, "0", 5, newhe.news.FileName, newhe.news.Path, newhe.news.Title, servertime, newhe.news.Author, user.TerminalName, user.TerminalIP, user.DeviceType);
                 if (flag)
                 {
@@ -99,7 +105,7 @@ namespace CDMIS.Controllers
 
         public ActionResult Edit(string Module, string Id)
         {
-            DataSet info = _ServicesSoapClient.GetAll(Module, Id); 
+            DataSet info = _ServicesSoapClient.GetAll(Module, Id);
             HealthEducation news = new HealthEducation();
             if (info.Tables[0].Rows.Count > 0)
             {
@@ -116,7 +122,7 @@ namespace CDMIS.Controllers
 
                 string dir = Server.MapPath("/") + "HealthEducation\\";
                 StreamReader sr = new StreamReader(dir + news.FileName, Encoding.GetEncoding("GB2312"));
-                
+
                 string temp;
                 news.htmlContent = "";
                 if ((temp = sr.ReadLine()) != null)
@@ -171,6 +177,10 @@ namespace CDMIS.Controllers
                 hostport = Request.ServerVariables.Get("Server_Port").ToString();
                 //newhe.news.Path = "http://" + hostAddress + ":" + hostport + "/HealthEducation/" + newhe.news.FileName;
                 newhe.news.Path = "/HealthEducation/" + newhe.news.FileName;
+                if (newhe.news.Title == null || newhe.news.Title == "")
+                {
+                    newhe.news.Title = "无主题";
+                }
                 bool flag = _ServicesSoapClient.SetHealthEducation(newhe.selectedModuleId, newhe.news.Id, 5, newhe.news.FileName, newhe.news.Path, newhe.news.Title, servertime, newhe.news.Author, user.TerminalName, user.TerminalIP, user.DeviceType);
                 if (flag)
                 {

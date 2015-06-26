@@ -90,6 +90,7 @@ namespace CDMIS.Controllers
         }
 
         [HttpPost]
+        [UserAuthorize]
         public ActionResult PersonalHomepage(PersonalHomepageViewModel PersonalHomepageModel, CDMIS.Models.PatientBasicInfo patient)
         {
 
