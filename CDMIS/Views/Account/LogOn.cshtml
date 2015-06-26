@@ -131,26 +131,44 @@
             var Reg = /^[0-9]*$/;
             //alert(Reg.test(PHONENUMBER));
             if (Reg.test(PHONENUMBER)) {
-                //alert(isPhone.test(PHONENUMBER));
-                if (isPhone.test(PHONENUMBER)) {
-                    document.getElementById("AlertUserId").style.display = "none";
-                }
-                else {
-                    //alert("test");
-                    //alert(PHONENUMBER.length);
-                    if (PHONENUMBER.length == 11) {
-                        //alert(PHONENUMBER.length);
-                        document.getElementById("AlertUserId").innerHTML = "不是正确的手机号码";
-                        document.getElementById("AlertUserId").style.display = "block";
-                        //alert("不是正确的手机号码");
+                if (PHONENUMBER.length == 11) {
+                    if (isPhone.test(PHONENUMBER)) {
+                        document.getElementById("AlertUserId").style.display = "none";
+                        //alert(PHONENUMBER);
                     }
                     else {
                         //alert(PHONENUMBER.length);
-                        document.getElementById("AlertUserId").innerHTML = "请输入11位手机号码";
+                        document.getElementById("AlertUserId").innerHTML = "请输入正确的手机号码";
                         document.getElementById("AlertUserId").style.display = "block";
-                        //alert("请输入11位手机号码");	
+                        //alert("不是正确的手机号码");
                     }
                 }
+                else {
+                    //alert(PHONENUMBER.length);
+                    document.getElementById("AlertUserId").innerHTML = "请输入11位手机号码";
+                    document.getElementById("AlertUserId").style.display = "block";
+                    //alert("请输入11位手机号码");	
+                }
+                //alert(isPhone.test(PHONENUMBER));
+//                if (isPhone.test(PHONENUMBER)) {
+//                    document.getElementById("AlertUserId").style.display = "none";
+//                }
+//                else {
+//                    //alert("test");
+//                    //alert(PHONENUMBER.length);
+//                    if (PHONENUMBER.length == 11) {
+//                        //alert(PHONENUMBER.length);
+//                        document.getElementById("AlertUserId").innerHTML = "不是正确的手机号码";
+//                        document.getElementById("AlertUserId").style.display = "block";
+//                        //alert("不是正确的手机号码");
+//                    }
+//                    else {
+//                        //alert(PHONENUMBER.length);
+//                        document.getElementById("AlertUserId").innerHTML = "请输入11位手机号码";
+//                        document.getElementById("AlertUserId").style.display = "block";
+//                        //alert("请输入11位手机号码");	
+//                    }
+//                }
             }
             else {
                 document.getElementById("AlertUserId").style.display = "none";
