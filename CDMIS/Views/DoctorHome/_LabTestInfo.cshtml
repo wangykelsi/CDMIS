@@ -412,7 +412,7 @@
             var LabItemCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
 
             $("#iframe_ClinicDetail").attr('src', "/DoctorHome/LabTestInfoDetail?UserId=" + UserId + "&VisitId=" + VisitId + "&SortNo=" + SortNo + "&LabItemType=" + LabItemType + "&LabItemCode=" + LabItemCode);
-            
+
             $('#LabTestDetails').modal({
                 closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
                 containerId: 'LabDtl-container',
@@ -620,8 +620,8 @@
                             tr.appendChild(td8);
                             //tr.insertCell(9).innerHTML = "<a data-ajax='true' data-ajax-mode='replace' data-ajax-update='#LabTestDetails' href='/DoctorHome/LabTestInfoDetail?UserId=" + UserId + "&amp;VisitId=" + VisitId + "&amp;SortNo=" + SortNo + "&amp;LabItemCode=" + LabItemCode + "' onclick='addLabTestDivHide()'>详细</a>";
                             tr.insertCell(9).innerHTML = '<input type="button" value="参数信息" class="btn btn-primary readLabTestSubInfoBtn" />';
-                    
-                            
+
+
                             tr.insertCell(10).innerHTML = "<input type='button' value='编辑' class='btn btn-primary editLabTestInfoBtn' />";
                             tr.insertCell(11).innerHTML = "<input type='button' value='删除' class='btn btn-primary deleteLabTestInfoBtn' />";
                             var td12 = document.createElement("td");

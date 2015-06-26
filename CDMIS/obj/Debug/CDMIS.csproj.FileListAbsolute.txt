@@ -65,3 +65,13 @@ C:\Users\MAC\Desktop\最后的工程\CDMIS_201506181416\CDMIS\bin\Newtonsoft.Jso
 C:\Users\MAC\Desktop\最后的工程\CDMIS_201506181416\CDMIS\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\MAC\Desktop\最后的工程\CDMIS_201506181416\CDMIS\obj\Debug\CDMIS.dll
 C:\Users\MAC\Desktop\最后的工程\CDMIS_201506181416\CDMIS\obj\Debug\CDMIS.pdb
+C:\Users\MAC\Desktop\20150625CDMIS\CDMIS\CDMIS\bin\CDMIS.dll
+C:\Users\MAC\Desktop\20150625CDMIS\CDMIS\CDMIS\bin\CDMIS.pdb
+C:\Users\MAC\Desktop\20150625CDMIS\CDMIS\CDMIS\bin\EntityFramework.dll
+C:\Users\MAC\Desktop\20150625CDMIS\CDMIS\CDMIS\bin\Newtonsoft.Json.dll
+C:\Users\MAC\Desktop\20150625CDMIS\CDMIS\CDMIS\bin\EntityFramework.xml
+C:\Users\MAC\Desktop\20150625CDMIS\CDMIS\CDMIS\bin\Newtonsoft.Json.pdb
+C:\Users\MAC\Desktop\20150625CDMIS\CDMIS\CDMIS\bin\Newtonsoft.Json.xml
+C:\Users\MAC\Desktop\20150625CDMIS\CDMIS\CDMIS\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\MAC\Desktop\20150625CDMIS\CDMIS\CDMIS\obj\Debug\CDMIS.dll
+C:\Users\MAC\Desktop\20150625CDMIS\CDMIS\CDMIS\obj\Debug\CDMIS.pdb

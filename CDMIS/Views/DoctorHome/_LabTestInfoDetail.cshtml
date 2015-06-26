@@ -1,18 +1,19 @@
 ﻿@model CDMIS.ViewModels.LabTestProfileViewModel
-
 <link href="../../Content/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <link href="../../Content/dataTables.fixedColumns.css" rel="stylesheet" type="text/css" />
 <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+@*<script type="text/javascript" src="../../Scripts/jquery-1.7.2.min.js"></script>*@
+<script type="text/javascript" src="../../Scripts/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../../Scripts/MicrosoftAjax.js"></script>
 <script type="text/javascript" src="../../Scripts/MicrosoftMvcAjax.js"></script>
-@*<script type="text/javascript" src="../../Scripts/jquery-1.7.2.min.js"></script>*@
-    <script type="text/javascript" src="../../Scripts/jquery-1.11.1.min.js"></script>
-
 <script type="text/javascript" src="../../Scripts/jquery.unobtrusive-ajax.min.js"></script>
 <script type="text/javascript" src="../../Scripts/jquery.dataTables.js"></script>
 <script type="text/javascript" src="../../Scripts/dataTables.fixedColumns.js"></script>
 <script src="@Url.Content("~/Scripts/bootstrap.min.js")" type="text/javascript"></script>
 <input type="text" id="UId" style="display:none" value="@Model.UserId"/>
+<div style="text-align: right">
+    <input type="button" value="添加" class="btn btn-primary addLabTestDtlInfo" />
+</div>
 @*参数信息*@
 <div id="DetailInfoDiv">
     <div class="modalContent">
@@ -42,8 +43,6 @@
                         <th>
                             操作
                         </th>
-                        <th>
-                        </th>
                     </tr>
                 </thead>
                 <tbody id="DetailTableBody">
@@ -70,18 +69,13 @@
                             {
                                 <td style="border: 0;">
                                     <input type="button" value="编辑" class="btn btn-primary editLabTestDetailInfoBtn" />
-                                </td>
-                                <td style="border: 0;">
                                     <input type="button" value="删除" class="btn btn-primary deleteLabTestDetailInfoBtn" />
                                 </td>
                             }
                             else
                             {
                                 <td style="border: 0;">
-                                    非本人填写，
-                                </td>
-                                <td style="border: 0;">
-                                    无权限编辑
+                                    非本人填写， 无权限编辑
                                 </td>                             
                             }
                         </tr>
@@ -99,91 +93,94 @@
                 </tbody>
             </table>
         </div>
-        @*添加参数信息*@
-        <div style="margin-top: 50px;">
-            <input type="text" style="display:none" value="@Model.LabTestInfo.SortNo" id="SortNo"/>
-            @* <div class="modalContent" style="margin-top: 15px; text-align: center;">*@
-            <form class="form-horizontal" role="form">
-            <div class="form-group">
-                <label class="col-sm-2 control-label">
-                    参数项目
-                </label>
-                <div class="col-sm-4">
-                    @Html.DropDownListFor(model => model.LabTestInfo.detail.Code, Model.LabSubItemList, new { id = "DtlItemNameDropDownList", @class = "form-control" })
-                </div>
-          @*  </div>
-            <div class="form-group">*@
-                <label class="col-sm-2 control-label">
-                    结果
-                </label>
-                <div class="col-sm-4">
-                    @Html.DropDownListFor(model => model.LabTestInfo.detail.IsAbnormal, Model.IsAbnormal(), new { id = "DtlIsAbnormalDropDownList", @class = "form-control" })
-                </div>
+    </div>
+    @*添加参数信息*@
+    <div style="display: none" id="addDataDiv">
+        @*<input type="text" style="display:none" value="@Model.LabTestInfo.SortNo" id="SortNo"/>*@
+        <div style="text-align: center">
+            <p style="font-size: 20px;">
+                添加参数信息</p>
+        </div>
+        <div class="modalContent">
+        <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                参数项目
+            </label>
+            <div class="col-sm-4">
+                @Html.DropDownListFor(model => model.LabTestInfo.detail.Code, Model.LabSubItemList, new { id = "DtlItemNameDropDownList", @class = "form-control" })
             </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">
-                    参数值
-                </label>
-                <div class="col-sm-4">
-                    @Html.TextBoxFor(model => Model.LabTestInfo.detail.Value, new { id = "DtlItemValue", @class = "form-control", @onkeyup = "IsLegal(this.id);" })
-                </div>
+            @*  </div>
+            <div class="form-group">*@
+            <label class="col-sm-2 control-label">
+                结果
+            </label>
+            <div class="col-sm-4">
+                @Html.DropDownListFor(model => model.LabTestInfo.detail.IsAbnormal, Model.IsAbnormal(), new { id = "DtlIsAbnormalDropDownList", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                参数值
+            </label>
+            <div class="col-sm-4">
+                @Html.TextBoxFor(model => Model.LabTestInfo.detail.Value, new { id = "DtlItemValue", @class = "form-control", @onkeyup = "IsLegal(this.id);" })
+            </div>
             @*</div>
             <div class="form-group">*@
-                <label class="col-sm-2 control-label">
-                    单位
-                </label>
-                <div class="col-sm-4">
-                    @Html.DropDownListFor(model => model.LabTestInfo.detail.UnitCode, Model.LabResultUnit(), new { id = "DtlItemUnitDropDownList", @class = "form-control" })
-                </div>
+            <label class="col-sm-2 control-label">
+                单位
+            </label>
+            <div class="col-sm-4">
+                @Html.DropDownListFor(model => model.LabTestInfo.detail.UnitCode, Model.LabResultUnit(), new { id = "DtlItemUnitDropDownList", @class = "form-control" })
             </div>
-            <div class="form-group LabTestParaTip" style="display: none">
-                <div class="col-sm-6">
-                    @*@Html.TextBoxFor(model => Model.ExamInfo.detail.Value, new { id = "ExamDtlItemValue", @class = "form-control" })*@
-                    <p class="LabTestParaWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
-                        text-align: center">
-                    </p>
-                </div>
+        </div>
+        <div class="form-group LabTestParaTip" style="display: none">
+            <div class="col-sm-6">
+                @*@Html.TextBoxFor(model => Model.ExamInfo.detail.Value, new { id = "ExamDtlItemValue", @class = "form-control" })*@
+                <p class="LabTestParaWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
+                    text-align: center">
+                </p>
             </div>
-            <div style="text-align:center">
-            <input type="button" class="btn btn-primary addLabTestDetailBtn" value="添加" /></div>
-            </form>
+        </div>
+        <div style="text-align: center">
+            <input type="button" class="btn btn-primary addLabTestDetailBtn" value="保存" /></div>
+        </form>
         </div>
     </div>
     @*编辑化验参数信息*@
     <div id="editLabDetailDataDiv" style="display: none;">
-        <div class="modalHeader">
-            <span>编辑参数信息</span></div>
+        <div style="text-align: center">
+            <p style="font-size: 20px;">
+                编辑参数信息</p>
+        </div>
         <div class="modalContent">
             <form class="form-horizontal" role="form">
             <div class="form-group">
-                <label for="ItemName" class="col-sm-3 control-label">
+                <label for="ItemName" class="col-sm-2 control-label">
                     参数项目</label>
-                <div class="col-sm-9">
+                <div class="col-sm-4">
                     @*<input type="text" class="form-control" id="ItemName" />*@
                     @Html.DropDownListFor(model => model.LabTestInfo.detail.Code, Model.LabSubItemList, new { id = "ItemName", @class = "form-control", disabled = "disabled" })
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="Value" class="col-sm-3 control-label">
-                    参数值</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="Value" onkeyup="IsLegal(this.id);" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="Unit" class="col-sm-3 control-label">
-                    单位</label>
-                <div class="col-sm-9">
-                    @*<input type="text" class="form-control" id="Unit" />*@
-                    @Html.DropDownListFor(model => model.LabTestInfo.detail.Unit, Model.LabResultUnit(), new { id = "Unit", @class = "form-control" })
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="IsAbnormalDtl" class="col-sm-3 control-label">
+                <label for="IsAbnormalDtl" class="col-sm-2 control-label">
                     结果</label>
-                <div class="col-sm-9">
+                <div class="col-sm-4">
                     @*<input type="text" class="form-control" id="IsAbnormalDtl" />*@
                     @Html.DropDownListFor(model => model.LabTestInfo.detail.IsAbnormal, Model.IsAbnormal(), new { id = "IsAbnormalDtl", @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Value" class="col-sm-2 control-label">
+                    参数值</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="Value" onkeyup="IsLegal(this.id);" />
+                </div>
+                <label for="Unit" class="col-sm-2 control-label">
+                    单位</label>
+                <div class="col-sm-4">
+                    @*<input type="text" class="form-control" id="Unit" />*@
+                    @Html.DropDownListFor(model => model.LabTestInfo.detail.Unit, Model.LabResultUnit(), new { id = "Unit", @class = "form-control" })
                 </div>
             </div>
             <div class="form-group LabTestParaEditTip" style="display: none">
@@ -195,7 +192,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-offset-4 col-sm-12">
+                <div class="col-sm-offset-5 col-sm-12">
                     <input type="button" class="btn btn-primary saveLabTestDetailBtn" value="保存" />
                     <input type="button" class="btn btn-default simplemodal-close" id="cancelDetail"
                         value="取消" />
@@ -205,34 +202,29 @@
         </div>
     </div>
     @*删除参数信息*@
-    <div id="DeleteLabDetailDataDiv" style="display: none;">
-        <div class="modalHeader">
-            <span>删除</span></div>
+    <div id="DeleteLabDetailDataDiv" style="display: none; text-align: center">
+        @*<div class="modalHeader">
+            <span>删除</span></div>*@
         <div class="modalContent">
             <form class="form-horizontal" role="form">
-            <p>
+            <p style="font-size: 24px; color: Red">
                 确定删除？</p>
-            <table>
-                <tr>
-                    <td>
-                        <input type="button" class="btn btn-primary sureLabTestDetailBtn" value="确定" />
-                    </td>
-                    <td>
-                        <input type="button" class="btn btn-default simplemodal-close" id="cancelDeleteDtl"
-                            value="取消" />
-                    </td>
-                </tr>
-            </table>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input type="button" class="btn btn-primary sureLabTestDetailBtn" value="确定" />
+                    <input type="button" class="btn btn-default simplemodal-close" id="cancelDeleteDtl"
+                        value="取消" />
+                </div>
+            </div>
             </form>
         </div>
     </div>
-</div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
         var UserId = document.getElementById("UId").value;
         var VisitId = "@Model.VisitId";
-        var SortNo = document.getElementById("SortNo").value;
+        var SortNo = "@Model.LabTestInfo.SortNo";
         var trDetailSeq;
 
         $("#DetailTableBody tr").each(function () {
@@ -253,7 +245,15 @@
         });
         $("#LabTestDtlInfoList").attr("width", "auto");
 
+        $(".addLabTestDtlInfo").click(function () {
+            $("#addDataDiv").show();
+            $("#editLabDetailDataDiv").hide();
+
+        })
+
         $(document).on("click", ".editLabTestDetailInfoBtn", function () {
+            $("#addDataDiv").hide();
+
             trDetailSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
             var Code = $("#DetailTableBody tr:eq(" + trDetailSeq + ") td:eq(0)").text().trim();
             var Value = $("#DetailTableBody tr:eq(" + trDetailSeq + ") td:eq(2)").text().trim();
@@ -270,10 +270,11 @@
             document.getElementById("Unit").value = Unit;
             document.getElementById("IsAbnormalDtl").value = IsAbnormal;
 
-            $('#editLabDetailDataDiv').modal({
-                closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                overlayClose: true     //点击蒙层关闭窗口
-            });
+            //            $('#editLabDetailDataDiv').modal({
+            //                closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
+            //                overlayClose: true     //点击蒙层关闭窗口
+            //            });
+            $('#editLabDetailDataDiv').show();
         }
 
         $(".saveLabTestDetailBtn").click(function () {
@@ -293,7 +294,7 @@
                 data: { UserId: UserId, VisitId: VisitId, SortNo: SortNo, Code: Code, Value: Value, UnitCode: UnitCode, IsAbnormalCode: IsAbnormalCode },  //输入参数
                 success: function (res) {
                     if (res == true) {
-                        $("#cancelDetail").click();
+                        //$("#cancelDetail").click();
                         //alert(trDetailSeq);
                         $("#DetailTableBody tr:eq(" + trDetailSeq + ") td:eq(0)").text(Code);
                         $("#DetailTableBody tr:eq(" + trDetailSeq + ") td:eq(1)").text(ItemName);
@@ -302,6 +303,9 @@
                         $("#DetailTableBody tr:eq(" + trDetailSeq + ") td:eq(4)").text(Unit);
                         $("#DetailTableBody tr:eq(" + trDetailSeq + ") td:eq(5)").text(IsAbnormalCode);
                         $("#DetailTableBody tr:eq(" + trDetailSeq + ") td:eq(6)").text(IsAbnormal);
+
+                        $("#editLabDetailDataDiv").hide();
+                        $("#addDataDiv").show();
 
                     }
                     else {
@@ -314,10 +318,12 @@
 
         $(".addLabTestDetailBtn").click(function () {
             var tbody = document.getElementById("DetailTableBody");
-//            if (document.getElementById("NotExistDtl")) {//存在 
-//                var tr = document.getElementById("NotExistDtl");
-//                tbody.removeChild(tr);
-//            }
+            //            if (document.getElementById("NotExistDtl")) {//存在 
+            //                var tr = document.getElementById("NotExistDtl");
+            //                tbody.removeChild(tr);
+            //            }
+            var LabItemType = "@Model.LabTestInfo.LabItemType";
+            var LabItemCode = "@Model.LabTestInfo.LabItemCode";
 
             if ($("#DetailTableBody tr").length == 1) {
                 if ($("#DetailTableBody tr:first td").length == 1) {
@@ -362,14 +368,14 @@
                         td5.innerHTML = IsAbnormalCode;
                         tr.appendChild(td5);
                         tr.insertCell(6).innerHTML = IsAbnormal;
-                        tr.insertCell(7).innerHTML = "<input type='button' value='编辑' class='btn btn-primary editLabTestDetailInfoBtn' />";
-                        tr.insertCell(8).innerHTML = "<input type='button' value='删除' class='btn btn-primary deleteLabTestDetailInfoBtn' />";
+                        tr.insertCell(7).innerHTML = "<input type='button' value='编辑' class='btn btn-primary editLabTestDetailInfoBtn' /><input type='button' value='删除' class='btn btn-primary deleteLabTestDetailInfoBtn' />";
+                        //tr.insertCell(8).innerHTML = "<input type='button' value='删除' class='btn btn-primary deleteLabTestDetailInfoBtn' />";
                         document.getElementById("DtlItemNameDropDownList").value = "";
                         document.getElementById("DtlItemValue").value = "";
                         document.getElementById("DtlItemUnitDropDownList").value = "";
                         document.getElementById("DtlIsAbnormalDropDownList").value = "";
                         $("#DtlItemNameDropDownList option[value='" + SubCode + "']").remove();
-
+                        //$("#editLabDetailDataDiv").hide();
                     }
                     else {
                         alert("数据插入失败，请重新输入！");
@@ -379,12 +385,16 @@
         })
 
         $(document).on("click", ".deleteLabTestDetailInfoBtn", function () {
+            $("#addDataDiv").hide();
+            $("#editLabDetailDataDiv").hide();
+
             trDetailSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
             var Code = $("#DetailTableBody tr:eq(" + trDetailSeq + ") td:eq(0)").text().trim();
-            $('#DeleteLabDetailDataDiv').modal({
-                closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                overlayClose: true     //点击蒙层关闭窗口
-            });
+            $('#DeleteLabDetailDataDiv').show();
+            //            $('#DeleteLabDetailDataDiv').modal({
+            //                closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
+            //                overlayClose: true     //点击蒙层关闭窗口
+            //            });
         });
 
         $(".sureLabTestDetailBtn").click(function () {
@@ -406,9 +416,13 @@
                         var tbody = document.getElementById("DetailTableBody");
                         tbody.deleteRow(trDetailSeq);
                         $("#DtlItemNameDropDownList").append("<option value='" + Code + "'>" + Name + "</option>");
+                        $('#DeleteLabDetailDataDiv').hide();
+
                     }
                     else {
                         alert("数据删除失败，请重试！");
+                        $('#DeleteLabDetailDataDiv').hide();
+
                     }
                 }
             })

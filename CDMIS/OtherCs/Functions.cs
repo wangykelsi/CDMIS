@@ -612,7 +612,7 @@ namespace CDMIS.OtherCs
             }
             else
             {
-                DataSet LabTestDetailsset = _ServicesSoapClient.GetLabTestDtlList(PatientId, vid, sortno, itemcode); //化验子表 
+                DataSet LabTestDetailsset = _ServicesSoapClient.GetLabTestDtlList(PatientId, vid, sortno); //化验子表 
                 ei.LabTestDetailsTable = LabTestDetailsset.Tables[0];
             }
         }

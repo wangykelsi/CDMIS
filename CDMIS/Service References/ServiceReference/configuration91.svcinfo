@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="Y4LqwXaBj8sCZCAQbyZiCOywY74=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="fXAmlS/lKuOncJW0B3vrkDEKga4=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="ServicesSoap">
       <properties>
@@ -227,10 +227,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="ServicesSoap" contract="ServiceReference.ServicesSoap" bindingType="basicHttpBinding" address="http://localhost:33/Services.asmx" bindingConfiguration="ServicesSoap">
+    <endpoint name="ServicesSoap" contract="ServiceReference.ServicesSoap" bindingType="basicHttpBinding" address="http://10.13.22.66:8088/Services.asmx" bindingConfiguration="ServicesSoap">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://localhost:33/Services.asmx</serializedValue>
+          <serializedValue>http://10.13.22.66:8088/Services.asmx</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -312,10 +312,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="ServicesSoap12" contract="ServiceReference.ServicesSoap" bindingType="customBinding" address="http://localhost:33/Services.asmx" bindingConfiguration="ServicesSoap12">
+    <endpoint name="ServicesSoap12" contract="ServiceReference.ServicesSoap" bindingType="customBinding" address="http://10.13.22.66:8088/Services.asmx" bindingConfiguration="ServicesSoap12">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://localhost:33/Services.asmx</serializedValue>
+          <serializedValue>http://10.13.22.66:8088/Services.asmx</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

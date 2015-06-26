@@ -1905,7 +1905,7 @@ namespace CDMIS.Controllers
             GetLabTestInfoDetailList(ref model, DoctorId);
 
             //model.LabSubItemList = GetLabTestSubItemNameList(LabItemCode);
-            model.LabSubItemList = GetLabTestSubItemNameList(LabItemType);
+            model.LabSubItemList = GetLabTestSubItemNameList();
             return PartialView("_LabTestInfoDetail", model);
         }
 
@@ -2737,9 +2737,9 @@ namespace CDMIS.Controllers
             int SortNo = model.LabTestInfo.SortNo;
             string LabItemType = model.LabTestInfo.LabItemType;
             string LabItemCode = model.LabTestInfo.LabItemCode;
-            string Code = LabItemType + "**" + LabItemCode;
+            //string Code = LabItemType + "**" + LabItemCode;
 
-            DataSet labTestDtlDs = _ServicesSoapClient.GetLabTestDtlList(UserId, VisitId, SortNo, Code);
+            DataSet labTestDtlDs = _ServicesSoapClient.GetLabTestDtlList(UserId, VisitId, SortNo);
             if (labTestDtlDs != null)
             {
                 if (labTestDtlDs.Tables.Count != 0)
@@ -2828,13 +2828,13 @@ namespace CDMIS.Controllers
         }
 
         //加载化验参数项目下拉框
-        public List<SelectListItem> GetLabTestSubItemNameList(string LabItemCode)
+        public List<SelectListItem> GetLabTestSubItemNameList()
         {
-            DataTable LabTestSubItemNameDt = _ServicesSoapClient.GetLabTestSubItemNameList(LabItemCode).Tables[0];
+            DataTable LabTestSubItemNameDt = _ServicesSoapClient.GetLabTestSubItemNameList().Tables[0];
             List<SelectListItem> LabTestSubItemNameList = new List<SelectListItem>();
             foreach (DataRow DR in LabTestSubItemNameDt.Rows)
             {
-                LabTestSubItemNameList.Add(new SelectListItem { Text = DR["Name"].ToString(), Value = DR["SubCode"].ToString() });
+                LabTestSubItemNameList.Add(new SelectListItem { Text = DR["Name"].ToString(), Value = DR["CodeSubCode"].ToString() });
             }
             return LabTestSubItemNameList;
         }
