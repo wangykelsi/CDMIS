@@ -47,10 +47,10 @@
     }
 </style>
 @*读取诊断信息*@
-<p style="font-size: 20px">
-    诊断信息</p>
+<h3 style="font-weight: bold;">
+    诊断信息</h3>
     <div style="text-align:right">
-     <input  type="button" value="添加" class="btn btn-primary addDiagnosisInfo" />
+     <input  type="button" value="添加诊断信息" class="btn btn-primary addDiagnosisInfo" style="margin-bottom: 5px" />
      </div>
 <input type="text" id="UId" style="display:none" value="@Model.UserId"/>
 <input type="text" style="display:none" value="@ViewBag.MaxDiagnosisNo" id="MaxDiagnosisNo"/>
@@ -139,7 +139,7 @@
                     <td width="5%" style="border: 0;">
                         <input type="button" value="删除" class="btn btn-primary deleteDiagnosisInfoBtn" disabled="disabled" />
                     </td>   *@      
-                     <td >非本人填写,无权限编辑</td>                     
+                     <td>无编辑权限</td>                     
                 }
             </tr>    
             }
@@ -157,8 +157,8 @@
 </table>
 @*添加诊断信息*@
 <div id = "addDataDiv" style="display: none;">
-    <p>
-        添加诊断信息</p>
+    <div class="modalHeader">
+        <span>添加诊断信息</span></div>
     <div class="modalContent" style="margin-top: 15px; text-align: center;">
         <div class="form-horizontal" role="form">
             <div class="form-group">
@@ -336,8 +336,9 @@
             "bPaginate": false,  //是否分页。
             "sScrollX": "100%",
             "sScrollY": "300px",
-            "bFilter": true
-            //"aaSorting": [[0, "desc"]]
+            "bFilter": true,
+            "aaSorting": [[8, "desc"]],
+            "columnDefs": [{ "bSortable": false, "aTargets": [9]}] //禁止某些列的排序功能
         });
         $("#DiagnosisInfoList").attr("width", "auto");
 

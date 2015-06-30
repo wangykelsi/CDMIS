@@ -42,19 +42,19 @@
     
     #simplemodal-container
     {
-        height: 600px;
+        height: 720px;
         width: 520px;
     }
     #Exam-container
     {
-         height: 750px;
+         height: 760px;
         width: 600px;
     }
 </style>
-<p style="font-size: 20px">
-    检查信息</p>
+<h3 style="font-weight: bold;">
+    检查信息</h3>
      <div style="text-align:right">
-     <input  type="button" value="添加" class="btn btn-primary addExaminationInfo" />
+     <input  type="button" value="添加检查信息" class="btn btn-primary addExaminationInfo" style="margin-bottom: 5px"/>
      </div>
 <input type="text" id="UId" style="display:none" value="@Model.UserId"/>
 <input type="text" style="display:none" value="@ViewBag.MaxSortNo" id="MaxSortNo"/>
@@ -107,10 +107,10 @@
           
             </th>
             <th>
-                操作
+                详细
             </th>
-          <th>
-          
+            <th>
+                操作
             </th>
             <th>
           
@@ -194,7 +194,7 @@
                         <input type="button" value="删除" class="btn btn-primary deleteExaminationInfoBtn"
                             disabled="disabled" />
                     </td> *@  
-                     <td>非本人填写,</td><td>无权限编辑  </td>                        
+                     <td>无编辑权限</td><td></td>                        
                 }
                  
                 <td style="border: 0; display: none">
@@ -216,8 +216,8 @@
 </table>
 @*没有就诊卡时，添加检查信息*@
 <div id = "addDataDiv" style="display: none;">
-    <p onclick="addExamInfoDivShow()">
-        添加检查信息</p>
+    <div class="modalHeader">
+        <span>添加检查信息</span></div>
     <div class="modalContent" style="margin-top: 15px; text-align: center;" id="addExamInfoDiv">
         <div class="form-horizontal" role="form">
             <div class="form-group">
@@ -445,13 +445,13 @@
         </div>
         <div class="form-group" style="display: none;" id="ExaminationTip">
             <div class="col-sm-12">
-                <p id="ExaminationEditWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
+                <p id="ExaminationEditWarning" style="font-size: 15px; color: #FF0000; font-weight: bold;
                     text-align: center">
                 </p>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
+            <div class="col-sm-offset-5 col-sm-7">
                 <input type="button" class="btn btn-primary saveExaminationInfoBtn" value="保存" />
                 <input type="button" class="btn btn-default simplemodal-close" id="cancel" value="取消" />
             </div>
@@ -464,7 +464,7 @@
 @*read检查信息*@
 <div id="readDataDiv" style="display: none; overflow: none">
     <div class="modalHeader">
-        <span>查看</span></div>
+        <span>查看详细信息</span></div>
     <div class="modalContent">
         <form class="form-horizontal" role="form">
         <div class="form-group" style="display: none;">
@@ -634,8 +634,9 @@
             "bPaginate": false,  //是否分页。
             "sScrollX": "100%",
             "sScrollY": "300px",
-            "bFilter": true
-            //"aaSorting": [[0, "desc"]]
+            "bFilter": true,
+            "aaSorting": [[5, "desc"]],
+            "columnDefs": [{ "bSortable": false, "aTargets": [15,16,17]}] //禁止某些列的排序功能
         });
         $("#ExaminationInfoList").attr("width", "auto");
 
@@ -1101,15 +1102,15 @@
         });
     }
 
-    function addExamInfoDivHide() {
-        $("#addExamInfoDiv").hide(500);
-        $("#ExamDetails").show(500);
-    }
+//    function addExamInfoDivHide() {
+//        $("#addExamInfoDiv").hide(500);
+//        $("#ExamDetails").show(500);
+//    }
 
-    function addExamInfoDivShow() {
-        $("#addExamInfoDiv").show(500);
-        $("#ExamDetails").hide(500);
-    }
+//    function addExamInfoDivShow() {
+//        $("#addExamInfoDiv").show(500);
+//        $("#ExamDetails").hide(500);
+//    }
 
     $(document).ready(function () {
         //鼠标移动到行变色,单独建立css类hover

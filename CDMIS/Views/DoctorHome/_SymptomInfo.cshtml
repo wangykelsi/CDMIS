@@ -1,4 +1,4 @@
-﻿@model CDMIS.ViewModels.SymptomsProfileViewModel
+﻿ @model CDMIS.ViewModels.SymptomsProfileViewModel
 <style type="text/css">
     #Redirect
     {
@@ -47,18 +47,17 @@
     }
 </style>
 @*读取症状信息*@
-<div id="ShowInfo" >
-    <p style="font-size: 20px">
-        症状信息</p> 
-        <div style="text-align:right">
-        <input  type="button" value="添加" class="btn btn-primary addSymptomInfo" /></div>
+<div id="ShowInfo">
+    <h3 style="font-weight: bold;">
+        症状信息</h3>
+    <div style="text-align: right">
+        <input type="button" value="添加症状信息" class="btn btn-primary addSymptomInfo" style="margin-bottom: 5px" /></div>
     <input type="text" id="UId" style="display:none" value="@Model.UserId"/>
     <input type="text" style="display:none" value="@ViewBag.MaxSynptomsNo" id="MaxSynptomsNo"/>
     <table id="SymptomsInfoList" class="display">
         <thead>
             <tr>
-            <th style="display: none;">
-                   
+                <th style="display: none;">
                 </th>
                 <th style="display: none;">
                     症状序号
@@ -83,7 +82,7 @@
                 <th>
                     操作
                 </th>
-                 <th>
+                <th>
                 </th>
             </tr>
         </thead>
@@ -96,50 +95,54 @@
                     <td style="border: 0; display: none;">
                         @item.SymptomsNo
                     </td>
-                    <td  style="border: 0; display: none">
+                    <td style="border: 0; display: none">
                         @item.SymptomsType
                     </td>
                     <td style="border: 0;">
                         @item.SymptomsTypeName
                     </td>
-                    <td  style="border: 0; display: none">
+                    <td style="border: 0; display: none">
                         @item.SymptomsCode
                     </td>
-                    <td  style="border: 0;">
+                    <td style="border: 0;">
                         @item.SymptomsName
                     </td>
                     <td style="border: 0;">
                         @item.Description
                     </td>
-                    <td  style="border: 0;">
+                    <td style="border: 0;">
                         @item.RecordDate
                     </td>
-                    <td  style="border: 0;">
+                    <td style="border: 0;">
                         @item.RecordTime
                     </td>
                     @if (item.IsAllowed == true)
                     {
-                        <td  style="border: 0;">
+                        <td style="border: 0;">
                             <input type="button" value="编辑" class="btn btn-primary editSymptomInfoBtn" />
-                      </td>
-                         <td  style="border: 0;">
+                        </td>
+                        <td style="border: 0;">
                             <input type="button" value="删除" class="btn btn-primary deleteSymptomInfoBtn" />
                         </td>
                     }
                     else
                     {
-                       @* <td width="5%" style="border: 0;">
+@* <td width="5%" style="border: 0;">
                             <input type="button" value="编辑" class="btn btn-primary editSymptomInfoBtn" disabled="disabled" />
                         </td>
                         <td width="5%" style="border: 0;">
                             <input type="button" value="删除" class="btn btn-primary deleteSymptomInfoBtn" disabled="disabled" />
                         </td>  *@  
-                         <td>非本人填写,</td><td>无权限编辑</td>                          
+                        <td>
+                            无编辑权限
+                        </td>
+                        <td>
+                        </td>                          
                     }
                 </tr>
                 }
             }
-           @* else
+@* else
             {
                 <tr id="NotExist">
                     <td style="font-size: 15px;" colspan="9">
@@ -152,10 +155,9 @@
     </table>
 </div>
 @*添加症状信息*@
-<div id = "addDataDiv" style="display: none;">
-
-    <p >
-        添加症状信息</p>
+<div id="addDataDiv" style="display: none;">
+    <div class="modalHeader">
+        <span>添加症状信息</span></div>
     <div class="modalContent" style="margin-top: 15px; text-align: center;">
         <div class="form-horizontal" role="form">
             <div class="form-group">
@@ -164,8 +166,8 @@
                 <div class="col-sm-8">
                     @Html.DropDownListFor(model => model.SymptomsTypeSelected, Model.SymptomsTypeList(), new { id = "SymptomsTypeListDropDownList", onchange = "SymptomsTypeChanged();", @class = "form-control" })
                 </div>
-</div>
- <div class="form-group">
+            </div>
+            <div class="form-group">
                 <label class="col-sm-4 control-label">
                     *症状名称
                 </label>
@@ -175,7 +177,6 @@
                     </select>
                 </div>
             </div>
-
             <div class="form-group">
                 <label class="col-sm-4 control-label">
                     *症状记录时间
@@ -184,8 +185,8 @@
                     @Html.TextBoxFor(model => model.Symptoms.RecordDate, new { id = "RecordDateInput", @onclick = "WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})", @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Symptoms.RecordDate)
                 </div>
-                </div>
-                 <div class="form-group">
+            </div>
+            <div class="form-group">
                 <label class="col-sm-4 control-label">
                     症状描述
                 </label>
@@ -206,7 +207,7 @@
     </div>
 </div>
 @*编辑症状信息*@
-<div id="editDataDiv" style="display: none; overflow: none">
+<div id="editDataDiv" style="display: none">
     <div class="modalHeader">
         <span>编辑</span></div>
     <div class="modalContent">
@@ -260,8 +261,8 @@
         </div>
         <div class="form-group" style="display: none;" id="SymptomTip">
             <div class="col-sm-12">
-                <p id="SymptomEditWarning" style="font-size: 16px; color: #FF0000;
-                    font-weight: bold;text-align:center">
+                <p id="SymptomEditWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
+                    text-align: center">
                 </p>
             </div>
         </div>
@@ -378,8 +379,9 @@
             "bPaginate": false,  //是否分页。
             "sScrollX": "100%",
             "sScrollY": "300px",
-            "bFilter": true
-            //"aaSorting": [[0, "desc"]]
+            "bFilter": true,
+            "aaSorting": [[6, "desc"],[7, "desc"]],
+            "columnDefs": [{ "bSortable": false, "aTargets": [8,9]}] //禁止某些列的排序功能
         });
 
         $("#SymptomsInfoList").attr("width", "auto");
@@ -398,7 +400,7 @@
         var trSeq;
         var addNo = 0;
 
-        $(".addSymptomInfo").click(function(){
+        $(".addSymptomInfo").click(function () {
             $('#addDataDiv').modal({
                 closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
                 overlayClose: true     //点击蒙层关闭窗口
@@ -414,7 +416,7 @@
                 }
                 //alert("12");
             }
-          
+
             //            if (document.getElementById("NotExist")) {//存在 
             //                var tr = document.getElementById("NotExist");
             //                tbody.removeChild(tr);

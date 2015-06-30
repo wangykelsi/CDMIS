@@ -46,10 +46,10 @@
         width: 450px;
     }
 </style>
-<p style="font-size: 20px">
-    药物治疗信息</p>
+<h3 style="font-weight: bold;">
+    药物治疗信息</h3>
      <div style="text-align:right">
-     <input  type="button" value="添加" class="btn btn-primary addDrugInfo" />
+     <input  type="button" value="添加药物治疗信息" class="btn btn-primary addDrugInfo" style="margin-bottom: 5px"/>
      </div>
 <input type="text" id="UId" style="display:none" value="@Model.UserId"/>
 <input type="text" style="display:none" value="@ViewBag.MaxOrderSubNo" id="MaxOrderSubNo"/>
@@ -172,10 +172,9 @@
                         <input type="button" value="删除" class="btn btn-primary deleteDrugInfoBtn" disabled="disabled" />
                     </td> *@   
                     <td>
-                        非本人填写,
+                        无编辑权限
                     </td>
                     <td>
-                        无权限编辑
                     </td>                          
                 }
                 <td style="border: 0; display: none">
@@ -200,6 +199,8 @@
 </table>
 @*添加药物治疗信息*@
 <div id="addDrugInfoDiv" style="display: none;">
+    <div class="modalHeader">
+        <span>添加药物治疗信息</span></div>
     <div class="modalContent" style="margin-top: 15px; text-align: center;">
         <div class="form-horizontal" role="form">
             <div class="form-group">
@@ -499,8 +500,10 @@
             "bPaginate": false,  //是否分页。
             "sScrollX": "100%",
             "sScrollY": "300px",
-            "bFilter": true
-            //"aaSorting": [[0, "desc"]]
+            "bFilter": true,
+            "aaSorting": [[9, "desc"]],
+            "columnDefs": [{ "bSortable": false, "aTargets": [15,16]}] //禁止某些列的排序功能
+
         });
         $("#DrugInfoList").attr("width", "auto");
 
