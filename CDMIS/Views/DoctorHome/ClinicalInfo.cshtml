@@ -115,8 +115,8 @@
 {
 @*读取就诊信息*@
     <div style="background-color: White; width: 100%; margin-top: 20px">
-        <h4>
-            就诊信息</h4>
+        <h3 style="font-weight: bold; text-align:center;">
+            就诊信息</h3>
         <input type="text" id="UId" style="display:none" value="@Model.UserId"/>
         <table id="InfoList" class="display">
             <thead>
@@ -201,7 +201,7 @@
                                 <input type="button" value="编辑" class="btn btn-primary editClinicalInfoBtn" disabled="disabled" />
                                 <input type="button" value="删除" class="btn btn-primary deleteClinicalInfoBtn" disabled="disabled" />
                             </td> *@     
-                            <td>非本人填写,无权限编辑</td>                  
+                            <td>无编辑权限</td>                  
                         }
                     </tr>
                     }
@@ -509,8 +509,9 @@
             "bPaginate": false,  //是否分页。
             "sScrollX": "100%",
             "sScrollY": "300px",  
-            "bFilter": false
-            //"aaSorting": [[0, "desc"]]
+            "bFilter": false,
+            "aaSorting": [[5, "desc"]],
+            "columnDefs": [{ "bSortable": false, "aTargets": [8]}] //禁止某些列的排序功能
         });
 
         var UserId = document.getElementById("UId").value;

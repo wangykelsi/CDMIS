@@ -57,9 +57,9 @@
                 @if (Model.PatientDetailInfo.Count > 0)
                 {
                     <div class="form-group">
-                        <label class="control-label col-sm-2" style="font-size: 17px">
+                        <label class="control-label col-sm-3" style="text-align: left; font-size: 17px">
                             已购买的模块信息</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             @Html.ActionLink("编辑", "ModuleProfileEdit", new { UserId = @Model.Patient.UserId }, new { @class = "btn btn-primary" })
                         </div>
                     </div>

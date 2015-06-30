@@ -52,10 +52,10 @@
         width: 900px;
     }
 </style>
-<p style="font-size: 20px">
-    化验信息</p>
+<h3 style="font-weight: bold;">
+    化验信息</h3>
     <div style="text-align:right">
-     <input  type="button" value="添加" class="btn btn-primary addLabTestInfo" />
+     <input  type="button" value="添加化验信息" class="btn btn-primary addLabTestInfo" style="margin-bottom: 5px"/>
      </div>
 <input type="text" id="UId" style="display:none" value="@Model.UserId"/>
 <input type="text" style="display:none" value="@ViewBag.MaxSortNo" id="MaxSortNo"/>
@@ -90,10 +90,10 @@
          
             </th>
             <th >
-                操作
+                参数信息
             </th>
-               <th>
-         
+            <th>
+                操作
             </th>
                <th>
          
@@ -157,7 +157,7 @@
                     <td width="5%" style="border: 0;">
                         <input type="button" value="删除" class="btn btn-primary deleteLabTestInfoBtn" disabled="disabled" />
                     </td> *@  
-                     <td >非本人填写,</td><td>无权限编辑</td>                           
+                     <td>无编辑权限</td><td></td>                           
                 }
                 <td  style="border: 0; display: none">
                     @item.DeptCode
@@ -179,8 +179,8 @@
 @*添加化验信息*@
 <div id="addLabTestNodiv" style="display: none;">
     @*详细信息*@
-    <p onclick="addLabTestDivShow()">
-        添加化验信息</p>
+    <div class="modalHeader">
+        <span>添加化验信息</span></div>
     <div class="modalContent" style="margin-top: 15px; text-align: center;" id="addLabTestDiv">
         <div class="form-horizontal" role="form">
             <div class="form-group">
@@ -332,7 +332,7 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
+            <div class="col-sm-offset-4 col-sm-8">
                 <input type="button" class="btn btn-primary saveLabTestInfoBtn" value="保存" />
                 <input type="button" class="btn btn-default simplemodal-close" id="cancel" value="取消" />
             </div>
@@ -383,8 +383,9 @@
             "bPaginate": false,  //是否分页。
             "sScrollX": "100%",
             "sScrollY": "300px",
-            "bFilter": true
-            //"aaSorting": [[0, "desc"]]
+            "bFilter": true,
+            "aaSorting": [[5, "desc"]],
+            "columnDefs": [{ "bSortable": false, "aTargets": [9,10,11]}] //禁止某些列的排序功能
         });
         $("#LabTestInfoList").attr("width", "auto");
 
@@ -477,8 +478,7 @@
 
             $('#editDataDiv').modal({
                 closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                containerId: 'simplemodal-container ',
-
+                containerId: 'simplemodal-container',
                 overlayClose: true     //点击蒙层关闭窗口
             });
         }
@@ -742,15 +742,15 @@
         });
     }
 
-    function addLabTestDivHide() {
-        $("#addLabTestDiv").hide(500);
-        $("#LabTestDetails").show(500);
-    }
+//    function addLabTestDivHide() {
+//        $("#addLabTestDiv").hide(500);
+//        $("#LabTestDetails").show(500);
+//    }
 
-    function addLabTestDivShow() {
-        $("#addLabTestDiv").show(500);
-        $("#LabTestDetails").hide(500);
-    }
+//    function addLabTestDivShow() {
+//        $("#addLabTestDiv").show(500);
+//        $("#LabTestDetails").hide(500);
+//    }
 
 
     $(document).ready(function () {

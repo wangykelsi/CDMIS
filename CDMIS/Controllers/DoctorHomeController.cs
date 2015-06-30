@@ -585,7 +585,7 @@ namespace CDMIS.Controllers
                 int Gender = Convert.ToInt32(model.Patient.Gender);
                 int BloodType = Convert.ToInt32(model.Patient.BloodType);
                 string IDNo = model.Patient.IDNo;           //患者身份证号码   2014/12/11 CSQ        
-                int InsuranceType = Convert.ToInt32(model.Patient.InsuranceType);
+                string InsuranceType = model.Patient.InsuranceType;
                 int InvalidFlag = 0;
 
                 flag = _ServicesSoapClient.SetPatBasicInfo(UserId, UserName, Convert.ToInt32(Birthday), Gender, BloodType, IDNo, "", InsuranceType, InvalidFlag, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);

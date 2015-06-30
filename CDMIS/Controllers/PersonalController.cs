@@ -163,11 +163,11 @@ namespace CDMIS.Controllers
                     PersonalHomepageModel.EmergencyContactPhoneNumber = DetailInfo.EmergencyContactPhoneNumber;
                     if (DetailInfo.PhotoAddress == null || DetailInfo.PhotoAddress == "")
                     {
-                        PersonalHomepageModel.PhotoAddress = "http://" + hostAddress + "/CDFiles/PersonalPhoto/Doctor/non.jpg"; 
+                        PersonalHomepageModel.PhotoAddress = "http://" + hostAddress + "/PersonalPhoto/non.jpg"; 
                     }
                     else 
                     {
-                        PersonalHomepageModel.PhotoAddress = "http://" + hostAddress + "/CDFiles/PersonalPhoto/Doctor/" + DetailInfo.PhotoAddress;
+                        PersonalHomepageModel.PhotoAddress = "http://" + hostAddress + "/PersonalPhoto/" + DetailInfo.PhotoAddress;
                         //PersonalHomepageModel.PhotoAddress = "CDFiles\\PersonalPhoto\\Doctor\\" + DetailInfo.PhotoAddress; 
                     }
                     
@@ -201,11 +201,11 @@ namespace CDMIS.Controllers
                 if (DetailInfo.PhotoAddress == null || DetailInfo.PhotoAddress == "")
                 {
                     //PersonalHomepageModel.PhotoAddress = "CDFiles\\PersonalPhoto\\Patient\\non.jpg";
-                    PersonalHomepageModel.PhotoAddress = "http://" + hostAddress + "/CDFiles/PersonalPhoto/Patient/non.jpg"; 
+                    PersonalHomepageModel.PhotoAddress = "http://" + hostAddress + "/PersonalPhoto/non.jpg"; 
                 }
                 else
                 {
-                    PersonalHomepageModel.PhotoAddress = "http://" + hostAddress + "/CDFiles/PersonalPhoto/Patient/" + DetailInfo.PhotoAddress;
+                    PersonalHomepageModel.PhotoAddress = "http://" + hostAddress + "/PersonalPhoto/" + DetailInfo.PhotoAddress;
                     //PersonalHomepageModel.PhotoAddress = "CDFiles\\PersonalPhoto\\Patient\\" + DetailInfo.PhotoAddress;
                 }
             }
@@ -250,16 +250,7 @@ namespace CDMIS.Controllers
                 string fileName = UserId + ".jpg";
                 string filePath = "";
                 string hostAddress = System.Configuration.ConfigurationManager.AppSettings["WebServe"];
-                if (user.Role == "Patient")
-                {
-                    filePath = "CDFiles/PersonalPhoto/Patient/";
-                    //avatarPath = "http://" + hostAddress + "/CDFiles/PersonalPhoto/Patient/" + fileName;
-                }
-                else
-                {
-                    filePath = "CDFiles/PersonalPhoto/Doctor/";
-                    //avatarPath = "http://" + hostAddress + "/CDFiles/PersonalPhoto/Doctor/" + fileName;
-                }
+                filePath = "PersonalPhoto/";
                 avatarPath = fileName;
                 ResizeAndSaveImage(image, 168, 168, filePath, fileName);
             }
@@ -298,7 +289,7 @@ namespace CDMIS.Controllers
                 var GetBasicInfoList = _ServicesSoapClient.GetUserBasicInfo(UserId);
                 var BloodType = Convert.ToInt32(GetBasicInfoList.BloodType);
                 var DoctorId = GetBasicInfoList.DoctorId;
-                var InsuranceType = Convert.ToInt32(GetBasicInfoList.InsuranceType);
+                var InsuranceType = GetBasicInfoList.InsuranceType;
                 var InvalidFlag = GetBasicInfoList.InvalidFlag;
                 var SetPatientBasicFlag = _ServicesSoapClient.SetBasicInfo(UserId, UserName, Birthday, Gender, BloodType, null, DoctorId, InsuranceType, InvalidFlag, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
                 var SetPatientPhoneNumberFlag = _ServicesSoapClient.SetBasicInfoDetail(UserId, CategoryCode, "Contact002_1", ItemSeq, PhoneNumber, null, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);

@@ -54,10 +54,30 @@ namespace CDMIS.ViewModels
             return BloodTypeList;
         }
 
+        //public static List<SelectListItem> GetInsuranceTypeList()
+        //{
+        //    List<SelectListItem> InsuranceTypeList = new List<SelectListItem>();
+        //    DataSet ds = _ServicesSoapClient.GetTypeList("InsuranceType");
+        //    if (ds == null)
+        //    {
+        //        return InsuranceTypeList;
+        //    }
+        //    InsuranceTypeList.Add(new SelectListItem { Text = "---请选择---", Value = "0" });
+        //    foreach (DataTable itemtable in ds.Tables)
+        //    {
+        //        foreach (DataRow item in itemtable.Rows)
+        //        {
+        //            InsuranceTypeList.Add(new SelectListItem { Text = item["Name"].ToString(), Value = item["Type"].ToString() });
+
+        //        }
+        //    }
+        //    return InsuranceTypeList;
+        //}
+
         public static List<SelectListItem> GetInsuranceTypeList()
         {
             List<SelectListItem> InsuranceTypeList = new List<SelectListItem>();
-            DataSet ds = _ServicesSoapClient.GetTypeList("InsuranceType");
+            DataSet ds = _ServicesSoapClient.GetInsuranceType();
             if (ds == null)
             {
                 return InsuranceTypeList;
@@ -67,7 +87,7 @@ namespace CDMIS.ViewModels
             {
                 foreach (DataRow item in itemtable.Rows)
                 {
-                    InsuranceTypeList.Add(new SelectListItem { Text = item["Name"].ToString(), Value = item["Type"].ToString() });
+                    InsuranceTypeList.Add(new SelectListItem { Text = item["Name"].ToString(), Value = item["Code"].ToString() });
 
                 }
             }
