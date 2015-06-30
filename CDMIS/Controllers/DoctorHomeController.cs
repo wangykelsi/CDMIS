@@ -18,7 +18,7 @@ namespace CDMIS.Controllers
     {
         #region <" 私有变量 ">
         public static ServicesSoapClient _ServicesSoapClient = new ServicesSoapClient();
-        WebReferenceJC.WebServicePs regionCenterWeb = new WebReferenceJC.WebServicePs();
+        WebReferenceJC.BsWebService regionCenterWeb = new WebReferenceJC.BsWebService();
 
         //public static string user.UserId = "D003";  //合并时，用user.UserId替换_UserId
         public static DataSet _DS_PatientList = new DataSet();
@@ -487,7 +487,7 @@ namespace CDMIS.Controllers
 
 
         #region 建档--个人信息
-        public ActionResult BasicProfile(string PatientId)
+        public ActionResult BasicProfile(string PatientId, string Role)
         {
             var user = Session["CurrentUser"] as UserAndRole;
             string DoctorId = user.UserId;
@@ -497,39 +497,71 @@ namespace CDMIS.Controllers
 
             if (PatientId != null)
             {
-                ViewBag.OperationInvalidFlag = "false";   //新建按钮的权限
+                ViewBag.OperationInvalidFlag = "false";   //手机号输入框不显示
 
-                //加载患者基本信息               
-                ServiceReference.PatientBasicInfo basicInfo = new ServiceReference.PatientBasicInfo();
-                basicInfo = _ServicesSoapClient.GetPatBasicInfo(PatientId);
-                model.Patient.UserId = basicInfo.UserId;
-                model.Patient.UserName = basicInfo.UserName;
-                model.Patient.Birthday = basicInfo.Birthday;
-                model.Patient.Gender = basicInfo.Gender;
-                model.Patient.BloodType = basicInfo.BloodType;
-                model.Patient.InsuranceType = basicInfo.InsuranceType;
 
-                //加载患者详细信息
-                GetPatientInfoDetail(ref model);
 
-                //加载操作医生未负责患者列表      
-                model.PatientList = GetPotentialPatientList(DoctorId);
+                if (Role == "Patient")
+                {
+                    //加载患者基本信息               
+                    ServiceReference.PatientBasicInfo basicInfo = new ServiceReference.PatientBasicInfo();
+                    basicInfo = _ServicesSoapClient.GetPatBasicInfo(PatientId);
+                    model.Patient.UserId = basicInfo.UserId;
+                    model.Patient.UserName = basicInfo.UserName;
+                    model.Patient.Birthday = basicInfo.Birthday;
+                    model.Patient.Gender = basicInfo.Gender;
+                    model.Patient.BloodType = basicInfo.BloodType;
+                    model.Patient.InsuranceType = basicInfo.InsuranceType;
+
+                    //加载患者详细信息
+                    GetPatientInfoDetail(ref model);
+                }
+                else
+                {
+                    DataSet basicInfoDs = _ServicesSoapClient.GetDoctorInfo(PatientId);
+                    if (basicInfoDs.Tables.Count > 0)
+                    {
+                        DataTable basicInfoDt = basicInfoDs.Tables[0];
+                        model.Patient.UserId = basicInfoDt.Rows[0]["DoctorId"].ToString();
+                        model.Patient.UserName = basicInfoDt.Rows[0]["DoctorName"].ToString();
+                        model.Patient.Birthday = basicInfoDt.Rows[0]["Birthday"].ToString();
+                        model.Patient.Gender = basicInfoDt.Rows[0]["Gender"].ToString();
+                        model.Patient.BloodType = "";
+                        model.Patient.InsuranceType = "";
+                    }
+
+                    var DetailInfo = _ServicesSoapClient.GetDoctorInfoDetail(PatientId);
+                    if (DetailInfo!=null)
+                    {
+                        model.Patient.IDNo = DetailInfo.IDNo;
+                        model.Occupation = DetailInfo.Occupation;
+                        model.Nationality = DetailInfo.Nationality;
+                        model.Phone = DetailInfo.PhoneNumber;
+                        model.Address = DetailInfo.HomeAddress;
+                        model.EmergencyContact = DetailInfo.EmergencyContact;
+                        model.EmergencyContactNumber = DetailInfo.EmergencyContactPhoneNumber;
+                    }
+                }
+                
+
+                //加载操作医生未负责患者列表      20150629
+                //model.PatientList = GetPotentialPatientList(DoctorId);
 
                 return View(model);
             }
             else
             {
-                ViewBag.OperationInvalidFlag = "true";        //新建按钮的权限               
+                ViewBag.OperationInvalidFlag = "true";        //显示手机号输入框             
 
-                //加载操作医生未负责患者列表             
-                model.PatientList = GetPotentialPatientList(DoctorId);
+                //加载操作医生未负责患者列表           20150629  
+                //model.PatientList = GetPotentialPatientList(DoctorId);
 
                 return View(model);
             }
         }
 
         [HttpPost]
-        public ActionResult BasicProfile(BasicProfileViewModel model)
+        public ActionResult BasicProfile(BasicProfileViewModel model, FormCollection formCollection)
         {
             if (ModelState.IsValid)
             {
@@ -580,6 +612,10 @@ namespace CDMIS.Controllers
                 else   //新增用户
                 {
                     flag = _ServicesSoapClient.SetMstUser(UserId, UserName, "123456", "", "", 1, Convert.ToInt32(DateTime.Now.ToString("yyyyMMdd")), Convert.ToInt32(DateTime.Now.AddYears(1).ToString("yyyyMMdd")), DateTime.Now, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                    if ((_ServicesSoapClient.SetPhoneNo(UserId, "PhoneNo", Request.Form["PhoneNo"], user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType))==1)
+                    {
+                        flag = true;
+                    }
                     if (_ServicesSoapClient.SetPsRoleMatch(UserId, "Patient", "", "1", "") == 1)
                     {
                         flag = true;
@@ -627,8 +663,86 @@ namespace CDMIS.Controllers
         public JsonResult AddNewPat()
         {
             var res = new JsonResult();
-            string UserId = _ServicesSoapClient.GetNoByNumberingType(1);   //"1":患者Id的生成方式
+            string UserId = _ServicesSoapClient.GetNoByNumberingType(17);   //"1":患者Id的生成方式
             res.Data = UserId;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+
+        //检查手机号码是否已存在
+        public JsonResult checkPhoneNoRepeat(string PhoneNo)
+        {
+            var res = new JsonResult();
+            int result = _ServicesSoapClient.CheckRepeat(PhoneNo, "PhoneNo");
+            res.Data = result;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+
+        //根据手机号码获取Id
+        public JsonResult GetIDByPhoneNo(string PhoneNo)
+        {
+            var res = new JsonResult();
+            string UserId = _ServicesSoapClient.GetIDByInput("PhoneNo", PhoneNo);
+            res.Data = UserId;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+
+        //根据Id获取角色
+        public JsonResult GetRolesByUserId(string UserId)
+        {
+            var res = new JsonResult();
+            List<string> RoleList = new List<string>();
+
+            DataSet roleDs = _ServicesSoapClient.GetAllRoleMatch(UserId);
+            if (roleDs.Tables.Count != 0)
+            {
+                DataTable roleDt = roleDs.Tables[0];
+                foreach (DataRow dr in roleDt.Rows)
+                {
+                    RoleList.Add(dr["RoleClass"].ToString());
+                }
+            }
+            res.Data = RoleList;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+
+        //根据Id获取手机号码
+        public JsonResult GetPhoneNoByUserId(string UserId)
+        {
+            var res = new JsonResult();
+            string PhoneNo = _ServicesSoapClient.GetPhoneNoByUserId(UserId);
+            if (PhoneNo == null)
+            {
+                PhoneNo = "";
+            }
+            res.Data = PhoneNo;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+
+        //插入用户相关信息和角色信息
+        public JsonResult setMstUserPhoneNoRoleMatch(string UserId,string PhoneNo)
+        {
+            var user = Session["CurrentUser"] as UserAndRole;
+
+            var res = new JsonResult();
+            int result = 0;
+           
+            if ((_ServicesSoapClient.SetMstUser(UserId, "", "123456", "", "", 1, Convert.ToInt32(DateTime.Now.ToString("yyyyMMdd")), Convert.ToInt32(DateTime.Now.AddYears(1).ToString("yyyyMMdd")), DateTime.Now, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType)) == true)
+            {
+                if ((_ServicesSoapClient.SetPhoneNo(UserId, "PhoneNo", PhoneNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType)) == 1)
+                {
+                    if (_ServicesSoapClient.SetPsRoleMatch(UserId, "Patient", "", "1", "") == 1)
+                    {
+                        result = 1;
+                    }
+                }
+            }
+            //int result = _ServicesSoapClient.CheckRepeat(PhoneNo, "PhoneNo");
+            res.Data = result;
             res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             return res;
         }
@@ -654,72 +768,75 @@ namespace CDMIS.Controllers
             ArrayList modulesBoughtCode = new ArrayList();
             ArrayList modulesBoughtName = new ArrayList();
 
-            foreach (DataTable datatable in ItemInfoBoughtds.Tables)
+            if (ItemInfoBoughtds!=null)
             {
-                List<PatientDetailInfo> items = new List<PatientDetailInfo>();
-
-                foreach (DataRow row in datatable.Rows)
+                foreach (DataTable datatable in ItemInfoBoughtds.Tables)
                 {
-                    if (row[3].ToString() != "InvalidFlag")
-                    {
-                        if (row[3].ToString() == "Doctor")
-                        {
-                            PatientDetailInfo item = new PatientDetailInfo()
-                            {
-                                //PatientId = row[0].ToString(),
-                                CategoryCode = row[1].ToString(),
-                                CategoryName = row[2].ToString(),
-                                ItemCode = row[3].ToString(),
-                                ItemName = row[4].ToString(),
-                                ParentCode = row[5].ToString(),
-                                //ControlType = row[11].ToString(),
-                                // OptionCategory = row[12].ToString(),
-                                //OptionSelected = row[0].ToString(),
-                                //OptionList = row[0],
-                                //ItemSeq = Convert.ToInt32(row[6]),
-                                Value = row[7].ToString(),
-                                //Content = row[9].ToString()
-                                Content = _ServicesSoapClient.GetUserName(row[7].ToString())
-                                //Description = row[9].ToString()
-                            };
+                    List<PatientDetailInfo> items = new List<PatientDetailInfo>();
 
-                            if (item.Value == DoctorId)
+                    foreach (DataRow row in datatable.Rows)
+                    {
+                        if (row[3].ToString() != "InvalidFlag")
+                        {
+                            if (row[3].ToString() == "Doctor")
                             {
-                                item.EditDeleteFlag = "true";
+                                PatientDetailInfo item = new PatientDetailInfo()
+                                {
+                                    //PatientId = row[0].ToString(),
+                                    CategoryCode = row[1].ToString(),
+                                    CategoryName = row[2].ToString(),
+                                    ItemCode = row[3].ToString(),
+                                    ItemName = row[4].ToString(),
+                                    ParentCode = row[5].ToString(),
+                                    //ControlType = row[11].ToString(),
+                                    // OptionCategory = row[12].ToString(),
+                                    //OptionSelected = row[0].ToString(),
+                                    //OptionList = row[0],
+                                    //ItemSeq = Convert.ToInt32(row[6]),
+                                    Value = row[7].ToString(),
+                                    //Content = row[9].ToString()
+                                    Content = _ServicesSoapClient.GetUserName(row[7].ToString())
+                                    //Description = row[9].ToString()
+                                };
+
+                                if (item.Value == DoctorId)
+                                {
+                                    item.EditDeleteFlag = "true";
+                                }
+                                else
+                                {
+                                    item.EditDeleteFlag = "false";
+                                }
+                                items.Add(item);
                             }
                             else
                             {
-                                item.EditDeleteFlag = "false";
+                                PatientDetailInfo item = new PatientDetailInfo()
+                                {
+                                    //PatientId = row[0].ToString(),
+                                    CategoryCode = row[1].ToString(),
+                                    CategoryName = row[2].ToString(),
+                                    ItemCode = row[3].ToString(),
+                                    ItemName = row[4].ToString(),
+                                    ParentCode = row[5].ToString(),
+                                    ControlType = row[11].ToString(),
+                                    OptionCategory = row[12].ToString(),
+                                    //OptionSelected = row[0].ToString(),
+                                    //OptionList = row[0],
+                                    //ItemSeq = Convert.ToInt32(row[6]),
+                                    Value = row[7].ToString(),
+                                    Content = row[8].ToString()
+                                    //Description = row[9].ToString()
+                                };
+                                item.OptionList = GetTypeList(item.OptionCategory, item.Value);  //通过yesornoh和value，结合字典表，生成有值的下拉框
+                                items.Add(item);
                             }
-                            items.Add(item);
-                        }
-                        else
-                        {
-                            PatientDetailInfo item = new PatientDetailInfo()
-                            {
-                                //PatientId = row[0].ToString(),
-                                CategoryCode = row[1].ToString(),
-                                CategoryName = row[2].ToString(),
-                                ItemCode = row[3].ToString(),
-                                ItemName = row[4].ToString(),
-                                ParentCode = row[5].ToString(),
-                                ControlType = row[11].ToString(),
-                                OptionCategory = row[12].ToString(),
-                                //OptionSelected = row[0].ToString(),
-                                //OptionList = row[0],
-                                //ItemSeq = Convert.ToInt32(row[6]),
-                                Value = row[7].ToString(),
-                                Content = row[8].ToString()
-                                //Description = row[9].ToString()
-                            };
-                            item.OptionList = GetTypeList(item.OptionCategory, item.Value);  //通过yesornoh和value，结合字典表，生成有值的下拉框
-                            items.Add(item);
                         }
                     }
+                    modulesBoughtCode.Add(items[0].CategoryCode);
+                    modulesBoughtName.Add(items[0].CategoryName);
+                    ItemInfoBought.Add(items);
                 }
-                modulesBoughtCode.Add(items[0].CategoryCode);
-                modulesBoughtName.Add(items[0].CategoryName);
-                ItemInfoBought.Add(items);
             }
             model.PatientDetailInfo = ItemInfoBought;
 
@@ -821,36 +938,39 @@ namespace CDMIS.Controllers
                 ArrayList modulesBoughtCode = new ArrayList();
                 ArrayList modulesBoughtName = new ArrayList();
 
-                foreach (DataTable datatable in ItemInfoBoughtds.Tables)
+                if (ItemInfoBoughtds != null)
                 {
-                    List<PatientDetailInfo> items = new List<PatientDetailInfo>();
-                    foreach (DataRow row in datatable.Rows)
+                    foreach (DataTable datatable in ItemInfoBoughtds.Tables)
                     {
-                        if (row[3].ToString() != "InvalidFlag")
+                        List<PatientDetailInfo> items = new List<PatientDetailInfo>();
+                        foreach (DataRow row in datatable.Rows)
                         {
-                            PatientDetailInfo item = new PatientDetailInfo
+                            if (row[3].ToString() != "InvalidFlag")
                             {
-                                //PatientId = row[0].ToString(),
-                                CategoryCode = row[1].ToString(),
-                                CategoryName = row[2].ToString(),
-                                ItemCode = row[3].ToString(),
-                                ItemName = row[4].ToString(),
-                                ParentCode = row[5].ToString(),
-                                //ControlType = row[11].ToString(),
-                                // OptionCategory = row[12].ToString(),
-                                //OptionSelected = row[0].ToString(),
-                                //OptionList = row[0],
-                                //ItemSeq = Convert.ToInt32(row[6]),
-                                Value = row[7].ToString(),
-                                Content = row[8].ToString(),
-                                //Description = row[9].ToString()
-                            };
-                            items.Add(item);
+                                PatientDetailInfo item = new PatientDetailInfo
+                                {
+                                    //PatientId = row[0].ToString(),
+                                    CategoryCode = row[1].ToString(),
+                                    CategoryName = row[2].ToString(),
+                                    ItemCode = row[3].ToString(),
+                                    ItemName = row[4].ToString(),
+                                    ParentCode = row[5].ToString(),
+                                    //ControlType = row[11].ToString(),
+                                    // OptionCategory = row[12].ToString(),
+                                    //OptionSelected = row[0].ToString(),
+                                    //OptionList = row[0],
+                                    //ItemSeq = Convert.ToInt32(row[6]),
+                                    Value = row[7].ToString(),
+                                    Content = row[8].ToString(),
+                                    //Description = row[9].ToString()
+                                };
+                                items.Add(item);
+                            }
                         }
+                        modulesBoughtCode.Add(items[0].CategoryCode);
+                        modulesBoughtName.Add(items[0].CategoryName);
+                        ItemInfoBought.Add(items);
                     }
-                    modulesBoughtCode.Add(items[0].CategoryCode);
-                    modulesBoughtName.Add(items[0].CategoryName);
-                    ItemInfoBought.Add(items);
                 }
                 model.PatientDetailInfo = ItemInfoBought;
                 #endregion
@@ -2207,9 +2327,23 @@ namespace CDMIS.Controllers
             res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             return res;
         }
+
+        public JsonResult GetIntegrationBasicData(string UserId, string PatientId, string HospitalCode)
+        {
+            //UserId: CDMISPatientId, PatientId: "10156471", StartDateTime: 0, HospitalCode: "HJZYY"
+            HttpContext.Server.ScriptTimeout = 600;
+            var res = new JsonResult();
+
+            WebReferenceJC.resSetPatient resInfo = regionCenterWeb.GetBasicInfo(UserId, PatientId, HospitalCode);
+
+            res.Data = resInfo.Status.ToString();
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
         #endregion
 
         #region function CSQ
+
         //获取患者个人信息
         public Models.PatientBasicInfo GetPatientBasicInfo(string UserId)
         {
@@ -2477,17 +2611,17 @@ namespace CDMIS.Controllers
         public BasicProfileViewModel GetPatientInfoDetail(ref BasicProfileViewModel model)
         {
             string PatientId = model.Patient.UserId;
-            DataSet basicInfoDtl = _ServicesSoapClient.GetPatientBasicInfoDetail(PatientId, "Contact");
-            if (basicInfoDtl.Tables[0].Rows.Count > 0)
-            {
-                model.Patient.IDNo = basicInfoDtl.Tables[0].Rows[0]["Value"].ToString();
-                model.Occupation = basicInfoDtl.Tables[0].Rows[1]["Value"].ToString();
-                model.Nationality = basicInfoDtl.Tables[0].Rows[2]["Value"].ToString();
-                model.Phone = basicInfoDtl.Tables[0].Rows[3]["Value"].ToString();
-                model.Address = basicInfoDtl.Tables[0].Rows[4]["Value"].ToString();
-                model.EmergencyContact = basicInfoDtl.Tables[0].Rows[5]["Value"].ToString();
-                model.EmergencyContactNumber = basicInfoDtl.Tables[0].Rows[6]["Value"].ToString();
-            }
+            var basicInfoDtl = _ServicesSoapClient.GetPatientDetailInfo(PatientId);
+
+
+            model.Patient.IDNo = basicInfoDtl.IDNo;
+            model.Occupation = basicInfoDtl.Occupation;
+            model.Nationality = basicInfoDtl.Nationality;
+            model.Phone = basicInfoDtl.PhoneNumber;
+            model.Address = basicInfoDtl.HomeAddress;
+            model.EmergencyContact = basicInfoDtl.EmergencyContact;
+            model.EmergencyContactNumber = basicInfoDtl.EmergencyContactPhoneNumber;
+
             return model;
         }
 

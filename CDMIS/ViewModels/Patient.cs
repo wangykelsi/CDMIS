@@ -52,6 +52,11 @@ namespace CDMIS.ViewModels
             return CommonVariables.GetModuleList();
         }
 
+        public List<SelectListItem> HospitalList()
+        {
+            return CommonVariables.GetHospitalList();
+        }
+
         public string[] DoctorIdSelected { get; set; }      //CSQ 20141213  选中的医生
         public List<SelectListItem> DoctorList { get; set; }
         
