@@ -31,7 +31,7 @@
 <div style="height: 40px;">
     <ul id="nav">
         <li>
-            @Html.ActionLink("个人信息", "BasicProfile", "DoctorHome", new { PatientId = @Model.Patient.UserId }, new { target = "_self" })</li>
+            @Html.ActionLink("个人信息", "BasicProfile", "DoctorHome", new { PatientId = @Model.Patient.UserId, Role = "Patient" }, new { target = "_self" })</li>
         <li>
             @Html.ActionLink("健康模块", "ModuleProfile", "DoctorHome", new { PatientId = @Model.Patient.UserId }, new { target = "_self" })</li>
         <li>

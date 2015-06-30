@@ -346,7 +346,7 @@
         switch ($(this).attr('id')) {
             case "ProfileLink":
                 {
-                    $(this).parent().attr('href', "/DoctorHome/BasicProfile" + "?PatientId=" + content);
+                    $(this).parent().attr('href', "/DoctorHome/BasicProfile" + "?PatientId=" + content + "&Role=" + "Patient");
                     break;
                 }
 //            case "TreatmentLink":
