@@ -223,6 +223,28 @@ namespace CDMIS.Controllers
             userInfoVM.RowCount = Row;
         }
 
+        //获取用户基本信息
+        public JsonResult GetUserInfoById(string UId)
+        {
+            var res = new JsonResult();
+
+            string ret = "";
+            string Class = "";
+            System.Data.DataTable userListDT = _ServicesSoapClient.GetUserInfoList(UId, "").Tables[0];
+            string UserName = userListDT.Rows[0]["UserName"].ToString();
+            string Password = userListDT.Rows[0]["Password"].ToString();
+            string EndDate = userListDT.Rows[0]["EndDate"].ToString();
+            ret = UserName + "_" + Password + "_" + EndDate;
+            foreach (DataRow row in userListDT.Rows)
+            {
+                Class = row["Class"].ToString();
+                ret = ret + "_" + Class;
+            }
+            res.Data = ret;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+
         //获取默认密码有效期
         public JsonResult GetDefaultEndTime()
         {
@@ -294,13 +316,20 @@ namespace CDMIS.Controllers
             IsSaved = _ServicesSoapClient.SetMstUserUM(UserId, UserName, Password, Class, intEndDate, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
             if (userClassCode == "Patient")
             {
-                IsSaved = _ServicesSoapClient.SetPatName(UserId, UserName);
+                if (NewFlag == 0)
+                {
+                    IsSaved = _ServicesSoapClient.SetPatName(UserId, UserName);
+                }
+                else
+                {
+                    //此界面不涉及病人新建
+                }
             }
             else
             {
                 string Code = "";
                 IsSaved = _ServicesSoapClient.SetDocName(UserId, UserName);
-                if (NewFlag == 1)
+                if (NewFlag != 0)
                 {
                     if (userClassCode == "Administrator")
                     {
@@ -400,7 +429,8 @@ namespace CDMIS.Controllers
 
             if ((userClass == "Doctor") || (userClass == "HealthCoach"))
             {
-                No = _ServicesSoapClient.GetNoByNumberingType(4);
+                //No = _ServicesSoapClient.GetNoByNumberingType(4);
+                No = _ServicesSoapClient.GetNoByNumberingType(17);
             }
             else if (userClass == "Administrator")
             {
@@ -411,6 +441,17 @@ namespace CDMIS.Controllers
                 No = "";
             }
             res.Data = No;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+        
+        //检查手机号是否存在
+        public JsonResult checkPhoneNoExist(string PhoneNo)
+        {
+            var res = new JsonResult();
+            int isExist = _ServicesSoapClient.CheckRepeat(PhoneNo, "PhoneNo");
+
+            res.Data = isExist;
             res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             return res;
         }
