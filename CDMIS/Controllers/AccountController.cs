@@ -85,9 +85,9 @@ namespace CDMIS.Controllers
                                     CurrentUser.Role = "Doctor";
                                 }
                             }
-                            //CurrentUser.UserName = UserName;
-                            CurrentUser.TerminalName = Dns.GetHostName();
-                            string hostAddress = Request.ServerVariables.Get("Local_Addr").ToString();
+                            //CurrentUser.TerminalName = Dns.GetHostName();
+                            CurrentUser.TerminalName = Request.ServerVariables.Get("Remote_Host").ToString();
+                            string hostAddress = Request.ServerVariables.Get("Remote_Addr").ToString();
                             if (hostAddress == "::1")
                             {
                                 hostAddress = "127.0.0.1";
