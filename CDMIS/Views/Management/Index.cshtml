@@ -31,7 +31,7 @@
          width:500px;
      }
 </style>
-<div width="100%" style="border: 0;">
+<div  style="width:100%;border: 0;">
     @using (Ajax.BeginForm("UserPartialView", "Management", null,
                             new AjaxOptions
                             {
@@ -76,31 +76,31 @@
     <fieldset style="width: 100%; height: 700px">
         <legend>用户信息列表</legend>
         <div id="UserSearchContainer">
-            <table width="100%" id="UserListDT" class="display">
+            <table  id="UserListDT" class="display">
                 <thead class="fixedHeader">
                     <tr>
-                        <th width="10%">
+                        <th >
                             用户ID
                         </th>
-                        <th width="10%">
+                        <th >
                             姓名
                         </th>
-                        <th width="10%">
+                        <th >
                             密码
                         </th>
                         <th  style="display: none;">
                             用户类别编码
                         </th>
-                        <th width="10%">
+                        <th >
                             用户类别
                         </th>
-                        <th width="10%">
+                        <th >
                             密码有效期
                         </th>
-                        <th width="10%">
+                        <th >
                             手机号
                         </th>
-                        <th width="20%">
+                        <th >
                             操作
                         </th>
                     </tr>
@@ -111,21 +111,21 @@
                         foreach (var item in Model.UserList)
                         {
                         <tr class="normalRow">
-                            <td width="10%">@item.UserId
+                            <td >@item.UserId
                             </td>
-                            <td width="10%">@item.UserName
+                            <td >@item.UserName
                             </td>
-                            <td width="10%">@item.Password
+                            <td >@item.Password
                             </td>
-                            <td width="10%" style="display: none;">@item.Class
+                            <td  style="display: none;">@item.Class
                             </td>
-                            <td width="10%">@item.ClassName
+                            <td >@item.ClassName
                             </td>
-                            <td width="10%">@item.EndDate
+                            <td >@item.EndDate
                             </td>
-                            <td width="10%">@item.PhoneNo
+                            <td >@item.PhoneNo
                             </td>
-                            <td width="20%">
+                            <td >
                                 @if(@item.Class=="Administrator")
                                 {
                                     <input type="button" value="新建角色" class="btn btn-primary newroleBtn" disabled="disabled"/>
@@ -161,18 +161,23 @@
                 <label class="col-sm-4 control-label">
                     *手机号</label>
                 <div class="col-sm-8">
-                    @*@Html.TextBoxFor(model => model.Patient.PhoneNo, new { id = "PhoneNo1", name = "PhoneNo1", @class = "form-control" })*@
-
-                    <input  id = "PhoneNo1", name = "PhoneNo1", class = "form-control" ,value=""/> 
+                    <input  id = "PhoneNo1"  name = "PhoneNo1"  class = "form-control"  style="width:65%;float:left;" value=""/>
+                    <button id="checkPhoneNo1"  class="btn btn-primary" style="width:33%;float:right;" >验证手机号</button>
                     <p id="phoneWrn1" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
+                    <div id="phoneWrn2Div">
+                        <p id="phoneWrn2" style="font-size: 16px; color: #FF0000; font-weight: bold;float:left;">是否新建管理员？</p>
+                        <button id="checkPhoneNo2"  class="btn btn-primary" style="width:33%;float:right" >确认</button>
+                    </div>
                 </div>
+                
             </div>
 
             <div class="form-group" id="New" style="display: none">
                 <label class="col-sm-4 control-label">
                     用户类别</label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(m => m.Patient.Class, Model.RoleClassList(), new { id = "newUserClass", @onchange = "New()", style = "font-size:18px", @class = "form-control" })
+                    @Html.DropDownListFor(m => m.Patient.Class, Model.RoleClassList(), new { id = "newUserClass", style = "width:65%;float:left;font-size:18px", @onchange = "UserClassChanged()", @class = "form-control" })
+                    <button id="checknewUserClass"  class="btn btn-primary" style="width:33%;float:right" >确认</button>
                 </div>
             </div>
 
@@ -191,7 +196,7 @@
                     @Html.TextBoxFor(m => m.Patient.UserName, new { id = "txtUserName", @class = "form-control" })
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="userClassListDiv">
                 <label class="col-sm-4 control-label">
                     用户类别</label>
                 <div class="col-sm-8">
@@ -256,7 +261,7 @@
                 <label class="col-sm-4 control-label">
                     模块</label>
                 <div class="col-sm-8">
-                    @Html.ListBoxFor(m => m.models, Model.ModelsTypeList, new { id = "Modules", @class = "form-control chzn-select", multiple = "multiple", style = "font-size:34px;width:100%;height:34px;" })
+                    @Html.ListBoxFor(m => m.models, Model.ModelsTypeList, new { id = "Modules", @class = "form-control chzn-select", multiple = "multiple", style = "font-size:34px;width:280px;height:34px;" })
                 </div>
             </div>
             <div class="form-group">
@@ -299,6 +304,9 @@
 </div>
 <script type="text/javascript">
     var newflag = 0;
+    var OriPhoneNo = "";
+    var UId = "";
+
     function hide() {
         var target = document.getElementById("UserListDT");
         target.style.display = "none";
@@ -316,7 +324,7 @@
             "oLanguage": {//语言国际化
                 "sUrl": "/Content/jquery.dataTable.cn.txt"
             },
-            "bAutoWidth": false,
+            "bAutoWidth": true,
             "bPaginate": false,  //是否分页。
             "sScrollX": "100%",
             "sScrollY": "500px",
@@ -324,6 +332,8 @@
             "bFilter": false
 
         });
+
+        $("#UserListDT").attr("width", "auto");
 
         //$(".chosen").trigger('liszt:updated');
         $('.chzn-select').chosen({
@@ -355,11 +365,12 @@
         newflag = 0;
         $('#PhoneNoDiv').css("display", "block");
         $('#PhoneNo1Div').css("display", "none");
-
+        $('#userClassListDiv').css("display", "block");
+        
         $('#New').css("display", "none");
         $('#phoneWrn').css("display", "none");
         $('#UIdWrn').css("display", "none");
-        
+
         trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
         var txtUserId = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
 
@@ -378,7 +389,7 @@
 
         document.getElementById("EndDate").value = EndDate;
         $("#PhoneNo").val(GetPhoneNo(userId));
-
+        OriPhoneNo = document.getElementById("PhoneNo").value;
         if (userClassCode == 'HealthCoach') {
             $('#CoachAndDoc').css("display", "block");
             $('#DocMod').css("display", "none");
@@ -397,7 +408,7 @@
             //$("#Modules").removeClass("chosen");
             //          $("#Modules").trigger("liszt:updated");
             //          $("#Modules").chosen();
-            GetDoctorDetailInfo(userId, userClassCode);
+
 
             $('#setUserInfo').modal({
                 closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
@@ -405,12 +416,12 @@
                 overlayClose: true     //点击蒙层关闭窗口
             });
 
-            $("#Modules").trigger("liszt:updated");
-            $("#Modules").chosen();
-
+            //            $("#Modules").trigger("liszt:updated");
+            //            $("#Modules").chosen();
+            GetDoctorDetailInfo(userId, userClassCode);
         }
         else {
-            
+
             $('#CoachAndDoc').css("display", "none");
             $('#DocMod').css("display", "none");
             $('#setUserInfo').modal({
@@ -430,6 +441,99 @@
         DeleteData(Code);
     });
 
+    //删除按钮触发
+    $(".newroleBtn").click(function () {
+        newflag = 2;
+        var strlist = document.getElementById("newUserClass"); //获取Listbox 
+        for (var j = 0; j < strlist.options.length; j++) {
+            strlist.options[j].hidden = false;
+        }
+
+        $('#PhoneNo1Div').css("display", "none");
+        $('#PhoneNoDiv').css("display", "block");
+        $('#phoneWrn2Div').css("display", "none");
+        $('#phoneWrn1').css("display", "none");
+        $('#UIdWrn').css("display", "none");
+        $('#userClassListDiv').css("display", "none");
+        $('#newUserClass').removeAttr('disabled');
+        $('#checknewUserClass').removeAttr('disabled');
+
+        trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
+        var txtUserId = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
+        UId = txtUserId;
+        document.getElementById("txtUserId").value = txtUserId;
+        var userId = txtUserId;
+        var txtUserName = $("#TableBody tr:eq(" + trSeq + ") td:eq(1)").text().trim();
+        document.getElementById("txtUserName").value = txtUserName;
+        var txtPassword = $("#TableBody tr:eq(" + trSeq + ") td:eq(2)").text().trim();
+        document.getElementById("txtPassword").value = txtPassword;
+        var userClassCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
+
+        var userClass = $("#TableBody tr:eq(" + trSeq + ") td:eq(4)").text().trim();
+        document.getElementById("userClassList").value = userClass;
+        document.getElementById("userClassCode").value = userClassCode;
+        var EndDate = $("#TableBody tr:eq(" + trSeq + ") td:eq(5)").text().trim();
+
+        document.getElementById("EndDate").value = EndDate;
+        $("#PhoneNo").val(GetPhoneNo(userId));
+
+
+        $('#New').css("display", "block");
+        $('#CoachAndDoc').css("display", "none");
+        $('#DocMod').css("display", "none");
+
+
+        $('#setUserInfo').modal({
+            closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
+            containerId: 'reminder-container',
+            overlayClose: true     //点击蒙层关闭窗口
+        });
+        var ret = "";
+
+        $.ajax({
+            url: "/Management/GetUserInfoById",
+            type: "GET",
+            dataType: "json",
+            async: false,
+            data: { UId: userId },
+            success: function (res) {
+                if (res != null) {
+                    ret = res.toString();
+
+                    var UserName = res.split("_")[0];
+                    var Password = res.split("_")[1];
+                    var EndDate = res.split("_")[2];
+                    document.getElementById("txtUserName").value = UserName;
+                    document.getElementById("txtPassword").value = Password;
+                    document.getElementById("EndDate").value = EndDate;
+
+                    var strlist = document.getElementById("newUserClass"); //获取Listbox 
+
+                    var len = res.split("_").length - 3;
+                    var Class = "";
+                    for (i = 0; i < len; i++) {
+                        Class = res.split("_")[3 + i];
+                        if (strlist.options.length > 0) {
+                            for (var j = 0; j < strlist.options.length; j++) {
+                                if (strlist.options[j].value == Class) {
+                                    strlist.options[j].hidden = true;
+                                }
+                            }
+                        }
+                    }
+
+
+
+
+                }
+                else {
+                    ret = "";
+                }
+            }
+        });
+    });
+
+    
 
     function trim(str) {  //删除左右两端的空格
         return str.replace(/(^\s*)|(\s*$)/g, "");
@@ -446,10 +550,13 @@
     $("#NewRole").on('click', function () {
         $('#PhoneNo1Div').css("display", "block");
         $('#PhoneNoDiv').css("display", "none");
-
+        $('#phoneWrn2Div').css("display", "none");
         $('#phoneWrn1').css("display", "none");
         $('#UIdWrn').css("display", "none");
-
+        $('#userClassListDiv').css("display", "none");
+        $('#newUserClass').attr('disabled', "disabled");
+        $('#checknewUserClass').attr('disabled', "disabled");
+        
         newflag = 1;
         var defaultEndTime;
         $.ajax({                                                //初始化日期控件为系统当前时间+1年（默认密码有效期为一年）
@@ -480,14 +587,20 @@
             containerId: 'reminder-container',
             overlayClose: true     //点击蒙层关闭窗口
         });
+
+
+        var strlist = document.getElementById("newUserClass"); //获取Listbox 
+        for (var j = 0; j < strlist.options.length; j++) {
+            strlist.options[j].hidden = false;
+        }
     });
 
-    function New() {
-        //$("#newUserClass").val("0");
-        var UId = "";
+    
+    $('#checkPhoneNo1').on('click', function () {
+
         $('#phoneWrn1').css("display", "none");
         var PhoneNo1 = document.getElementById("PhoneNo1").value;
-        if (PhoneNo1 == undefined) {PhoneNo1 = ""; }
+        if (PhoneNo1 == undefined) { PhoneNo1 = ""; }
         if (PhoneNo1.match(/^\d{11}$/) == null) {
             //alert("请输入11位手机号");
             event.preventDefault();
@@ -496,14 +609,13 @@
             $('#phoneWrn1').html(Text);
             $('#phoneWrn1').css("display", "block");
 
-
         }
         else {
-            var clslist = document.getElementById("newUserClass");
-            var userClass = clslist.options[clslist.selectedIndex].text;
-            var userClassCode = clslist.options[clslist.selectedIndex].value;
-            var defaultEndTime;
-
+            //document.getElementById("PhoneNo1").disabled =
+            $("#PhoneNo1").attr("disabled", "disabled");
+            $("#checkPhoneNo1").attr("disabled", "disabled");
+            $('#newUserClass').removeAttr('disabled');
+            //$('#checknewUserClass').removeAttr('disabled');
             //此处判断该手机号有无用户Id
             $.ajax({
                 url: "/Management/GetUIdByPhoneNo",
@@ -512,85 +624,108 @@
                 async: false,
                 data: { PhoneNo: PhoneNo1 },
                 success: function (res) {
-                    UId = res.toString();
+                    if (res != null) {
+                        UId = res.toString();
+                    }
+                    else {
+                        UId = "";
+                    }
                 }
             });
+            if (UId != "") {
+                document.getElementById("txtUserId").value = UId;
+                var Text = "该手机号已注册,请选择其他类型！";
+
+                $('#phoneWrn1').html(Text);
+                $('#phoneWrn1').css("display", "block");
 
 
-            $.ajax({                                                //初始化日期控件为系统当前时间+1年（默认密码有效期为一年）
-                url: "/Management/GetDefaultEndTime",
-                type: "GET",
-                dataType: "json",
-                async: false,
-                data: {},
-                success: function (res) {
-                    defaultEndTime = res.toString();
-                }
-            });
+                $('#phoneWrn2Div').css("display", "none");
 
-            if (userClassCode == '0') {
-                document.getElementById("txtUserId").value = "";
-                document.getElementById("txtUserName").value = "";
-                document.getElementById("txtPassword").value = "";
-                $("#userClassList").val("");
-                $("#userClassCode").val("");
-                document.getElementById("EndDate").value = defaultEndTime;
+                var ret = "";
 
-            }
+                $.ajax({
+                    url: "/Management/GetUserInfoById",
+                    type: "GET",
+                    dataType: "json",
+                    async: false,
+                    data: { UId: UId },
+                    success: function (res) {
+                        if (res != null) {
+                            ret = res.toString();
 
-            else 
-            {
-                if (UId == "") {
-                    $.ajax({
-                        url: "/Management/GetRoleNo",
-                        type: "GET",
-                        dataType: "json",
-                        async: false,
-                        data: { userClass: userClassCode },
-                        success: function (res) {
-                            var userId = res;
-                            if (userId != "") 
-                            {
-                                document.getElementById("txtUserId").value = userId;
-                                document.getElementById("txtUserName").value = "";
-                                document.getElementById("txtPassword").value = "";
-                                $("#userClassList").val(userClass);
-                                $("#userClassCode").val(userClassCode);
-                                document.getElementById("EndDate").value = defaultEndTime;
-                                document.getElementById("PhoneNo").value = "";
+                            var UserName = res.split("_")[0];
+                            var Password = res.split("_")[1];
+                            var EndDate = res.split("_")[2];
+                            document.getElementById("txtUserName").value = UserName;
+                            document.getElementById("txtPassword").value = Password;
+                            document.getElementById("EndDate").value = EndDate;
 
-                                if (userClassCode == 'HealthCoach') {
-                                    $('#CoachAndDoc').css("display", "block");
-                                    $('#DocMod').css("display", "none");
-                                    GetDoctorDetailInfo(userId, userClassCode);
-
-
-                                }
-                                else if (userClassCode == 'Doctor') {
-                                    $('#CoachAndDoc').css("display", "block");
-                                    $('#DocMod').css("display", "block");
-                                    //                        $("#Modules").chosen();
-                                    //                        $("#Modules").trigger("chosen:updated");
-                                    GetDoctorDetailInfo(userId, userClassCode);
-
-
-                                    $("#Modules").trigger("liszt:updated");
-                                    $("#Modules").chosen();
-
-                                }
-                                else {
-                                    $('#CoachAndDoc').css("display", "none");
-                                    $('#DocMod').css("display", "none");
-
+                            var strlist = document.getElementById("newUserClass"); //获取Listbox 
+                            
+                            var len = res.split("_").length - 3;
+                            var Class = "";
+                            for (i = 0; i < len; i++) {
+                                Class = res.split("_")[3 + i];
+                                if (strlist.options.length > 0) {
+                                    for (var j = 0; j < strlist.options.length; j++) {
+                                        if (strlist.options[j].value == Class) {
+                                            strlist.options[j].hidden = true;
+                                        }
+                                    }
                                 }
                             }
 
+
+
+
                         }
-                    });
-                }
-                else 
-                {
-                    document.getElementById("txtUserId").value = UId;
+                        else {
+                            ret = "";
+                        }
+                    }
+                });
+                //$('#newUserClass').attr('disabled', "disabled");
+
+
+
+            }
+            else {
+
+            }
+        }
+    });
+
+    function UserClassChanged() {
+        var clslist = document.getElementById("newUserClass");
+        var userClass = clslist.options[clslist.selectedIndex].text;
+        var userClassCode = clslist.options[clslist.selectedIndex].value;
+
+        if (userClassCode != '0') {
+
+            $('#checknewUserClass').removeAttr('disabled');
+        }
+        else {
+            $('#checknewUserClass').attr('disabled', 'disabled');
+        }
+    }
+
+    $('#checkPhoneNo2').on('click', function () {
+        $('#phoneWrn1').css("display", "none");
+        $('#phoneWrn2Div').css("display", "none");
+
+        $("#newUserClass").val("Administrator");
+        var userClassCode = "Administrator";
+        $.ajax({
+            url: "/Management/GetRoleNo",
+            type: "GET",
+            dataType: "json",
+            async: false,
+            data: { userClass: userClassCode },
+            success: function (res) {
+                var userId = res;
+                if (userId != "") {
+                    document.getElementById("txtUserId").value = userId;
                     document.getElementById("txtUserName").value = "";
                     document.getElementById("txtPassword").value = "";
                     $("#userClassList").val(userClass);
@@ -598,40 +733,162 @@
                     document.getElementById("EndDate").value = defaultEndTime;
                     document.getElementById("PhoneNo").value = "";
 
-                    if (userClassCode == 'HealthCoach') {
-                        $('#CoachAndDoc').css("display", "block");
-                        $('#DocMod').css("display", "none");
-                        GetDoctorDetailInfo(UId, userClassCode);
 
-
-                    }
-                    else if (userClassCode == 'Doctor') {
-                        $('#CoachAndDoc').css("display", "block");
-                        $('#DocMod').css("display", "block");
-                        //                        $("#Modules").chosen();
-                        //                        $("#Modules").trigger("chosen:updated");
-                        GetDoctorDetailInfo(UId, userClassCode);
-
-
-                        $("#Modules").trigger("liszt:updated");
-                        $("#Modules").chosen();
-
-                    }
-                    else {
-                        $('#CoachAndDoc').css("display", "none");
-                        $('#DocMod').css("display", "none");
-
-                    }
-                 
+                    $('#CoachAndDoc').css("display", "none");
+                    $('#DocMod').css("display", "none");
                 }
+
             }
+        });
+    });
+
+
+    $('#checknewUserClass').on('click', function () {
+        //$("#newUserClass").val("0"); 
+        $('#phoneWrn1').css("display", "none");
+        $("#newUserClass").attr("disabled", "disabled");
+        $("#checknewUserClass").attr("disabled", "disabled");
+
+        var PhoneNo1 = document.getElementById("PhoneNo1").value;
+
+
+        var clslist = document.getElementById("newUserClass");
+        var userClass = clslist.options[clslist.selectedIndex].text;
+        var userClassCode = clslist.options[clslist.selectedIndex].value;
+
+
+
+        if (UId == "") {
+            $.ajax({
+                url: "/Management/GetRoleNo",
+                type: "GET",
+                dataType: "json",
+                async: false,
+                data: { userClass: userClassCode },
+                success: function (res) {
+                    var userId = res;
+                    if (userId != "") {
+                        document.getElementById("txtUserId").value = userId;
+                        document.getElementById("txtUserName").value = "";
+                        document.getElementById("txtPassword").value = "";
+                        $("#userClassList").val(userClass);
+                        $("#userClassCode").val(userClassCode);
+                    
+                        document.getElementById("PhoneNo").value = "";
+
+                        if (userClassCode == 'HealthCoach') {
+                            $('#CoachAndDoc').css("display", "block");
+                            $('#DocMod').css("display", "none");
+                            GetDoctorDetailInfo(userId, userClassCode);
+
+
+                        }
+                        else if (userClassCode == 'Doctor') {
+                            $('#CoachAndDoc').css("display", "block");
+                            $('#DocMod').css("display", "block");
+                            //$("#Modules").chosen();
+                            //$("#Modules").trigger("chosen:updated");
+                            GetDoctorDetailInfo(userId, userClassCode);
+
+
+                            $("#Modules").trigger("liszt:updated");
+                            $("#Modules").chosen();
+
+                        }
+                        else {
+                            $('#CoachAndDoc').css("display", "none");
+                            $('#DocMod').css("display", "none");
+
+                        }
+                    }
+
+                }
+            });
         }
-    }
+        else {
+        //获取用户基本信息
+            //document.getElementById("txtUserId").value = UId;
+
+            $("#userClassList").val(userClass);
+            $("#userClassCode").val(userClassCode);
+
+            //document.getElementById("PhoneNo").value = "";
+            if (userClassCode == 'Administrator') {
+                var userClassCode = "Administrator";
+                $.ajax({
+                    url: "/Management/GetRoleNo",
+                    type: "GET",
+                    dataType: "json",
+                    async: false,
+                    data: { userClass: userClassCode },
+                    success: function (res) {
+                        var userId = res;
+                        if (userId != "") {
+                            document.getElementById("txtUserId").value = userId;
+                            $("#userClassList").val(userClass);
+                            $("#userClassCode").val(userClassCode);
+                           
+
+
+                            $('#CoachAndDoc').css("display", "none");
+                            $('#DocMod').css("display", "none");
+                        }
+
+                    }
+                });
+
+            }
+            else if (userClassCode == 'HealthCoach') {
+                $('#CoachAndDoc').css("display", "block");
+                $('#DocMod').css("display", "none");
+                GetDoctorDetailInfo(UId, userClassCode);
+
+
+            }
+            else if (userClassCode == 'Doctor') {
+                $('#CoachAndDoc').css("display", "block");
+                $('#DocMod').css("display", "block");
+                //                        $("#Modules").chosen();
+                //                        $("#Modules").trigger("chosen:updated");
+                GetDoctorDetailInfo(UId, userClassCode);
+
+
+                $("#Modules").trigger("liszt:updated");
+                $("#Modules").chosen();
+
+            }
+            else {
+                $('#CoachAndDoc').css("display", "none");
+                $('#DocMod').css("display", "none");
+
+            }
+
+        }
+
+
+    });
+
+
 
     $("#Cancel").on('click', function () {
         $('#phoneWrn').css("display", "none");
         $('#phoneWrn1').css("display", "none");
         $('#UIdWrn').css("display", "none");
+        $('#phoneWrn2Div').css("display", "none");
+        $("#PhoneNo1").removeAttr("disabled");
+        $("#checkPhoneNo1").removeAttr("disabled");
+
+        $('#CoachAndDoc').css("display", "none");
+        $('#DocMod').css("display", "none");
+        if (newflag == 2) {
+            $("#newUserClass").removeAttr("disabled");
+            $("#checknewUserClass").removeAttr("disabled");
+        }
+        else {
+            $("#newUserClass").attr("disabled", "disabled");
+            $("#checknewUserClass").attr("disabled", "disabled");
+        }
+
 
         var defaultEndTime;
         $.ajax({                                                //初始化日期控件为系统当前时间+1年（默认密码有效期为一年）
@@ -661,7 +918,11 @@
 
         $('#txtUserId').attr('disabled', "disabled");
         $('#txtUserId').removeAttr('disabled');
-//        window.location.href = window.location.href;
+        //        window.location.href = window.location.href;
+        var strlist = document.getElementById("newUserClass"); //获取Listbox 
+        for (var j = 0; j < strlist.options.length; j++) {
+            strlist.options[j].hidden = false;
+        }
     });
 
     $("#Save").bind('click', function (event) {
@@ -681,11 +942,108 @@
 
 
             }
+            else {
+                var SetMstUserFlag = false;
+                var userId = document.getElementById("txtUserId").value;
+
+                if (userId == "") {
+
+                    event.preventDefault();
+                    var Text = "请选择一个用户！";
+                    $('#UIdWrn').html(Text);
+                    $('#UIdWrn').css("display", "block");
+
+                }
+                else {
+                    var UserName = document.getElementById("txtUserName").value;
+                    var Password = document.getElementById("txtPassword").value;
+                    var userClass = document.getElementById("userClassList").value;
+                    var userClassCode = document.getElementById("userClassCode").value;
+                    var EndDate = document.getElementById("EndDate").value;
+                    var PhoneNo = document.getElementById("PhoneNo").value;
+                    if (PhoneNo.match(/^\d{11}$/) == null) {
+                        //alert("请输入11位手机号");
+                        event.preventDefault();
+                        var Text = "请输入11位手机号！";
+
+                        $('#phoneWrn').html(Text);
+                        $('#phoneWrn').css("display", "block");
+
+
+                    }
+                    else {
+
+                        if (userId != "") {
+                            $.ajax({
+                                url: "/Management/setCmMstUser",
+                                type: "GET",
+                                dataType: "json",
+                                async: false,
+                                data: { UserId: userId, UserName: UserName, Password: Password, EndDate: EndDate, PhoneNo: PhoneNo, userClassCode: userClassCode, NewFlag: newflag },
+                                success: function (res) {
+                                    SetMstUserFlag = res;
+                                    //                alert(res);
+                                }
+                            });
+                        }
+                        if (SetMstUserFlag == 1) {
+                            if ((userClassCode == "Administrator") || (userClassCode == "Patient")) {
+                                location.reload();
+                            }
+                            else {
+                                var clslist = document.getElementById("UnitName");
+                                var UnitName = clslist.options[clslist.selectedIndex].value;
+                                var clslist = document.getElementById("Dept");
+                                var Dept = clslist.options[clslist.selectedIndex].value;
+                                var JobTitle = document.getElementById("JobTitle").value;
+
+                                //alert(PhoneNo);
+
+                                //获取多选框内容
+                                var strlist = document.getElementById("Modules"); //获取Listbox 
+                                var str = "";
+                                //遍历Listbox，取得选中项的值 
+                                if (strlist.options.length > 0) {
+                                    for (var i = 0; i < strlist.options.length; i++) {
+                                        if (strlist.options[i].selected == true) {
+                                            var j = strlist.options[i].value;
+                                            str += j + ","; //把Value值串起来
+                                        }
+                                    }
+                                    var strValue = str.replace(/,$/, ""); //去掉最后一个逗号 
+
+                                }
+                                else {
+                                    strValue = "";
+                                    alert("No Item in Listbox");
+                                }
+
+                                setDocDetailInfo(userId, userClassCode, UnitName, Dept, JobTitle, strValue);
+    
+                                location.reload();
+                            }
+
+                        }
+                    }
+                }
+            }
         }
-        else 
-        {
+        else if (newflag == 0) {
+            var Flag = "";
             var PhoneNo = document.getElementById("PhoneNo").value;
             if (PhoneNo == undefined) { PhoneNo = ""; }
+            $.ajax({
+                url: "/Management/checkPhoneNoExist",
+                type: "GET",
+                dataType: "json",
+                async: false,
+                data: { PhoneNo: PhoneNo },
+                success: function (res) {
+                    Flag = res.toString();
+
+                }
+            });
+
             if (PhoneNo.match(/^\d{11}$/) == null) {
                 //alert("请输入11位手机号");
                 event.preventDefault();
@@ -696,38 +1054,39 @@
 
 
             }
-        }
-        var SetMstUserFlag = false;
-        var userId = document.getElementById("txtUserId").value;
+            else if ((PhoneNo != OriPhoneNo) &&(Flag == "0")){
+                
+                    //0代表手机号已存在
+                    var Text = "手机号已存在！";
 
-        if (userId == "") {
+                    $('#phoneWrn').html(Text);
+                    $('#phoneWrn').css("display", "block");
 
-            event.preventDefault();
-            var Text = "请选择一个用户！";
-            $('#UIdWrn').html(Text);
-            $('#UIdWrn').css("display", "block");
-
-        }
-        else {
-            var UserName = document.getElementById("txtUserName").value;
-            var Password = document.getElementById("txtPassword").value;
-            var userClass = document.getElementById("userClassList").value;
-            var userClassCode = document.getElementById("userClassCode").value;
-            var EndDate = document.getElementById("EndDate").value;
-            var PhoneNo = document.getElementById("PhoneNo").value;
-            if (PhoneNo.match(/^\d{11}$/) == null) {
-                //alert("请输入11位手机号");
-                event.preventDefault();
-                var Text = "请输入11位手机号！";
-
-                $('#phoneWrn').html(Text);
-                $('#phoneWrn').css("display", "block");
-
-
+   
             }
             else {
+                var SetMstUserFlag = false;
+                var userId = document.getElementById("txtUserId").value;
 
-                if (userId != "") {
+                if (userId == "") {
+
+                    event.preventDefault();
+                    var Text = "请选择一个用户！";
+                    $('#UIdWrn').html(Text);
+                    $('#UIdWrn').css("display", "block");
+
+                }
+                else {
+                    var UserName = document.getElementById("txtUserName").value;
+                    var Password = document.getElementById("txtPassword").value;
+                    var userClass = document.getElementById("userClassList").value;
+                    var userClassCode = document.getElementById("userClassCode").value;
+                    var EndDate = document.getElementById("EndDate").value;
+                    var PhoneNo = document.getElementById("PhoneNo").value;
+
+
+
+                   
                     $.ajax({
                         url: "/Management/setCmMstUser",
                         type: "GET",
@@ -739,54 +1098,161 @@
                             //                alert(res);
                         }
                     });
-                }
-                if (SetMstUserFlag == 1) {
-                    if ((userClassCode == "Administrator") || (userClassCode == "Patient")) {
-                        location.reload();
-                    }
-                    else {
-                        var clslist = document.getElementById("UnitName");
-                        var UnitName = clslist.options[clslist.selectedIndex].value;
-                        var clslist = document.getElementById("Dept");
-                        var Dept = clslist.options[clslist.selectedIndex].value;
-                        var JobTitle = document.getElementById("JobTitle").value;
-
-                        //alert(PhoneNo);
-
-                        //获取多选框内容
-                        var strlist = document.getElementById("Modules"); //获取Listbox 
-                        var str = "";
-                        //遍历Listbox，取得选中项的值 
-                        if (strlist.options.length > 0) {
-                            for (var i = 0; i < strlist.options.length; i++) {
-                                if (strlist.options[i].selected == true) {
-                                    var j = strlist.options[i].value;
-                                    str += j + ","; //把Value值串起来
-                                }
-                            }
-                            var strValue = str.replace(/,$/, ""); //去掉最后一个逗号 
-
+                   
+                    if (SetMstUserFlag == 1) {
+                        if ((userClassCode == "Administrator") || (userClassCode == "Patient")) {
+                            location.reload();
                         }
                         else {
-                            strValue = "";
-                            alert("No Item in Listbox");
+                            var clslist = document.getElementById("UnitName");
+                            var UnitName = clslist.options[clslist.selectedIndex].value;
+                            var clslist = document.getElementById("Dept");
+                            var Dept = clslist.options[clslist.selectedIndex].value;
+                            var JobTitle = document.getElementById("JobTitle").value;
+
+                            //alert(PhoneNo);
+
+                            //获取多选框内容
+                            var strlist = document.getElementById("Modules"); //获取Listbox 
+                            var str = "";
+                            //遍历Listbox，取得选中项的值 
+                            if (strlist.options.length > 0) {
+                                for (var i = 0; i < strlist.options.length; i++) {
+                                    if (strlist.options[i].selected == true) {
+                                        var j = strlist.options[i].value;
+                                        str += j + ","; //把Value值串起来
+                                    }
+                                }
+                                var strValue = str.replace(/,$/, ""); //去掉最后一个逗号 
+
+                            }
+                            else {
+                                strValue = "";
+                                alert("No Item in Listbox");
+                            }
+
+                            setDocDetailInfo(userId, userClassCode, UnitName, Dept, JobTitle, strValue);
+                            location.reload();
                         }
 
-                        setDocDetailInfo(userId, userClassCode, UnitName, Dept, JobTitle, strValue);
-                        //                    event.preventDefault();
-                        //                    var Text = "保存成功！";
-                        //                    $('#successD').html(Text);
-                        //                    $('#success').modal({
-                        //                        closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                        //                        containerId: 'alert-container',
-                        //                        overlayClose: true     //点击蒙层关闭窗口
-                        //                    });
-                        location.reload();
+                    }
+                    
+                }
+            }
+        }
+        else if (newflag == 2) {
+            var Flag = "";
+            var PhoneNo = document.getElementById("PhoneNo").value;
+            if (PhoneNo == undefined) { PhoneNo = ""; }
+            $.ajax({
+                url: "/Management/checkPhoneNoExist",
+                type: "GET",
+                dataType: "json",
+                async: false,
+                data: { PhoneNo: PhoneNo },
+                success: function (res) {
+                    Flag = res.toString();
+
+                }
+            });
+
+            if (PhoneNo.match(/^\d{11}$/) == null) {
+                //alert("请输入11位手机号");
+                event.preventDefault();
+                var Text = "请输入11位手机号！";
+
+                $('#phoneWrn').html(Text);
+                $('#phoneWrn').css("display", "block");
+
+
+            }
+            else if ((PhoneNo != OriPhoneNo) && (Flag == "0")) {
+
+                //0代表手机号已存在
+                var Text = "手机号已存在！";
+
+                $('#phoneWrn').html(Text);
+                $('#phoneWrn').css("display", "block");
+
+
+            }
+            else {
+                var SetMstUserFlag = false;
+                var userId = document.getElementById("txtUserId").value;
+
+                if (userId == "") {
+
+                    event.preventDefault();
+                    var Text = "请选择一个用户！";
+                    $('#UIdWrn').html(Text);
+                    $('#UIdWrn').css("display", "block");
+
+                }
+                else {
+                    var UserName = document.getElementById("txtUserName").value;
+                    var Password = document.getElementById("txtPassword").value;
+                    var userClass = document.getElementById("userClassList").value;
+                    var userClassCode = document.getElementById("userClassCode").value;
+                    var EndDate = document.getElementById("EndDate").value;
+                    var PhoneNo = document.getElementById("PhoneNo").value;
+
+
+
+
+                    $.ajax({
+                        url: "/Management/setCmMstUser",
+                        type: "GET",
+                        dataType: "json",
+                        async: false,
+                        data: { UserId: userId, UserName: UserName, Password: Password, EndDate: EndDate, PhoneNo: PhoneNo, userClassCode: userClassCode, NewFlag: newflag },
+                        success: function (res) {
+                            SetMstUserFlag = res;
+                            //                alert(res);
+                        }
+                    });
+
+                    if (SetMstUserFlag == 1) {
+                        if ((userClassCode == "Administrator") || (userClassCode == "Patient")) {
+                            location.reload();
+                        }
+                        else {
+                            var clslist = document.getElementById("UnitName");
+                            var UnitName = clslist.options[clslist.selectedIndex].value;
+                            var clslist = document.getElementById("Dept");
+                            var Dept = clslist.options[clslist.selectedIndex].value;
+                            var JobTitle = document.getElementById("JobTitle").value;
+
+                            //alert(PhoneNo);
+
+                            //获取多选框内容
+                            var strlist = document.getElementById("Modules"); //获取Listbox 
+                            var str = "";
+                            //遍历Listbox，取得选中项的值 
+                            if (strlist.options.length > 0) {
+                                for (var i = 0; i < strlist.options.length; i++) {
+                                    if (strlist.options[i].selected == true) {
+                                        var j = strlist.options[i].value;
+                                        str += j + ","; //把Value值串起来
+                                    }
+                                }
+                                var strValue = str.replace(/,$/, ""); //去掉最后一个逗号 
+
+                            }
+                            else {
+                                strValue = "";
+                                alert("No Item in Listbox");
+                            }
+
+                            setDocDetailInfo(userId, userClassCode, UnitName, Dept, JobTitle, strValue);
+                            location.reload();
+                        }
+
                     }
 
                 }
             }
         }
+
     });
 
     function onSearch() {//js函数开始
@@ -915,6 +1381,10 @@
                 document.getElementById("Dept").value = Dept;
                 document.getElementById("JobTitle").value = JobTitle;
                 if (userClassCode == "Doctor") {
+                    $('.chzn-select').chosen({
+                        placeholder_text_multiple: " "
+                    });
+                    $(".chosen-select").chosen();
                     var len = res.split("_").length - 3;
                     var m = [];
                     var Module = "";
@@ -924,7 +1394,7 @@
                     }
                     $("#Modules").val(m);
                     $("#Modules").trigger("chosen:updated");
-
+                    //$("#Modules").chosen({ width: "270px" }); 
                     //遍历Listbox，取得选中项的值 
 
 
