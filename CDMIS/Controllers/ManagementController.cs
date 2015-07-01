@@ -316,7 +316,14 @@ namespace CDMIS.Controllers
             IsSaved = _ServicesSoapClient.SetMstUserUM(UserId, UserName, Password, Class, intEndDate, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
             if (userClassCode == "Patient")
             {
-                IsSaved = _ServicesSoapClient.SetPatName(UserId, UserName);
+                if (NewFlag == 0)
+                {
+                    IsSaved = _ServicesSoapClient.SetPatName(UserId, UserName);
+                }
+                else
+                {
+                    //此界面不涉及病人新建
+                }
             }
             else
             {
