@@ -328,6 +328,13 @@ namespace CDMIS.Controllers
             return res;
         }
 
+        public JsonResult GetSignInfoByCodeWeb(string PatientId, string PlanNo, string ItemCode, int StartDate, int EndDate)
+        {
+            var res = new JsonResult();
+            res.Data = _ServicesSoapClient.GetSignInfoByCodeWeb(PatientId, PlanNo, ItemCode, StartDate, EndDate);
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
         #endregion
 
         #region 症状管理
