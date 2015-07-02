@@ -22,13 +22,13 @@
     }
      #simplemodal-container 
      {
-         height:450px; 
+         height:500px; 
          width:400px;
      }
      #reminder-container
      {
-         height:600px; 
-         width:500px;
+         height:800px; 
+         width:550px;
      }
 </style>
 <div  style="width:100%;border: 0;">
@@ -157,125 +157,127 @@
     <div class="modalContent">
         <fieldset> 
             <legend>用户信息设定</legend>
-            <div class="form-group" id="PhoneNo1Div">
-                <label class="col-sm-4 control-label">
-                    *手机号</label>
-                <div class="col-sm-8">
-                    <input  id = "PhoneNo1"  name = "PhoneNo1"  class = "form-control"  style="width:65%;float:left;" value=""/>
-                    <button id="checkPhoneNo1"  class="btn btn-primary" style="width:33%;float:right;" >验证手机号</button>
-                    <p id="phoneWrn1" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
-                    <div id="phoneWrn2Div">
-                        <p id="phoneWrn2" style="font-size: 16px; color: #FF0000; font-weight: bold;float:left;">是否新建管理员？</p>
-                        <button id="checkPhoneNo2"  class="btn btn-primary" style="width:33%;float:right" >确认</button>
+            <div class="form-horizontal" role="form">
+                <div class="form-group" id="PhoneNo1Div">
+                    <label class="col-sm-4 control-label">
+                        *手机号</label>
+                    <div class="col-sm-8">
+                        <input  id = "PhoneNo1"  name = "PhoneNo1"  class = "form-control"  style="width:65%;float:left;" value=""/>
+                        <button id="checkPhoneNo1"  class="btn btn-primary" style="width:33%;float:right;" >验证手机号</button>
+                        <p id="phoneWrn1" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
+                        <div id="phoneWrn2Div">
+                            <p id="phoneWrn2" style="font-size: 16px; color: #FF0000; font-weight: bold;float:left;">是否新建管理员？</p>
+                            <button id="checkPhoneNo2"  class="btn btn-primary" style="width:33%;float:right" >确认</button>
+                        </div>
                     </div>
-                </div>
                 
-            </div>
+                </div>
 
-            <div class="form-group" id="New" style="display: none">
-                <label class="col-sm-4 control-label">
-                    用户类别</label>
-                <div class="col-sm-8">
-                    @Html.DropDownListFor(m => m.Patient.Class, Model.RoleClassList(), new { id = "newUserClass", style = "width:65%;float:left;font-size:18px", @onchange = "UserClassChanged()", @class = "form-control" })
-                    <button id="checknewUserClass"  class="btn btn-primary" style="width:33%;float:right" >确认</button>
+                <div class="form-group" id="New" style="display: none">
+                    <label class="col-sm-4 control-label">
+                        用户类别</label>
+                    <div class="col-sm-8">
+                        @Html.DropDownListFor(m => m.Patient.Class, Model.RoleClassList(), new { id = "newUserClass", style = "width:65%;float:left;font-size:18px", @onchange = "UserClassChanged()", @class = "form-control" })
+                        <button id="checknewUserClass"  class="btn btn-primary" style="width:33%;float:right" >确认</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    *用户ID</label>
-                <div class="col-sm-8">
-                    @Html.TextBoxFor(m => m.Patient.UserId, new { @readonly = "true", id = "txtUserId", @class = "form-control" })
-                    <p id="UIdWrn" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        *用户ID</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(m => m.Patient.UserId, new { @readonly = "true", id = "txtUserId", @class = "form-control" })
+                        <p id="UIdWrn" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    用户名</label>
-                <div class="col-sm-8">
-                    @Html.TextBoxFor(m => m.Patient.UserName, new { id = "txtUserName", @class = "form-control" })
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        用户名</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(m => m.Patient.UserName, new { id = "txtUserName", @class = "form-control" })
+                    </div>
                 </div>
-            </div>
-            <div class="form-group" id="userClassListDiv">
-                <label class="col-sm-4 control-label">
-                    用户类别</label>
-                <div class="col-sm-8">
-                    @Html.TextBoxFor(m => m.Patient.ClassName, new { @readonly = "true", id = "userClassList", @class = "form-control" })
+                <div class="form-group" id="userClassListDiv">
+                    <label class="col-sm-4 control-label">
+                        用户类别</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(m => m.Patient.ClassName, new { @readonly = "true", id = "userClassList", @class = "form-control" })
+                    </div>
                 </div>
-            </div>
-            <div class="form-group" style="display: none">
-                <label class="col-sm-4 control-label">
-                    用户类别代码</label>
-                <div class="col-sm-8">
-                    @Html.TextBoxFor(m => m.Patient.Class, new { @readonly = "true", id = "userClassCode", @class = "form-control" })
+                <div class="form-group" style="display: none">
+                    <label class="col-sm-4 control-label">
+                        用户类别代码</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(m => m.Patient.Class, new { @readonly = "true", id = "userClassCode", @class = "form-control" })
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    密码</label>
-                <div class="col-sm-8">
-                    @Html.TextBoxFor(m => m.Patient.Password, new { id = "txtPassword", @class = "form-control" })
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        密码</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(m => m.Patient.Password, new { id = "txtPassword", @class = "form-control" })
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4 control-label">
-                    密码有效期</label>
-                <div class="col-sm-8">
-                    @Html.TextBoxFor(model => model.Patient.EndDate, new { id = "EndDate", @class = "form-control", @onclick = "WdatePicker({startDate:'1991-02-14',dateFmt:'yyyy-MM-dd'})" })
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                        密码有效期</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => model.Patient.EndDate, new { id = "EndDate", @class = "form-control", @onclick = "WdatePicker({startDate:'1991-02-14',dateFmt:'yyyy-MM-dd'})" })
+                    </div>
                 </div>
-            </div>
-            <div class="form-group" id="PhoneNoDiv">
-                <label class="col-sm-4 control-label">
-                    *手机号</label>
-                <div class="col-sm-8">
-                    @*@Html.TextBoxFor(model => model.Patient.PhoneNo, new { id = "PhoneNo", name="PhoneNo", @class = "form-control" })*@
-                    <input  id = "PhoneNo", name = "PhoneNo", class = "form-control", value=""/> 
-                    <p id="phoneWrn" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
+                <div class="form-group" id="PhoneNoDiv">
+                    <label class="col-sm-4 control-label">
+                        *手机号</label>
+                    <div class="col-sm-8">
+                        @*@Html.TextBoxFor(model => model.Patient.PhoneNo, new { id = "PhoneNo", name="PhoneNo", @class = "form-control" })*@
+                        <input  id = "PhoneNo", name = "PhoneNo", class = "form-control", value=""/> 
+                        <p id="phoneWrn" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
+                    </div>
                 </div>
-            </div>
             
-            <div id="CoachAndDoc" style="display: none">
-                <div class="form-group">
+                <div id="CoachAndDoc" style="display: none">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">
+                            工作单位</label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(m => m.UnitName, Model.GetHospitalList(), new { id = "UnitName", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">
+                            科室</label>
+                        <div class="col-sm-8">
+                            @Html.DropDownListFor(m => m.Dept, Model.GetDeptList(), new { id = "Dept", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">
+                            职务</label>
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.JobTitle, new { id = "JobTitle", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div id="DocMod" class="form-group">
                     <label class="col-sm-4 control-label">
-                        工作单位</label>
+                        模块</label>
                     <div class="col-sm-8">
-                        @Html.DropDownListFor(m => m.UnitName, Model.GetHospitalList(), new { id = "UnitName", @class = "form-control" })
+                        @Html.ListBoxFor(m => m.models, Model.ModelsTypeList, new { id = "Modules", @class = "form-control chzn-select", multiple = "multiple", style = "font-size:34px;width:100%;height:34px;" })
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label">
-                        科室</label>
-                    <div class="col-sm-8">
-                        @Html.DropDownListFor(m => m.Dept, Model.GetDeptList(), new { id = "Dept", @class = "form-control" })
+                     <div class="col-sm-offset-3 col-sm-3">
+                        <input type="button" class="btn btn-primary" id="Save" value="保存" style="font-size: 16px;
+                            margin-top: 30px" />
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="button" class="btn btn-primary" id="Cancel" value="取消" style="font-size: 16px;
+                            margin-top: 30px" />
+                    </div>
+                    <div class="col-sm-3">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-4 control-label">
-                        职务</label>
-                    <div class="col-sm-8">
-                        @Html.TextBoxFor(m => m.JobTitle, new { id = "JobTitle", @class = "form-control" })
-                    </div>
-                </div>
-            </div>
-            <div id="DocMod" class="form-group">
-                <label class="col-sm-4 control-label">
-                    模块</label>
-                <div class="col-sm-8">
-                    @Html.ListBoxFor(m => m.models, Model.ModelsTypeList, new { id = "Modules", @class = "form-control chzn-select", multiple = "multiple", style = "font-size:34px;width:280px;height:34px;" })
-                </div>
-            </div>
-            <div class="form-group">
-                 <div class="col-sm-offset-3 col-sm-3">
-                    <input type="button" class="btn btn-primary" id="Save" value="保存" style="font-size: 16px;
-                        margin-top: 30px" />
-                </div>
-                <div class="col-sm-3">
-                    <input type="button" class="btn btn-primary" id="Cancel" value="取消" style="font-size: 16px;
-                        margin-top: 30px" />
-                </div>
-                <div class="col-sm-3">
-                </div>
-            </div>
+        </div>
         </fieldset>
     </div>
 </div>
@@ -336,9 +338,9 @@
         $("#UserListDT").attr("width", "auto");
 
         //$(".chosen").trigger('liszt:updated');
-        $('.chzn-select').chosen({
-            placeholder_text_multiple: " "
-        });
+//        $('.chzn-select').chosen({
+//            placeholder_text_multiple: " "
+//        });
 
         //$(".chosen").chosen().change();
         //        $(".chosen").trigger('chosen:updated');
@@ -436,9 +438,23 @@
 
     //删除按钮触发
     $(".deleteBtn").click(function () {
+        var ret = 2;
         trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
-        var Code = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
-        DeleteData(Code);
+        var txtUserId = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
+        var userClassCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
+        $.ajax({                                                //初始化日期控件为系统当前时间+1年（默认密码有效期为一年）
+            url: "/Management/DeleteRoleData",
+            type: "GET",
+            dataType: "json",
+            async: false,
+            data: { UId: txtUserId, userClassCode: userClassCode },
+            success: function (res) {
+                ret = res;
+            }
+        });
+        if (ret == 1) {
+            window.location.href = window.location.href;
+        }
     });
 
     //删除按钮触发
@@ -476,7 +492,7 @@
 
         document.getElementById("EndDate").value = EndDate;
         $("#PhoneNo").val(GetPhoneNo(userId));
-
+        OriPhoneNo = document.getElementById("PhoneNo").value;
 
         $('#New').css("display", "block");
         $('#CoachAndDoc').css("display", "none");
@@ -1057,7 +1073,7 @@
             else if ((PhoneNo != OriPhoneNo) &&(Flag == "0")){
                 
                     //0代表手机号已存在
-                    var Text = "手机号已存在！";
+                    var Text = "手机号已存在，请更换！";
 
                     $('#phoneWrn').html(Text);
                     $('#phoneWrn').css("display", "block");
@@ -1169,7 +1185,7 @@
             else if ((PhoneNo != OriPhoneNo) && (Flag == "0")) {
 
                 //0代表手机号已存在
-                var Text = "手机号已存在！";
+                var Text = "手机号已存在，请更换！";
 
                 $('#phoneWrn').html(Text);
                 $('#phoneWrn').css("display", "block");
