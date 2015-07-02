@@ -245,6 +245,17 @@ namespace CDMIS.Controllers
             return res;
         }
 
+        //获取用户基本信息
+        public JsonResult DeleteRoleData(string UId, string userClassCode)
+        {
+            var res = new JsonResult();
+            int ret = 2;
+            ret = _ServicesSoapClient.DeleteRoleData(UId, userClassCode);
+            res.Data = ret;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+
         //获取默认密码有效期
         public JsonResult GetDefaultEndTime()
         {

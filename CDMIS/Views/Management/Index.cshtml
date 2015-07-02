@@ -438,9 +438,23 @@
 
     //删除按钮触发
     $(".deleteBtn").click(function () {
+        var ret = 2;
         trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
-        var Code = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
-        DeleteData(Code);
+        var txtUserId = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
+        var userClassCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
+        $.ajax({                                                //初始化日期控件为系统当前时间+1年（默认密码有效期为一年）
+            url: "/Management/DeleteRoleData",
+            type: "GET",
+            dataType: "json",
+            async: false,
+            data: { UId: txtUserId, userClassCode: userClassCode },
+            success: function (res) {
+                ret = res;
+            }
+        });
+        if (ret == 1) {
+            window.location.href = window.location.href;
+        }
     });
 
     //删除按钮触发
