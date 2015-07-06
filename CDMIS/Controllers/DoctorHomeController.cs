@@ -612,7 +612,8 @@ namespace CDMIS.Controllers
                 else   //新增用户
                 {
                     flag = _ServicesSoapClient.SetMstUser(UserId, UserName, "123456", "", "", 1, Convert.ToInt32(DateTime.Now.ToString("yyyyMMdd")), Convert.ToInt32(DateTime.Now.AddYears(1).ToString("yyyyMMdd")), DateTime.Now, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
-                    if ((_ServicesSoapClient.SetPhoneNo(UserId, "PhoneNo", Request.Form["PhoneNo"], user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType))==1)
+                    //string test = Request["PhoneNo"].ToString();
+                    if ((_ServicesSoapClient.SetPhoneNo(UserId, "PhoneNo", Request.Form["PhoneNo"].ToString(), user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType)) == 1)
                     {
                         flag = true;
                     }
@@ -645,7 +646,7 @@ namespace CDMIS.Controllers
                 flag = _ServicesSoapClient.SetPatBasicInfoDetail(Patient, "Contact", "Contact002_3", 1, EmergencyContact, "", 1, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
                 //插入 紧急联系人电话
                 string EmergencyContactNumber = model.EmergencyContactNumber;
-                flag = _ServicesSoapClient.SetPatBasicInfoDetail(Patient, "Contact", "Contact002_4", 1, EmergencyContact, "", 1, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                flag = _ServicesSoapClient.SetPatBasicInfoDetail(Patient, "Contact", "Contact002_4", 1, EmergencyContactNumber, "", 1, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
                 #endregion
 
                 if (flag == true)
@@ -896,9 +897,28 @@ namespace CDMIS.Controllers
                             ControlType = InfoItemDr["ControlType"].ToString(),
                             OptionCategory = InfoItemDr["OptionCategory"].ToString()
                         };
-
-                        item.OptionList = GetTypeList(item.OptionCategory, "");  //通过yesornoh和value，结合字典表，生成有值的下拉框
-
+                        if (item.ControlType == "7")
+                        {
+                            if (item.OptionCategory == "Cm.MstHypertensionDrug")
+                            {
+                                //高血压药物
+                                item.OptionList = GetHypertensionDrugTypeNameList("");
+                            }
+                            if (item.OptionCategory == "Cm.MstDiabetesDrug")
+                            {
+                                //糖尿病药物
+                                item.OptionList = GetDiabetesDrugTypeNameList("");
+                            }
+                            if (item.OptionCategory == "")
+                            {
+                                //合并用药
+                                item.OptionList = GetTypeList(item.OptionCategory, "");  //通过yesornoh和value，结合字典表，生成有值的下拉框
+                            }
+                        }
+                        else
+                        {
+                            item.OptionList = GetTypeList(item.OptionCategory, "");  //通过yesornoh和value，结合字典表，生成有值的下拉框
+                        }
                         list.Add(item);
 
                     }
@@ -1085,8 +1105,38 @@ namespace CDMIS.Controllers
                             {
                                 ItemCode = model.InfoItemList[i][j].Code;
                                 Value = Request.Form[model.InfoItemList[i][j].Code];
-                                //插入 患者详细信息表中的模块关注详细信息
+
+                                //插入患者详细信息表中的模块关注详细信息
                                 flag = _ServicesSoapClient.SetBasicInfoDetail(Patient, CategoryCode, ItemCode, ItemSeq, Value, Description, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                                 
+                                //string[] Array = Value.Split(',');
+                                //if (Value ==null)
+                                //{
+                                    //插入患者详细信息表中的模块关注详细信息
+                                    //flag = _ServicesSoapClient.SetBasicInfoDetail(Patient, CategoryCode, ItemCode, ItemSeq, Value, Description, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                           
+                                //}
+                                //else
+                                //{
+                                    //string[] values = Value.Split(',');
+                                    //int vLength = values.Length;
+                                    //if (vLength > 1)
+                                    //{
+                                        
+                                        //for (int vnum = 0; vnum < vLength; vnum++)
+                                        //{
+                                            //插入患者详细信息表中的模块关注详细信息
+                                            //flag = _ServicesSoapClient.SetBasicInfoDetail(Patient, CategoryCode, ItemCode, ItemSeq, values[vnum].ToString(), Description, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                                            //SortNo++;
+                                            //ItemSeq++;
+                                        //}
+                                    //}
+                                    //else
+                                    //{
+                                        //插入患者详细信息表中的模块关注详细信息
+                                       // flag = _ServicesSoapClient.SetBasicInfoDetail(Patient, CategoryCode, ItemCode, ItemSeq, Value, Description, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                                    //}
+                                //}
                             }
                         }
                     }
@@ -2561,11 +2611,29 @@ namespace CDMIS.Controllers
 
             if (Value != "")
             {
-                foreach (var item in dropdownList)
+                string[] values = Value.Split(',');
+                int vLength = values.Length;
+                if (vLength > 1)
                 {
-                    if (Value == item.Value)
+                    for (int vnum = 0; vnum < vLength; vnum++)
                     {
-                        item.Selected = true;
+                        foreach (var item in dropdownList)
+                        {
+                            if (values[vnum] == item.Value)
+                            {
+                                item.Selected = true;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var item in dropdownList)
+                    {
+                        if (Value == item.Value)
+                        {
+                            item.Selected = true;
+                        }
                     }
                 }
             }
@@ -2581,6 +2649,83 @@ namespace CDMIS.Controllers
                 }
             }
             return dropdownList;
+        }
+
+        //高血压药物类型下拉框
+        public List<SelectListItem> GetHypertensionDrugTypeNameList(string selectedValue)
+        {
+            DataSet HypertensionDrugTypeNameDs = _ServicesSoapClient.GetHypertensionDrugTypeNameList();
+            List<SelectListItem> HypertensionDrugTypeNameList = new List<SelectListItem>();
+            HypertensionDrugTypeNameList.Add(new SelectListItem { Text = "请选择", Value = "0" });
+
+            if (HypertensionDrugTypeNameDs != null)
+            {
+                DataTable HypertensionDrugTypeNameDt = HypertensionDrugTypeNameDs.Tables[0];
+                foreach (DataRow DR in HypertensionDrugTypeNameDt.Rows)
+                {
+                    HypertensionDrugTypeNameList.Add(new SelectListItem { Text = DR["TypeName"].ToString(), Value = DR["Type"].ToString() });
+                }
+                if (selectedValue != "")
+                {
+                    foreach (var item in HypertensionDrugTypeNameList)
+                    {
+                        if (selectedValue == item.Value)
+                        {
+                            item.Selected = true;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var item in HypertensionDrugTypeNameList)
+                    {
+                        if (item.Value == "0")
+                        {
+                            item.Selected = true;
+                        }
+                    }
+                }
+            }
+            return HypertensionDrugTypeNameList;
+        }
+
+
+        //糖尿病药物类型下拉框
+        public List<SelectListItem> GetDiabetesDrugTypeNameList(string selectedValue)
+        {
+            DataSet DiabetesDrugTypeNameDs = _ServicesSoapClient.GetDiabetesDrugTypeNameList();
+            List<SelectListItem> DiabetesDrugTypeNameList = new List<SelectListItem>();
+            DiabetesDrugTypeNameList.Add(new SelectListItem { Text = "请选择", Value = "0" });
+
+            if (DiabetesDrugTypeNameDs != null)
+            {
+                DataTable DiabetesDrugTypeNameDt = DiabetesDrugTypeNameDs.Tables[0];
+                foreach (DataRow DR in DiabetesDrugTypeNameDt.Rows)
+                {
+                    DiabetesDrugTypeNameList.Add(new SelectListItem { Text = DR["TypeName"].ToString(), Value = DR["Type"].ToString() });
+                }
+                if (selectedValue != "")
+                {
+                    foreach (var item in DiabetesDrugTypeNameList)
+                    {
+                        if (selectedValue == item.Value)
+                        {
+                            item.Selected = true;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var item in DiabetesDrugTypeNameList)
+                    {
+                        if (item.Value == "0")
+                        {
+                            item.Selected = true;
+                        }
+                    }
+                }
+            }
+            return DiabetesDrugTypeNameList;
         }
 
         //加载操作医生未负责患者列表

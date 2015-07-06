@@ -326,6 +326,15 @@
                     @Html.ValidationMessageFor(model => model.ExamInfo.Recommendation)
                 </div>
             </div>
+              @*alert弹出框*@
+            <div id="alertExaminationInfoDiv" style="display: none" class="form-group">
+                <div class="col-sm-12">
+                    <p id="ExaminationInfoWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
+                    text-align: center">
+                       
+                    </p>
+                </div>
+            </div>
             <input type="button" class="btn btn-primary addExaminationInfoBtn" value="添加" />
         </div>
     </div>
@@ -636,7 +645,7 @@
             "sScrollY": "300px",
             "bFilter": true,
             "aaSorting": [[5, "desc"]],
-            "columnDefs": [{ "bSortable": false, "aTargets": [15,16,17]}] //禁止某些列的排序功能
+            "columnDefs": [{ "bSortable": false, "aTargets": [15, 16, 17]}] //禁止某些列的排序功能
         });
         $("#ExaminationInfoList").attr("width", "auto");
 
@@ -896,13 +905,14 @@
                 if (ItemCode == "0") { Text = Text + "检查项目 "; }
                 if (ExamDate == "") { Text = Text + "检查日期 "; }
                 Text = Text + "不能为空！";
-                $("#Warning").html(Text);
+                $("#ExaminationInfoWarning").html(Text);
+                $("#alertExaminationInfoDiv").show();
                 //alert(Text);
-                $('#alertDiv').modal({
-                    closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                    containerId: 'alert-container',
-                    overlayClose: true     //点击蒙层关闭窗口
-                });
+                //                $('#alertDiv').modal({
+                //                    closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
+                //                    containerId: 'alert-container',
+                //                    overlayClose: true     //点击蒙层关闭窗口
+                //                });
             }
             else {
                 if (IsAbnormal == "") {

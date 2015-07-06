@@ -111,26 +111,68 @@
     </ul>
 </div>
 @{Html.RenderAction("PatientBasicInfo", "PatientInfo");}
+
+@*就诊卡信息*@
+<div>
+    <h4>
+        根据就诊卡同步</h4>
+    <div class="modalContent" style="margin-top: 15px; text-align: center;">
+        <div class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">
+                    就诊医院
+                </label>
+                <div class="col-sm-4">
+                    @Html.DropDownListFor(model => model.HospitalSelected, Model.HospitalList(), new { id = "HospitalListDropDownListFor", @class = "form-control" })
+                </div>
+                <label class="col-sm-2 control-label">
+                    起始日期
+                </label>
+                <div class="col-sm-3">
+                    @Html.TextBox("StartDateTime", "", new { id = "StartDateTime", @onclick = "WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})", @class = "form-control" })
+                </div>
+                <div class="col-sm-1">
+                    <input type="button" class="btn btn-primary" id="synchronization" value="同步" />
+                </div>
+            </div>
+            <div class="form-group">
+                @*<label class="col-sm-2 control-label">
+                    就诊ID
+                </label>
+                <div class="col-sm-4">
+                    @Html.TextBox("PIDJC", "", new { id = "PIDJC", @class = "form-control" })
+                </div>*@
+                <div class="col-sm-8">
+                </div>
+                <div class="col-sm-4">
+                    <input style="font-size: 16px; font-weight: bold; text-align: center" value="起始日期未填时，将同步所有临床信息"
+                        class="form-control" disabled="disabled" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @using (Html.BeginForm("ClinicalInfo", "DoctorHome", FormMethod.Post, new { id = "Form1", enctype = "multipart/form-data" }))
 {
 @*读取就诊信息*@
     <div style="background-color: White; width: 100%; margin-top: 20px">
-        <h3 style="font-weight: bold; text-align:center;">
-            就诊信息</h3>
+        <h4>
+            就诊信息</h4>
         <input type="text" id="UId" style="display:none" value="@Model.UserId"/>
         <table id="InfoList" class="display">
             <thead>
                 <tr>
-                    <th style="display:none;">
+                    <th style="display: none;">
                         就诊Id
                     </th>
-                    <th style="display:none;">
+                    <th style="display: none;">
                         就诊医院ID
                     </th>
                     <th>
                         就诊医院
                     </th>
-                    <th style="display:none;">
+                    <th style="display: none;">
                         就诊科室ID
                     </th>
                     <th>
@@ -142,7 +184,7 @@
                     <th>
                         就诊医生
                     </th>
-                    <th style="display:none;">
+                    <th style="display: none;">
                         序号
                     </th>
                     @*<th colspan="2">*@
@@ -157,7 +199,7 @@
                     for (int i = 0; i < Model.InPatientList.Count(); i++)
                     {
                     <tr>
-                        <td style="border: 0;display: none" id="1">
+                        <td style="border: 0; display: none" id="1">
                             @Model.InPatientList[i].VisitId _ @Model.InPatientList[i].SortNo
                         </td>
                         <td style="border: 0; display: none">
@@ -197,18 +239,20 @@
                         }
                         else
                         {
-                           @* <td style="border: 0;">
+@* <td style="border: 0;">
                                 <input type="button" value="编辑" class="btn btn-primary editClinicalInfoBtn" disabled="disabled" />
                                 <input type="button" value="删除" class="btn btn-primary deleteClinicalInfoBtn" disabled="disabled" />
                             </td> *@     
-                            <td>无编辑权限</td>                  
+                            <td>
+                                无编辑权限
+                            </td>                  
                         }
                     </tr>
                     }
                     for (int i = 0; i < Model.OutPatientList.Count(); i++)
                     {
                     <tr>
-                        <td style="border: 0;display: none" id="1">
+                        <td style="border: 0; display: none" id="1">
                             @Model.OutPatientList[i].VisitId
                         </td>
                         <td style="border: 0; display: none">
@@ -241,16 +285,18 @@
                         }
                         else
                         {
-                            @*<td style="border: 0;" class="disabledInputHover">
+@*<td style="border: 0;" class="disabledInputHover">
                                 <input type="button" value="编辑" class="btn btn-primary editClinicalInfoBtn" disabled="disabled" />
                                 <input type="button" value="删除" class="btn btn-primary deleteClinicalInfoBtn" disabled="disabled" />
                             </td> *@    
-                             <td>非本人填写,无权限编辑</td>                            
+                            <td>
+                                非本人填写,无权限编辑
+                            </td>                            
                         }
                     </tr>
                     }
                 }
-               @* else
+@* else
                 {
                     <tr id="NotExist">
                         <td style="font-size: 15px;" colspan="9">
@@ -421,45 +467,7 @@
         </form>
     </div>
 </div>
-@*就诊卡信息*@
-<div>
-    <h4>
-        根据就诊卡同步</h4>
-    <div class="modalContent" style="margin-top: 15px; text-align: center;">
-        <div class="form-horizontal" role="form">
-            <div class="form-group">
-                <label class="col-sm-2 control-label">
-                    就诊医院
-                </label>
-                <div class="col-sm-4">
-                    @Html.DropDownListFor(model => model.HospitalSelected, Model.HospitalList(), new { id = "HospitalListDropDownListFor", @class = "form-control" })
-                </div>
-                <label class="col-sm-2 control-label">
-                    就诊ID
-                </label>
-                <div class="col-sm-4">
-                    @Html.TextBox("PIDJC", "", new { id = "PIDJC", @class = "form-control" })
-                    @*model中还没有这个属性*@
-                </div>
-               
-            </div>
-            
-             <div class="form-group">
-                <label class="col-sm-2 control-label">
-                    起始日期
-                </label>
-                <div class="col-sm-4">
-                        @Html.TextBox("StartDateTime", "", new { id = "StartDateTime", @onclick = "WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})", @class = "form-control" })
-                  
-                </div>
-            <div class="col-sm-4"></div> 
-                <div class="col-sm-2">
-                    <input type="button" class="btn btn-primary" id="synchronization" value="同步" />
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 @*alert弹出框*@
 <div id="alertDiv" style="display: none;">
     <div class="modalHeader">
@@ -508,7 +516,7 @@
             "bAutoWidth": false,
             "bPaginate": false,  //是否分页。
             "sScrollX": "100%",
-            "sScrollY": "300px",  
+            "sScrollY": "300px",
             "bFilter": false,
             "aaSorting": [[5, "desc"]],
             "columnDefs": [{ "bSortable": false, "aTargets": [8]}] //禁止某些列的排序功能

@@ -92,7 +92,7 @@
 <div style="height: 40px; display: none" id="navDiv">
     <ul id="nav">
         <li>
-            @Html.ActionLink("个人信息", "BasicProfile", "DoctorHome", new { PatientId = @Model.Patient.UserId, Role ="Patient"}, new { target = "_self" })</li>
+            @Html.ActionLink("个人信息", "BasicProfile", "DoctorHome", new { PatientId = @Model.Patient.UserId, Role = "Patient" }, new { target = "_self" })</li>
         <li>
             @Html.ActionLink("健康模块", "ModuleProfile", "DoctorHome", new { PatientId = @Model.Patient.UserId }, new { target = "_self" })</li>
         <li>
@@ -126,14 +126,14 @@
                         <p id="PhoneNoTip" style="display: none; color: red">
                             请确认手机号！</p>
                     </div>
-                  <label class="col-sm-2 control-label idClass">
+                    <label class="col-sm-2 control-label idClass">
                         患者Id</label>
                     <div class="col-sm-4 idClass">
                         @Html.TextBoxFor(model => model.Patient.UserId, new { id = "UserId", @class = "form-control", @readonly = "readonly" })
                         @Html.ValidationMessageFor(model => model.Patient.UserId)
                     </div>
                 </div>
-                <div class="form-group basicInfo integrateBasicInfoDiv" style="display:none">
+                <div class="form-group basicInfo integrateBasicInfoDiv" style="display: none">
                     <label class="col-sm-2 control-label">
                         就诊医院</label>
                     <div class="col-sm-4">
@@ -320,14 +320,14 @@
         $("#menu li:eq(1) a").attr("id", "current");
 
         if ($("#OperationInvalidFlag").val() == "false") {
-            $("#PhoneNo").attr("disabled", "disabled");
+            $("#PhoneNo").attr("readonly", "readonly");
             //$(".integrateBasicInfoDiv").hide();
 
             var UserId = "@Model.Patient.UserId";
 
             GetPhoneNoByUserId(UserId);
             //$(".basicInfo").hide();
-
+            
         }
         else {
             $(".basicInfo").hide();
@@ -413,7 +413,7 @@
                 if (res == "1") {
                     //手机号码不存在
                     $(".validatePhoneNo").hide();
-                    $("#PhoneNo").attr("disabled","disabled");
+                    $("#PhoneNo").attr("readonly", "readonly");
                     $(".basicInfo").show();
                     addNewPat();
                     $(".idClass").show();
@@ -424,15 +424,22 @@
                     //手机号码已存在,根据手机号码获取Id
                     UserId = GetIDByPhoneNo(PhoneNo);
                     if (UserId != "") {
-                        //alert(UserId);
+                        //患者，医生，健康专员，管理员   
 
                         //角色判断
                         GetRolesByUserId(UserId);
                     }
                     else {
+                        //管理员使用该手机号码 没有使用过其他角色
                         $("#PhoneNoTip").show();
-                        //alert("1");
-                       
+//                        $(".validatePhoneNo").hide();
+//                        $("#PhoneNo").attr("readonly", "readonly");
+//                        $(".basicInfo").show();
+//                        addNewPat();
+//                        $(".idClass").show();
+//                        $(".integrateBasicInfoDiv").show();
+//                        $(".submitBtn").show();
+
 
                     }
                 }
@@ -473,7 +480,7 @@
             async: false,
             data: { UserId: UserId },  //输入参数
             success: function (res) {
-              
+
                 if (res != "") {
 
                     //取到Id
@@ -484,7 +491,7 @@
                     $("#PhoneNoNull").show();
                 }
             },
-            error:function(){alert("GetPhoneNoByUserIdError");}
+            error: function () { alert("GetPhoneNoByUserIdError"); }
         })
         //return UserId;
     }
@@ -499,6 +506,11 @@
             data: { UserId: UserId },  //输入参数
             success: function (res) {
                 //if(res.length!=0){
+
+                //                alert(res);
+                //                var test = res;
+                //if (res.trim() != "") {
+                //ID存在，有角色
                     for (var item in res) {
                         if (res[item] == "Patient") {
                             //患者角色
@@ -506,70 +518,74 @@
                         }
                     }
                     for (var item in res) {
-                            //alert(res[item]);
-                            //医生和健康专员角色
-                            window.location.href = "/DoctorHome/BasicProfile?PatientId=" + UserId + "&Role=" + res[item];
-                    
-                    }
-                     //该手机号码被管理员使用
-                     //addNewPat();
-                     //$(".basicInfo").show();
-                     //$(".idClass").show();
-                     //$(".submitBtn").show();
-                     //$(".validatePhoneNo").hide();
-                //}
+                        //alert(res[item]);
+                        //医生和健康专员角色
+                        window.location.href = "/DoctorHome/BasicProfile?PatientId=" + UserId + "&Role=" + res[item];
 
+                    }
+                    //ID存在，没有角色
+               // }
+              // // else
+             //   {
+                //该手机号码被管理员使用
+                //addNewPat();
+                //$(".basicInfo").show();
+                //$(".idClass").show();
+                //$(".submitBtn").show();
+                //$(".validatePhoneNo").hide();
+                //}
+              //  }
             }
         })
     }
 
-    $(document).on("click",".integrateBasicInfo",function(){
-        
+    $(document).on("click", ".integrateBasicInfo", function () {
+
         var CDMISPatientId = $("#UserId").val();
         var PhoneNo = $("#PhoneNo").val();
         var HospitalCode = $("#HospitalCode").val();
         var PatientId = $("#HospitalUserId").val();
-        
-         $.ajax({
-                    url: "/DoctorHome/GetIntegrationBasicData",
-                    type: "GET",
-                    dataType: "json",
-                    async: false,
-                    data: { UserId: CDMISPatientId, PatientId: PatientId, HospitalCode: HospitalCode },  //输入参数
-                    success: function (res) {
-                        if (res == "") {
-                            //集成成功
-                            //alert(res);
-                            //$("#simple-overlay").hide();
-                            //集成成功后操作
-                            IntegrationSuccess(CDMISPatientId,PhoneNo);
-                        }
-                        else {
-                            alert("基本信息集成失败，请重试！");
-                        }
-                    }
 
-                });
-        
+        $.ajax({
+            url: "/DoctorHome/GetIntegrationBasicData",
+            type: "GET",
+            dataType: "json",
+            async: false,
+            data: { UserId: CDMISPatientId, PatientId: PatientId, HospitalCode: HospitalCode },  //输入参数
+            success: function (res) {
+                if (res == "") {
+                    //集成成功
+                    //alert(res);
+                    //$("#simple-overlay").hide();
+                    //集成成功后操作
+                    IntegrationSuccess(CDMISPatientId, PhoneNo);
+                }
+                else {
+                    alert("基本信息集成失败，请重试！");
+                }
+            }
+
+        });
+
     })
 
-    function IntegrationSuccess(UserId,PhoneNo){
-         $.ajax({
-                    url: "/DoctorHome/setMstUserPhoneNoRoleMatch",
-                    type: "GET",
-                    dataType: "json",
-                    async: false,
-                    data: { UserId: UserId, PhoneNo: PhoneNo},  //输入参数
-                    success: function (res) {
-                        if (res == "1") {
-                            //操作成功
-                            window.location.href = "/DoctorHome/BasicProfile?PatientId=" + UserId + "&Role=" + "Patient";
-                        }
-                        else {
-                            alert("基本信息集成失败，请重试！");
-                        }
-                    }
+    function IntegrationSuccess(UserId, PhoneNo) {
+        $.ajax({
+            url: "/DoctorHome/setMstUserPhoneNoRoleMatch",
+            type: "GET",
+            dataType: "json",
+            async: false,
+            data: { UserId: UserId, PhoneNo: PhoneNo },  //输入参数
+            success: function (res) {
+                if (res == "1") {
+                    //操作成功
+                    window.location.href = "/DoctorHome/BasicProfile?PatientId=" + UserId + "&Role=" + "Patient";
+                }
+                else {
+                    alert("基本信息集成失败，请重试！");
+                }
+            }
 
-                });
+        });
     }
 </script>

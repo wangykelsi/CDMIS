@@ -5,6 +5,9 @@
 }
 <link href="../../Content/flexibleDisplay.css" rel="stylesheet" type="text/css" />
 <link href="../../Content/simpleModal.css" rel="stylesheet" type="text/css" />
+<link rel="Stylesheet" href="../../Content/chosen.css" />
+<script type="text/javascript" src="../../Scripts/chosen.jquery.min.js"></script>
+
 <script type="text/javascript" src="../../Scripts/My97DatePicker/WdatePicker.js"></script>
 <style type="text/css">
     body
@@ -89,16 +92,26 @@
                                         <td width="10%" style="border: 0;">
                                             @item.ItemName
                                         </td>
-                                        @if (item.ControlType == "1")
+                                         @if (item.ControlType == "1"||item.ControlType == "3")
                                         {
                                             <td width="20%" style="border: 0;">
                                                 @Html.DropDownList(item.ItemCode, item.OptionList, new { id = item.ItemCode, style = "font-size:17px;", @class = "form-control" })
+                                                @*@item.Content*@
                                             </td>
                                         }
-                                        else
+                                        @if (item.ControlType == "2")                                        
+                                        {
+                                            <td width="20%" style="border: 0;">
+                                              
+                                                @Html.ListBox(item.ItemCode, item.OptionList, new { id = item.ItemCode, @class = "form-control chzn-select", multiple = "multiple", style = "font-size:34px;width:100%;height:34px;" })
+
+                                            </td>   
+                                        }
+                                        @if (item.ControlType == "4" || item.ControlType == "5" || item.ControlType == "6" || item.ControlType == "7")                                        
                                         {
                                             <td width="20%" style="border: 0;">
                                                 @Html.TextBox(item.ItemCode, item.Content, new { id = item.ItemCode, style = "font-size:17px;", @class = "form-control" })
+                                                @*@item.Content*@
                                             </td>   
                                         }
                                     </tr>
@@ -139,14 +152,22 @@
                                         <td width="10%" style="border: 0;">
                                             @item.ItemName
                                         </td>
-                                        @if (item.ControlType == "1")
+                                        @if (item.ControlType == "1"||item.ControlType == "3")
                                         {
                                             <td width="20%" style="border: 0;">
                                                 @Html.DropDownList(item.ItemCode, item.OptionList, new { id = item.ItemCode, style = "font-size:17px;", @class = "form-control", disabled = "disabled" })
                                                 @*@item.Content*@
                                             </td>
                                         }
-                                        else
+                                        @if (item.ControlType == "2")                                        
+                                        {
+                                            <td width="20%" style="border: 0;">
+                                              
+                                                @Html.ListBox(item.ItemCode, item.OptionList, new { id = item.ItemCode, @class = "form-control chzn-select", multiple = "multiple", style = "font-size:34px;width:100%;height:34px;" })
+
+                                            </td>   
+                                        }
+                                        @if (item.ControlType == "4" || item.ControlType == "5" || item.ControlType == "6" || item.ControlType == "7")                                        
                                         {
                                             <td width="20%" style="border: 0;">
                                                 @Html.TextBox(item.ItemCode, item.Content, new { id = item.ItemCode, style = "font-size:17px;", @class = "form-control", @readonly = "readonly" })
@@ -176,6 +197,12 @@
     $(document).ready(function () {
         $("#menu a").attr("id", ""); //Reset id's 
         $("#menu li:eq(1) a").attr("id", "current");
+
+        $('.chzn-select').chosen({
+            placeholder_text_multiple: " "
+        });
+        $(".chosen-container").css("width", "100%");
+
     });
 
     function show(i) {

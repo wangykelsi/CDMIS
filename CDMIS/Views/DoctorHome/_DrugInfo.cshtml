@@ -312,6 +312,15 @@
                 </div>
                
             </div>
+               @*alert弹出框*@
+            <div id="alertDrugInfoDiv" style="display: none" class="form-group">
+                <div class="col-sm-12">
+                    <p id="DrugInfoWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
+                    text-align: center">
+                       
+                    </p>
+                </div>
+            </div>
             <input type="button" class="btn btn-primary addDrugInfoBtn" value="添加" />
         </div>
     </div>
@@ -502,7 +511,7 @@
             "sScrollY": "300px",
             "bFilter": true,
             "aaSorting": [[9, "desc"]],
-            "columnDefs": [{ "bSortable": false, "aTargets": [15,16]}] //禁止某些列的排序功能
+            "columnDefs": [{ "bSortable": false, "aTargets": [15, 16]}] //禁止某些列的排序功能
 
         });
         $("#DrugInfoList").attr("width", "auto");
@@ -718,13 +727,14 @@
                 if (FreqCounter == "" || FreqInteval == "" || FreqIntevalUnit == "") { Text = Text + "执行频率 "; }
 
                 Text = Text + "不能为空！";
-                $("#Warning").html(Text);
+                $("#DrugInfoWarning").html(Text);
+                $("#alertDrugInfoDiv").show();
                 //alert(Text);
-                $('#alertDiv').modal({
-                    closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                    containerId: 'alert-container',
-                    overlayClose: true     //点击蒙层关闭窗口
-                });
+                //                $('#alertDiv').modal({
+                //                    closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
+                //                    containerId: 'alert-container',
+                //                    overlayClose: true     //点击蒙层关闭窗口
+                //                });
             }
             else {
                 if (DosageUnits == "") {
