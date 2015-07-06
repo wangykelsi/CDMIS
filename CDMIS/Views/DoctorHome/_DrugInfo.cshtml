@@ -487,7 +487,7 @@
     <ul id="Redirect">
         <li>@Ajax.ActionLink("上一步", "LabTestInfo", new { UserId = @Model.UserId }, new AjaxOptions { OnSuccess = "tabClick5();", UpdateTargetId = "ShowClinicalProfileInfo", InsertionMode = InsertionMode.Replace })</li>
         @*<li>@Ajax.ActionLink("完成", "DrugInfo", new AjaxOptions { OnSuccess = "success6();", UpdateTargetId = "ShowClinicalProfileInfo", InsertionMode = InsertionMode.Replace })</li>*@
-        <li>@Html.ActionLink("完成", "PatientList", "DoctorHome")</li>
+        <li>@Html.ActionLink("完成", "PatientList", "DoctorHome", new { PatientId = @Model.UserId }, null)</li>
     </ul>
 </div>
 <script type="text/javascript">

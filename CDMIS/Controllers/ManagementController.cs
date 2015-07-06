@@ -20,7 +20,7 @@ namespace CDMIS.Controllers
         // GET: /UserManagement/
         //
         // GET: /UserManagement/
-       
+
         static string _PatientId { get; set; }
         static string _ErrorMSG { get; set; }
 
@@ -141,7 +141,7 @@ namespace CDMIS.Controllers
             {
                 var user = Session["CurrentUser"] as UserAndRole;
                 MMVM.ModuleInfoList = GetModuleAndDoctorInfo(MMVM.PatientId);
-                MMVM.HealthCoachList = GetHealthCareList(MMVM.PatientId);
+                MMVM.HealthCoachInfoList = GetHealthCareList(MMVM.PatientId);
                 return View(MMVM);
             }
             catch (Exception ex)
@@ -183,6 +183,7 @@ namespace CDMIS.Controllers
             res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             return res;
         }
+
         #endregion
 
         public ActionResult QualificationCheck()
@@ -208,8 +209,8 @@ namespace CDMIS.Controllers
         {
             List<User> userList = new List<User>();
             int Row = 0;
-            String UId="";
-            String PhoneNo="";
+            String UId = "";
+            String PhoneNo = "";
             System.Data.DataTable userListDT = _ServicesSoapClient.GetUserInfoList(id, name).Tables[0];
             foreach (DataRow row in userListDT.Rows)
             {
@@ -282,12 +283,12 @@ namespace CDMIS.Controllers
             res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             return res;
         }
-        
+
         //获取手机号对应用户ID
         public JsonResult GetUIdByPhoneNo(string PhoneNo)
         {
             var res = new JsonResult();
-            string UserId = _ServicesSoapClient.GetIDByInput("PhoneNo",PhoneNo);
+            string UserId = _ServicesSoapClient.GetIDByInput("PhoneNo", PhoneNo);
 
             res.Data = UserId;
             res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
@@ -314,7 +315,7 @@ namespace CDMIS.Controllers
         }
 
         //保存基本信息
-        public JsonResult setCmMstUser(string UserId, string UserName, string Password, string EndDate, string PhoneNo, string userClassCode,int NewFlag)
+        public JsonResult setCmMstUser(string UserId, string UserName, string Password, string EndDate, string PhoneNo, string userClassCode, int NewFlag)
         {
             var user = Session["CurrentUser"] as UserAndRole;
             EndDate = EndDate.Replace(" ", "");
@@ -455,7 +456,7 @@ namespace CDMIS.Controllers
             res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             return res;
         }
-        
+
         //检查手机号是否存在
         public JsonResult checkPhoneNoExist(string PhoneNo)
         {
@@ -494,7 +495,7 @@ namespace CDMIS.Controllers
             r2aInfoVM.AuthorityList = authorityList;
             r2aInfoVM.AuthorityRowCount = Row;
         }
-        
+
         //查询输出该角色（roleCode）已有权限列表
         public void GetRoleAuthorityList(string roleCode, ref Role2AuthorityViewModel r2aVM)
         {
@@ -596,14 +597,16 @@ namespace CDMIS.Controllers
                         ModuleAndDoctor md = new ModuleAndDoctor()
                         {
                             Module = row[1].ToString(),
-                            ModuleName = row[2].ToString(),
+                            ModuleName = row[2].ToString(), 
                             ItemSeq = row[6].ToString(),
                             DoctorId = row[7].ToString(),
+                            ModalName = row[1].ToString() + "Modal",
+                            DataTableName = row[1].ToString() + "DataTable",
                             DoctorName = _ServicesSoapClient.GetUserName(row[7].ToString()),
-                            DoctorList = GetDoctorListByModule(row[1].ToString(), row[7].ToString())
+                            DoctorList = GetDoctorList(row[1].ToString())
                         };
                         mdlist.Add(md);
-                        break;  
+                        break;
                     }
                 }
             }
@@ -621,98 +624,74 @@ namespace CDMIS.Controllers
                     ItemSeq = row[2].ToString(),
                     HealthCoachId = row[0].ToString(),
                     HealthCoachName = _ServicesSoapClient.GetUserName(row[0].ToString()),
-                    HealthCoachList = GetHealthCoachInfoList(row[0].ToString())
+                    HCDivName = "HC" + row[2].ToString() + "Div",
+                    DataTableName = "HC" + row[2].ToString() + "DataTable",
+                    HealthCoachList = GetHealthCoachInfoList()
                 };
                 hclist.Add(hc);
             }
             if (hclist.Count == 0)
             {
-                HealthCoach hc = new HealthCoach()
-                {
-                    ItemSeq = "1",
-                    HealthCoachId = "0",
-                    HealthCoachName = "",
-                    HealthCoachList = GetHealthCoachInfoList("0")
-                };
-                hclist.Add(hc);
+                hclist.Add(new HealthCoach { ItemSeq = "1", HealthCoachId = "0", HealthCoachName = "", HCDivName = "HC1Div", DataTableName = "HC1DataTable", HealthCoachList = GetHealthCoachInfoList() });
             }
             return hclist;
         }
 
         //获取某模块的医生列表
-        public List<SelectListItem> GetDoctorListByModule(string Module, string Value)
+        public List<DoctorAndHCInfo> GetDoctorList(string Module)
         {
-            DataTable docList = _ServicesSoapClient.GetDoctorListByModule(Module).Tables[0];
-            List<SelectListItem> DoctorList = new List<SelectListItem>();
+            DataTable docList = new DataTable();
+            docList = _ServicesSoapClient.GetDoctorListByModule(Module).Tables[0];
+            List<DoctorAndHCInfo> DoctorList = new List<DoctorAndHCInfo>();
             foreach (DataRow DR in docList.Rows)
             {
-                string description = "";
-                if (DR["Hospital"].ToString() != null && DR["Hospital"].ToString() != "")
-                {
-                    description = DR["Hospital"].ToString();
-                }
-                if (DR["Dept"].ToString() != null && DR["Dept"].ToString() != "" && description != "")
-                {
-                    description += "-" + DR["Dept"].ToString();
-                }
-                else if (DR["Dept"].ToString() != null && DR["Dept"].ToString() != "" && description == "")
-                {
-                    description += DR["Dept"].ToString();
-                }
-                if (description != "")
-                {
-                    description = "（" + description + "）";
-                }
-                if (DR["DoctorId"].ToString() == Value)
-                {
-                    DoctorList.Add(new SelectListItem { Text = DR["DoctorName"].ToString() + description, Value = DR["DoctorId"].ToString(), Selected = true });
-                }
-                else
-                {
-                    DoctorList.Add(new SelectListItem { Text = DR["DoctorName"].ToString() + description, Value = DR["DoctorId"].ToString() });
-                }
-               
+                //string description = "";
+                //if (DR["Hospital"].ToString() != null && DR["Hospital"].ToString() != "")
+                //{
+                //    description = DR["Hospital"].ToString();
+                //}
+                //if (DR["Dept"].ToString() != null && DR["Dept"].ToString() != "" && description != "")
+                //{
+                //    description += "-" + DR["Dept"].ToString();
+                //}
+                //else if (DR["Dept"].ToString() != null && DR["Dept"].ToString() != "" && description == "")
+                //{
+                //    description += DR["Dept"].ToString();
+                //}
+                //if (description != "")
+                //{
+                //    description = "（" + description + "）";
+                //}
+                DoctorList.Add(new DoctorAndHCInfo { DoctorId = DR["DoctorId"].ToString(), DoctorName = DR["DoctorName"].ToString(), Hospital = DR["Hospital"].ToString(), Dept = DR["Dept"].ToString() });
             }
             return DoctorList;
         }
 
         //获取健康专员列表
-        public List<SelectListItem> GetHealthCoachInfoList(string Value)
+        public List<DoctorAndHCInfo> GetHealthCoachInfoList()
         {
             DataTable docList = _ServicesSoapClient.GetActiveUserByRole("HealthCoach").Tables[0];
-            List<SelectListItem> DoctorList = new List<SelectListItem>();
-            if (Value == "0")
-            {
-                DoctorList.Add(new SelectListItem { Text = "请选择", Value = "0", Selected = true });
-            }
+            List<DoctorAndHCInfo> DoctorList = new List<DoctorAndHCInfo>();
             foreach (DataRow DR in docList.Rows)
             {
-                string description = "";
-                if (DR["Hospital"].ToString() != null && DR["Hospital"].ToString() != "")
-                {
-                    description = DR["Hospital"].ToString();
-                }
-                if (DR["Dept"].ToString() != null && DR["Dept"].ToString() != "" && description != "")
-                {
-                    description += "-" + DR["Dept"].ToString();
-                }
-                else if (DR["Dept"].ToString() != null && DR["Dept"].ToString() != "" && description == "")
-                {
-                    description += DR["Dept"].ToString();
-                }
-                if (description != "")
-                {
-                    description = "（" + description + "）";
-                }
-                if (DR["UserId"].ToString() == Value)
-                {
-                    DoctorList.Add(new SelectListItem { Text = DR["UserName"].ToString() + description, Value = DR["UserId"].ToString(), Selected = true });
-                }
-                else
-                {
-                    DoctorList.Add(new SelectListItem { Text = DR["UserName"].ToString() + description, Value = DR["UserId"].ToString() });
-                }
-
+                //string description = "";
+                //if (DR["Hospital"].ToString() != null && DR["Hospital"].ToString() != "")
+                //{
+                //    description = DR["Hospital"].ToString();
+                //}
+                //if (DR["Dept"].ToString() != null && DR["Dept"].ToString() != "" && description != "")
+                //{
+                //    description += "-" + DR["Dept"].ToString();
+                //}
+                //else if (DR["Dept"].ToString() != null && DR["Dept"].ToString() != "" && description == "")
+                //{
+                //    description += DR["Dept"].ToString();
+                //}
+                //if (description != "")
+                //{
+                //    description = "（" + description + "）";
+                //}
+                DoctorList.Add(new DoctorAndHCInfo { DoctorId = DR["UserId"].ToString(), DoctorName = DR["UserName"].ToString(), Hospital = DR["Hospital"].ToString(), Dept = DR["Dept"].ToString() });
             }
             return DoctorList;
         }
