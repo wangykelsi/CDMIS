@@ -5,6 +5,9 @@
 }
 <link href="../../Content/flexibleDisplay.css" rel="stylesheet" type="text/css" />
 <link href="../../Content/simpleModal.css" rel="stylesheet" type="text/css" />
+<link rel="Stylesheet" href="../../Content/chosen.css" />
+<script type="text/javascript" src="../../Scripts/chosen.jquery.min.js"></script>
+
 <script src="../../Scripts/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
 <script src="../../Scripts/jquery.simplemodal.1.4.4.min.js" type="text/javascript"></script>
 <style type="text/css">
@@ -102,21 +105,22 @@
                                             else
                                             {
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">@item.ItemName</label>
+                                        <label class="col-sm-4 control-label">@item.ItemName</label>
                                     </div> 
                                             }
                                         }
                                         else
                                         { 
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">
+                                        <label class="col-sm-4 control-label">
                                             @item.ItemName
                                         </label>
-                                        <div class="col-sm-5">
+                                        <div class="col-sm-6">
                                             @if (item.ControlType == "1")
                                             {
                                                 @item.Content       
                                             }
+                                           
                                             else
                                             {
                                                 @item.Content  
@@ -162,26 +166,65 @@
                                 if (items.GroupHeaderFlag == 1)
                                 { 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">
+                                <label class="col-sm-4 control-label">
                                     @items.Name</label>
                             </div>
                                 }
                                 else
                                 {
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">
+                                <label class="col-sm-4 control-label">
                                     @items.Name</label>
-                                <div class="col-sm-5">
-                                    @if (items.ControlType == "1")
-                                    {
-                                        @Html.DropDownList(items.Code, items.OptionList, new { style = "font-size:18px", @class = "form-control defaultSelected" })
                                 
-                                    }
-                                    else
-                                    { 
-                                        @Html.TextBox(items.Code, "", new { id = items.Code, style = "font-size:17px;", @class = "form-control" })
-                                    }
+                                    @if (items.ControlType == "1" || items.ControlType == "3")
+                                    {
+                                        
+                                        @* 1：下拉框  3：单选框*@
+                                        <div class="col-sm-6">
+                                        @Html.DropDownList(items.Code, items.OptionList, new { style = "font-size:18px", @class = "form-control defaultSelected" })
                                 </div>
+                                    }
+                                    @if (items.ControlType == "2")
+                                    { 
+                                        @* 复选框 *@
+                                       <div class="col-sm-6">
+                                        @Html.ListBox(items.Code, items.OptionList, new { id = items.Code, @class = "form-control chzn-select", multiple = "multiple", style = "font-size:34px;width:100%;height:34px;" })
+                   </div>
+                                    }
+                                    @if (items.ControlType == "4")
+                                    { 
+                                        @* 自由文本 *@
+                                        <div class="col-sm-6">
+                                        @Html.TextBox(items.Code, "", new { id = items.Code, style = "font-size:17px;", @class = "form-control" })
+                                        </div>
+                                    }
+                                    @if (items.ControlType == "5")
+                                    { 
+                                        @* 数字 *@
+                                       <div class="col-sm-6">
+                                        @Html.TextBox(items.Code, "", new { id = items.Code, style = "font-size:17px;", @class = "form-control", @onkeyup = "IsLegal(this.id);" })
+                                        <p class="@items.Code" style="font-size: 24px; color: Red"></p>
+                                        </div>
+                                    }
+                                    @if (items.ControlType == "6")
+                                    { 
+                                        @* 数字加单位 *@
+                                        <div class="col-sm-6">
+                                        @Html.TextBox(items.Code, "", new { id = items.Code, style = "font-size:17px;", @class = "form-control", disabled = "disabled" })
+                                        </div>
+                                    }
+                                     @if (items.ControlType == "7")
+                                     { 
+                                        @* 两层选择 *@
+                                         <div class="col-sm-3">
+                                       @* @Html.TextBox(items.Code, "", new { id = items.Code, style = "font-size:17px;", @class = "form-control", disabled = "disabled" })*@
+                                        @Html.DropDownList(items.Code, items.OptionList, new { style = "font-size:18px", @class = "form-control defaultSelected" })
+                                        </div>
+                                         <div class="col-sm-3">
+                                        @Html.DropDownList(items.Code, items.OptionList, new { style = "font-size:18px", @class = "form-control defaultSelected" })
+                                        </div>
+                                     }
+                             
                             </div>
                             
                                 }
@@ -258,11 +301,19 @@
         $("#menu a").attr("id", ""); //Reset id's 
         $("#menu li:eq(1) a").attr("id", "current");
         $("#nav a").attr("id", ""); //Reset id's 
-        $("#nav li:eq(1) a").attr("id", "currentnav"); 
+        $("#nav li:eq(1) a").attr("id", "currentnav");
 
-        document.getElementById("VitalSignsTypeNameListDropDownListFor").value = "";
+        //document.getElementById("VitalSignsTypeNameListDropDownListFor").value = "";
 
         var UserId = document.getElementById("UId").value;
+
+      
+        $('.chzn-select').chosen({
+            placeholder_text_multiple: " "
+        });
+        //$(element).css("width", "100%");
+        //document.Element.style.width = "100%";
+        $(".chosen-container").css("width", "100%");
 
         $.ajax({
             url: "/DoctorHome/GetVitalSignsFocusedList",
@@ -462,4 +513,19 @@
     $(".Sure").click(function () {
         $("#Close").click();
     })
+
+    //验证输入参数值合法性
+    function IsLegal(o) {
+        if (document.getElementById(o).value != "") {
+            var re = /^\d+$|^\d+\.\d+$/;
+            if (!re.test(document.getElementById(o).value)) {
+                $("." + o).html("输入格式有误！");
+
+                $("."+o).show();
+            }
+            else {
+                $("."+o).hide();
+            }
+        }
+    }
 </script>

@@ -213,6 +213,15 @@
                     @Html.ValidationMessageFor(model => model.DiagnosisInfo.Description)
                 </div>
             </div>
+             @*alert弹出框*@
+            <div id="alertDiagnosisInfoDiv" style="display: none" class="form-group">
+                <div class="col-sm-12">
+                    <p id="DiagnosisInfoWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
+                    text-align: center">
+                       
+                    </p>
+                </div>
+            </div>
            <input type="button" class="btn btn-primary addDiagnosisInfoBtn" value="添加" />
         </div>
          
@@ -487,13 +496,15 @@
                 if (DiagnosisCode == "") { Text = Text + "诊断名称 "; }
                 if (RecordDate == "") { Text = Text + "诊断日期 "; }
                 Text = Text + "不能为空！";
-                $("#Warning").html(Text);
+                $("#DiagnosisInfoWarning").html(Text);
+                $("#alertDiagnosisInfoDiv").show();
+
                 //alert(Text);
-                $('#alertDiv').modal({
-                    closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                    containerId: 'alert-container',
-                    overlayClose: true     //点击蒙层关闭窗口
-                });
+//                $('#alertDiv').modal({
+//                    closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
+//                    containerId: 'alert-container',
+//                    overlayClose: true     //点击蒙层关闭窗口
+//                });
             }
             else {
                 $.ajax({

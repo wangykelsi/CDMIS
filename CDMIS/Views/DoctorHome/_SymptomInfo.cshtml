@@ -202,6 +202,15 @@
                     @Html.ValidationMessageFor(model => model.Symptoms.RecordTime)
                 </div>*@
             </div>
+             @*alert弹出框*@
+            <div id="alertSymptomInfoDiv" style="display: none" class="form-group">
+                <div class="col-sm-12">
+                    <p id="SymptomInfoWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
+                    text-align: center">
+                       
+                    </p>
+                </div>
+            </div>
             <input type="button" class="btn btn-primary addSymptomInfoBtn" value="添加" />
         </div>
     </div>
@@ -429,6 +438,7 @@
             var RecordDateInput = document.getElementById("RecordDateInput").value;
             var RecordDate = RecordDateInput.substr(0, 10);
             var RecordTime = RecordDateInput.substr(11);
+           
 
             if (SymptomsType == "0" || SymptomsCode == "" || RecordDateInput == "") {
                 var Text = "";
@@ -436,13 +446,17 @@
                 if (SymptomsCode == "") { Text = Text + "症状名称 "; }
                 if (RecordDateInput == "") { Text = Text + "记录时间 "; }
                 Text = Text + "不能为空！";
-                $("#Warning").html(Text);
+               
+
+                $("#SymptomInfoWarning").html(Text);
+                $('#alertSymptomInfoDiv').show();
+
                 //alert(Text);
-                $('#alertDiv').modal({
-                    closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-                    containerId: 'alert-container',
-                    overlayClose: true     //点击蒙层关闭窗口
-                });
+//                $('#alertDiv').modal({
+//                    closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
+//                    containerId: 'alert-container',
+//                    overlayClose: true     //点击蒙层关闭窗口
+//                });
             }
             else {
                 $.ajax({

@@ -16,6 +16,26 @@ namespace CDMIS.ServiceReference {
     [System.ServiceModel.ServiceContractAttribute(Namespace="http://bme319.org/", ConfigurationName="ServiceReference.ServicesSoap")]
     public interface ServicesSoap {
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetClinicalInfo", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Data.DataSet GetClinicalInfo(string UserId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetDiagnosisInfo", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Data.DataSet GetDiagnosisInfo(string UserId, string VisitId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetExaminationInfo", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Data.DataSet GetExaminationInfo(string UserId, string VisitId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetLabTestInfo", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Data.DataSet GetLabTestInfo(string UserId, string VisitId);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetDrugRecord", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Data.DataSet GetDrugRecord(string UserId, string VisitId);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetWnMstBasicAlert", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         CDMIS.ServiceReference.WnMstAlert GetWnMstBasicAlert(string AlertItemCode);
@@ -246,30 +266,6 @@ namespace CDMIS.ServiceReference {
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         string GetHeartFailure(string UserId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetImplementationForPadFirst", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        void GetImplementationForPadFirst(string PatientId, string Module);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetImplementationForPadSecond", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        void GetImplementationForPadSecond(string PatientId, string PlanNo);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetImplementationForPhone", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        void GetImplementationForPhone(string PatientId, string Module);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetBPDetailByPeriod", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        void GetBPDetailByPeriod(string PatientId, string ItemType, int StartDate, int EndDate);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetImplementationForWebFirst", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        CDMIS.ServiceReference.ImplementationInfo GetImplementationForWebFirst(string PatientId, string Module);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetImplementationForWebSecond", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        CDMIS.ServiceReference.ImplementationInfo GetImplementationForWebSecond(string PatientId, string PlanNo);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetTaskNumber", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         int GetTaskNumber(string PatientId, string PlanNo, int PiStatus);
@@ -423,6 +419,54 @@ namespace CDMIS.ServiceReference {
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         CDMIS.ServiceReference.UpLoadImageResponse UpLoadImage(CDMIS.ServiceReference.UpLoadImageRequest request);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetImplementationForPadFirst", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        void GetImplementationForPadFirst(string PatientId, string Module);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetImplementationForPadSecond", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        void GetImplementationForPadSecond(string PatientId, string PlanNo);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetSignInfoByCode", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        void GetSignInfoByCode(string PatientId, string PlanNo, string ItemCode, int StartDate, int EndDate);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetImplementationForPhone1", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        void GetImplementationForPhone1(string PatientId, string Module);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetImplementationForPhone", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        void GetImplementationForPhone(string PatientId, string Module);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetSignsDetailByPeriod", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        void GetSignsDetailByPeriod(string PatientId, string Module, int StartDate, int Num);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetImplementationForWebFirst", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        CDMIS.ServiceReference.ImplementationInfo GetImplementationForWebFirst(string PatientId, string Module);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetImplementationForWebSecond", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        CDMIS.ServiceReference.ImplementationInfo GetImplementationForWebSecond(string PatientId, string PlanNo);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetSignInfoByCodeWeb", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        CDMIS.ServiceReference.ChartData GetSignInfoByCodeWeb(string PatientId, string PlanNo, string ItemCode, int StartDate, int EndDate);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetImplementationByDate", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        void GetImplementationByDate(string PatientId, string PlanNo, string DateSelected);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/getRemoteIPAddress", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        string getRemoteIPAddress();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetPhoneNoByUserId", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        string GetPhoneNoByUserId(string UserId);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/SetPatName", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         bool SetPatName(string UserId, string UserName);
@@ -501,7 +545,7 @@ namespace CDMIS.ServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/SetPatBasicInfo", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        bool SetPatBasicInfo(string UserId, string UserName, int Birthday, int Gender, int BloodType, string IDNo, string DoctorId, int InsuranceType, int InvalidFlag, string revUserId, string TerminalName, string TerminalIP, int DeviceType);
+        bool SetPatBasicInfo(string UserId, string UserName, int Birthday, int Gender, int BloodType, string IDNo, string DoctorId, string InsuranceType, int InvalidFlag, string revUserId, string TerminalName, string TerminalIP, int DeviceType);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/UpdatePatBasicInfoDtl", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
@@ -591,9 +635,25 @@ namespace CDMIS.ServiceReference {
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Data.DataSet GetDiagNameList(string Type);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetDiabetesDrugNameList", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Data.DataSet GetDiabetesDrugNameList(string Type);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetHypertensionDrugNameList", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Data.DataSet GetHypertensionDrugNameList(string Type);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetDiagTypeNameList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Data.DataSet GetDiagTypeNameList();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetDiabetesDrugTypeNameList", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Data.DataSet GetDiabetesDrugTypeNameList();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetHypertensionDrugTypeNameList", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Data.DataSet GetHypertensionDrugTypeNameList();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetClinicalInfoList", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
@@ -999,26 +1059,6 @@ namespace CDMIS.ServiceReference {
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Data.DataSet GetPatBasicInfoDtlList(string UserId);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetClinicalInfo", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Data.DataSet GetClinicalInfo(string UserId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetDiagnosisInfo", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Data.DataSet GetDiagnosisInfo(string UserId, string VisitId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetExaminationInfo", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Data.DataSet GetExaminationInfo(string UserId, string VisitId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetLabTestInfo", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Data.DataSet GetLabTestInfo(string UserId, string VisitId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetDrugRecord", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Data.DataSet GetDrugRecord(string UserId, string VisitId);
-        
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/TestGetCacheConnection", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         bool TestGetCacheConnection();
@@ -1153,7 +1193,7 @@ namespace CDMIS.ServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/SetBasicInfo", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        bool SetBasicInfo(string UserId, string UserName, int Birthday, int Gender, int BloodType, string IDNo, string DoctorId, int InsuranceType, int InvalidFlag, string revUserId, string TerminalName, string TerminalIP, int DeviceType);
+        bool SetBasicInfo(string UserId, string UserName, int Birthday, int Gender, int BloodType, string IDNo, string DoctorId, string InsuranceType, int InvalidFlag, string revUserId, string TerminalName, string TerminalIP, int DeviceType);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/SetBasicInfoDetail", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
@@ -1487,6 +1527,10 @@ namespace CDMIS.ServiceReference {
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         bool SetMstUserUM(string UserId, string UserName, string Password, string Class, int EndDate, string revUserId, string TerminalName, string TerminalIP, int DeviceType);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/DeleteRoleData", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        int DeleteRoleData(string PatientId, string RoleClass);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetClassByUserId", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         string GetClassByUserId(string UserId);
@@ -1502,10 +1546,6 @@ namespace CDMIS.ServiceReference {
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/CheckUserExist", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         bool CheckUserExist(string UserId);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetPhoneNoByUserId", ReplyAction="*")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        string GetPhoneNoByUserId(string UserId);
     }
     
     /// <remarks/>
@@ -2982,9 +3022,9 @@ namespace CDMIS.ServiceReference {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://bme319.org/")]
-    public partial class GuideList : object, System.ComponentModel.INotifyPropertyChanged {
+    public partial class GraphGuide : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private Guide[] guidesField;
+        private Guide[] guideListField;
         
         private string originalField;
         
@@ -2996,13 +3036,13 @@ namespace CDMIS.ServiceReference {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
-        public Guide[] Guides {
+        public Guide[] GuideList {
             get {
-                return this.guidesField;
+                return this.guideListField;
             }
             set {
-                this.guidesField = value;
-                this.RaisePropertyChanged("Guides");
+                this.guideListField = value;
+                this.RaisePropertyChanged("GuideList");
             }
         }
         
@@ -3074,21 +3114,15 @@ namespace CDMIS.ServiceReference {
         
         private string dateField;
         
-        private string sBPvalueField;
+        private string signValueField;
         
-        private string dBPvalueField;
+        private string signGradeField;
         
-        private string sBPGradeField;
+        private string signColorField;
         
-        private string dBPGradeField;
+        private string signShapeField;
         
-        private string sBPlineColorField;
-        
-        private string dBPlineColorField;
-        
-        private string sBPbulletShapeField;
-        
-        private string dBPbulletShapeField;
+        private string signDescriptionField;
         
         private string drugValueField;
         
@@ -3100,157 +3134,121 @@ namespace CDMIS.ServiceReference {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string date {
+        public string Date {
             get {
                 return this.dateField;
             }
             set {
                 this.dateField = value;
-                this.RaisePropertyChanged("date");
+                this.RaisePropertyChanged("Date");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string SBPvalue {
+        public string SignValue {
             get {
-                return this.sBPvalueField;
+                return this.signValueField;
             }
             set {
-                this.sBPvalueField = value;
-                this.RaisePropertyChanged("SBPvalue");
+                this.signValueField = value;
+                this.RaisePropertyChanged("SignValue");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string DBPvalue {
+        public string SignGrade {
             get {
-                return this.dBPvalueField;
+                return this.signGradeField;
             }
             set {
-                this.dBPvalueField = value;
-                this.RaisePropertyChanged("DBPvalue");
+                this.signGradeField = value;
+                this.RaisePropertyChanged("SignGrade");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string SBPGrade {
+        public string SignColor {
             get {
-                return this.sBPGradeField;
+                return this.signColorField;
             }
             set {
-                this.sBPGradeField = value;
-                this.RaisePropertyChanged("SBPGrade");
+                this.signColorField = value;
+                this.RaisePropertyChanged("SignColor");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=4)]
-        public string DBPGrade {
+        public string SignShape {
             get {
-                return this.dBPGradeField;
+                return this.signShapeField;
             }
             set {
-                this.dBPGradeField = value;
-                this.RaisePropertyChanged("DBPGrade");
+                this.signShapeField = value;
+                this.RaisePropertyChanged("SignShape");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=5)]
-        public string SBPlineColor {
+        public string SignDescription {
             get {
-                return this.sBPlineColorField;
+                return this.signDescriptionField;
             }
             set {
-                this.sBPlineColorField = value;
-                this.RaisePropertyChanged("SBPlineColor");
+                this.signDescriptionField = value;
+                this.RaisePropertyChanged("SignDescription");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public string DBPlineColor {
-            get {
-                return this.dBPlineColorField;
-            }
-            set {
-                this.dBPlineColorField = value;
-                this.RaisePropertyChanged("DBPlineColor");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
-        public string SBPbulletShape {
-            get {
-                return this.sBPbulletShapeField;
-            }
-            set {
-                this.sBPbulletShapeField = value;
-                this.RaisePropertyChanged("SBPbulletShape");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
-        public string DBPbulletShape {
-            get {
-                return this.dBPbulletShapeField;
-            }
-            set {
-                this.dBPbulletShapeField = value;
-                this.RaisePropertyChanged("DBPbulletShape");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
-        public string drugValue {
+        public string DrugValue {
             get {
                 return this.drugValueField;
             }
             set {
                 this.drugValueField = value;
-                this.RaisePropertyChanged("drugValue");
+                this.RaisePropertyChanged("DrugValue");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=10)]
-        public string drugBullet {
+        [System.Xml.Serialization.XmlElementAttribute(Order=7)]
+        public string DrugBullet {
             get {
                 return this.drugBulletField;
             }
             set {
                 this.drugBulletField = value;
-                this.RaisePropertyChanged("drugBullet");
+                this.RaisePropertyChanged("DrugBullet");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=11)]
-        public string drugColor {
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public string DrugColor {
             get {
                 return this.drugColorField;
             }
             set {
                 this.drugColorField = value;
-                this.RaisePropertyChanged("drugColor");
+                this.RaisePropertyChanged("DrugColor");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=12)]
-        public string drugDescription {
+        [System.Xml.Serialization.XmlElementAttribute(Order=9)]
+        public string DrugDescription {
             get {
                 return this.drugDescriptionField;
             }
             set {
                 this.drugDescriptionField = value;
-                this.RaisePropertyChanged("drugDescription");
+                this.RaisePropertyChanged("DrugDescription");
             }
         }
         
@@ -3270,33 +3268,47 @@ namespace CDMIS.ServiceReference {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://bme319.org/")]
-    public partial class chartData : object, System.ComponentModel.INotifyPropertyChanged {
+    public partial class ChartData : object, System.ComponentModel.INotifyPropertyChanged {
         
         private Graph[] graphListField;
         
-        private GuideList[] bPGuideField;
+        private GraphGuide graphGuideField;
+        
+        private string otherTasksField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayAttribute(Order=0)]
-        public Graph[] graphList {
+        public Graph[] GraphList {
             get {
                 return this.graphListField;
             }
             set {
                 this.graphListField = value;
-                this.RaisePropertyChanged("graphList");
+                this.RaisePropertyChanged("GraphList");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=1)]
-        public GuideList[] BPGuide {
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public GraphGuide GraphGuide {
             get {
-                return this.bPGuideField;
+                return this.graphGuideField;
             }
             set {
-                this.bPGuideField = value;
-                this.RaisePropertyChanged("BPGuide");
+                this.graphGuideField = value;
+                this.RaisePropertyChanged("GraphGuide");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string OtherTasks {
+            get {
+                return this.otherTasksField;
+            }
+            set {
+                this.otherTasksField = value;
+                this.RaisePropertyChanged("OtherTasks");
             }
         }
         
@@ -3436,6 +3448,196 @@ namespace CDMIS.ServiceReference {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://bme319.org/")]
+    public partial class PatientInfo1 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string patientNameField;
+        
+        private string imageUrlField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public string PatientName {
+            get {
+                return this.patientNameField;
+            }
+            set {
+                this.patientNameField = value;
+                this.RaisePropertyChanged("PatientName");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string ImageUrl {
+            get {
+                return this.imageUrlField;
+            }
+            set {
+                this.imageUrlField = value;
+                this.RaisePropertyChanged("ImageUrl");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://bme319.org/")]
+    public partial class ImplementationInfo : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private PatientInfo1 patientInfoField;
+        
+        private string progressRateField;
+        
+        private string remainingDaysField;
+        
+        private string compliacneValueField;
+        
+        private int startDateField;
+        
+        private int endDateField;
+        
+        private PlanDeatil[] planListField;
+        
+        private Task[] taskListField;
+        
+        private ChartData chartDataField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
+        public PatientInfo1 PatientInfo {
+            get {
+                return this.patientInfoField;
+            }
+            set {
+                this.patientInfoField = value;
+                this.RaisePropertyChanged("PatientInfo");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
+        public string ProgressRate {
+            get {
+                return this.progressRateField;
+            }
+            set {
+                this.progressRateField = value;
+                this.RaisePropertyChanged("ProgressRate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
+        public string RemainingDays {
+            get {
+                return this.remainingDaysField;
+            }
+            set {
+                this.remainingDaysField = value;
+                this.RaisePropertyChanged("RemainingDays");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
+        public string CompliacneValue {
+            get {
+                return this.compliacneValueField;
+            }
+            set {
+                this.compliacneValueField = value;
+                this.RaisePropertyChanged("CompliacneValue");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
+        public int StartDate {
+            get {
+                return this.startDateField;
+            }
+            set {
+                this.startDateField = value;
+                this.RaisePropertyChanged("StartDate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=5)]
+        public int EndDate {
+            get {
+                return this.endDateField;
+            }
+            set {
+                this.endDateField = value;
+                this.RaisePropertyChanged("EndDate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=6)]
+        public PlanDeatil[] PlanList {
+            get {
+                return this.planListField;
+            }
+            set {
+                this.planListField = value;
+                this.RaisePropertyChanged("PlanList");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Order=7)]
+        public Task[] TaskList {
+            get {
+                return this.taskListField;
+            }
+            set {
+                this.taskListField = value;
+                this.RaisePropertyChanged("TaskList");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order=8)]
+        public ChartData ChartData {
+            get {
+                return this.chartDataField;
+            }
+            set {
+                this.chartDataField = value;
+                this.RaisePropertyChanged("ChartData");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://bme319.org/")]
     public partial class PlanDeatil : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string planNameField;
@@ -3533,168 +3735,6 @@ namespace CDMIS.ServiceReference {
             set {
                 this.doctorIdField = value;
                 this.RaisePropertyChanged("DoctorId");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://bme319.org/")]
-    public partial class PatientInfo1 : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string patientNameField;
-        
-        private string imageUrlField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public string PatientName {
-            get {
-                return this.patientNameField;
-            }
-            set {
-                this.patientNameField = value;
-                this.RaisePropertyChanged("PatientName");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string ImageUrl {
-            get {
-                return this.imageUrlField;
-            }
-            set {
-                this.imageUrlField = value;
-                this.RaisePropertyChanged("ImageUrl");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.1")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://bme319.org/")]
-    public partial class ImplementationInfo : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private PatientInfo1 patientInfoField;
-        
-        private string progressRateField;
-        
-        private string remainingDaysField;
-        
-        private string compliacneValueField;
-        
-        private PlanDeatil[] planListField;
-        
-        private Task[] taskListField;
-        
-        private chartData chartDataField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public PatientInfo1 PatientInfo {
-            get {
-                return this.patientInfoField;
-            }
-            set {
-                this.patientInfoField = value;
-                this.RaisePropertyChanged("PatientInfo");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
-        public string ProgressRate {
-            get {
-                return this.progressRateField;
-            }
-            set {
-                this.progressRateField = value;
-                this.RaisePropertyChanged("ProgressRate");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
-        public string RemainingDays {
-            get {
-                return this.remainingDaysField;
-            }
-            set {
-                this.remainingDaysField = value;
-                this.RaisePropertyChanged("RemainingDays");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
-        public string CompliacneValue {
-            get {
-                return this.compliacneValueField;
-            }
-            set {
-                this.compliacneValueField = value;
-                this.RaisePropertyChanged("CompliacneValue");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=4)]
-        public PlanDeatil[] PlanList {
-            get {
-                return this.planListField;
-            }
-            set {
-                this.planListField = value;
-                this.RaisePropertyChanged("PlanList");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Order=5)]
-        public Task[] TaskList {
-            get {
-                return this.taskListField;
-            }
-            set {
-                this.taskListField = value;
-                this.RaisePropertyChanged("TaskList");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order=6)]
-        public chartData chartData {
-            get {
-                return this.chartDataField;
-            }
-            set {
-                this.chartDataField = value;
-                this.RaisePropertyChanged("chartData");
             }
         }
         
@@ -4260,6 +4300,26 @@ namespace CDMIS.ServiceReference {
                 base(binding, remoteAddress) {
         }
         
+        public System.Data.DataSet GetClinicalInfo(string UserId) {
+            return base.Channel.GetClinicalInfo(UserId);
+        }
+        
+        public System.Data.DataSet GetDiagnosisInfo(string UserId, string VisitId) {
+            return base.Channel.GetDiagnosisInfo(UserId, VisitId);
+        }
+        
+        public System.Data.DataSet GetExaminationInfo(string UserId, string VisitId) {
+            return base.Channel.GetExaminationInfo(UserId, VisitId);
+        }
+        
+        public System.Data.DataSet GetLabTestInfo(string UserId, string VisitId) {
+            return base.Channel.GetLabTestInfo(UserId, VisitId);
+        }
+        
+        public System.Data.DataSet GetDrugRecord(string UserId, string VisitId) {
+            return base.Channel.GetDrugRecord(UserId, VisitId);
+        }
+        
         public CDMIS.ServiceReference.WnMstAlert GetWnMstBasicAlert(string AlertItemCode) {
             return base.Channel.GetWnMstBasicAlert(AlertItemCode);
         }
@@ -4490,30 +4550,6 @@ namespace CDMIS.ServiceReference {
             return base.Channel.GetHeartFailure(UserId);
         }
         
-        public void GetImplementationForPadFirst(string PatientId, string Module) {
-            base.Channel.GetImplementationForPadFirst(PatientId, Module);
-        }
-        
-        public void GetImplementationForPadSecond(string PatientId, string PlanNo) {
-            base.Channel.GetImplementationForPadSecond(PatientId, PlanNo);
-        }
-        
-        public void GetImplementationForPhone(string PatientId, string Module) {
-            base.Channel.GetImplementationForPhone(PatientId, Module);
-        }
-        
-        public void GetBPDetailByPeriod(string PatientId, string ItemType, int StartDate, int EndDate) {
-            base.Channel.GetBPDetailByPeriod(PatientId, ItemType, StartDate, EndDate);
-        }
-        
-        public CDMIS.ServiceReference.ImplementationInfo GetImplementationForWebFirst(string PatientId, string Module) {
-            return base.Channel.GetImplementationForWebFirst(PatientId, Module);
-        }
-        
-        public CDMIS.ServiceReference.ImplementationInfo GetImplementationForWebSecond(string PatientId, string PlanNo) {
-            return base.Channel.GetImplementationForWebSecond(PatientId, PlanNo);
-        }
-        
         public int GetTaskNumber(string PatientId, string PlanNo, int PiStatus) {
             return base.Channel.GetTaskNumber(PatientId, PlanNo, PiStatus);
         }
@@ -4676,6 +4712,54 @@ namespace CDMIS.ServiceReference {
             return retVal.UpLoadImageResult;
         }
         
+        public void GetImplementationForPadFirst(string PatientId, string Module) {
+            base.Channel.GetImplementationForPadFirst(PatientId, Module);
+        }
+        
+        public void GetImplementationForPadSecond(string PatientId, string PlanNo) {
+            base.Channel.GetImplementationForPadSecond(PatientId, PlanNo);
+        }
+        
+        public void GetSignInfoByCode(string PatientId, string PlanNo, string ItemCode, int StartDate, int EndDate) {
+            base.Channel.GetSignInfoByCode(PatientId, PlanNo, ItemCode, StartDate, EndDate);
+        }
+        
+        public void GetImplementationForPhone1(string PatientId, string Module) {
+            base.Channel.GetImplementationForPhone1(PatientId, Module);
+        }
+        
+        public void GetImplementationForPhone(string PatientId, string Module) {
+            base.Channel.GetImplementationForPhone(PatientId, Module);
+        }
+        
+        public void GetSignsDetailByPeriod(string PatientId, string Module, int StartDate, int Num) {
+            base.Channel.GetSignsDetailByPeriod(PatientId, Module, StartDate, Num);
+        }
+        
+        public CDMIS.ServiceReference.ImplementationInfo GetImplementationForWebFirst(string PatientId, string Module) {
+            return base.Channel.GetImplementationForWebFirst(PatientId, Module);
+        }
+        
+        public CDMIS.ServiceReference.ImplementationInfo GetImplementationForWebSecond(string PatientId, string PlanNo) {
+            return base.Channel.GetImplementationForWebSecond(PatientId, PlanNo);
+        }
+        
+        public CDMIS.ServiceReference.ChartData GetSignInfoByCodeWeb(string PatientId, string PlanNo, string ItemCode, int StartDate, int EndDate) {
+            return base.Channel.GetSignInfoByCodeWeb(PatientId, PlanNo, ItemCode, StartDate, EndDate);
+        }
+        
+        public void GetImplementationByDate(string PatientId, string PlanNo, string DateSelected) {
+            base.Channel.GetImplementationByDate(PatientId, PlanNo, DateSelected);
+        }
+        
+        public string getRemoteIPAddress() {
+            return base.Channel.getRemoteIPAddress();
+        }
+        
+        public string GetPhoneNoByUserId(string UserId) {
+            return base.Channel.GetPhoneNoByUserId(UserId);
+        }
+        
         public bool SetPatName(string UserId, string UserName) {
             return base.Channel.SetPatName(UserId, UserName);
         }
@@ -4752,7 +4836,7 @@ namespace CDMIS.ServiceReference {
             return base.Channel.GetDoctorList();
         }
         
-        public bool SetPatBasicInfo(string UserId, string UserName, int Birthday, int Gender, int BloodType, string IDNo, string DoctorId, int InsuranceType, int InvalidFlag, string revUserId, string TerminalName, string TerminalIP, int DeviceType) {
+        public bool SetPatBasicInfo(string UserId, string UserName, int Birthday, int Gender, int BloodType, string IDNo, string DoctorId, string InsuranceType, int InvalidFlag, string revUserId, string TerminalName, string TerminalIP, int DeviceType) {
             return base.Channel.SetPatBasicInfo(UserId, UserName, Birthday, Gender, BloodType, IDNo, DoctorId, InsuranceType, InvalidFlag, revUserId, TerminalName, TerminalIP, DeviceType);
         }
         
@@ -4844,8 +4928,24 @@ namespace CDMIS.ServiceReference {
             return base.Channel.GetDiagNameList(Type);
         }
         
+        public System.Data.DataSet GetDiabetesDrugNameList(string Type) {
+            return base.Channel.GetDiabetesDrugNameList(Type);
+        }
+        
+        public System.Data.DataSet GetHypertensionDrugNameList(string Type) {
+            return base.Channel.GetHypertensionDrugNameList(Type);
+        }
+        
         public System.Data.DataSet GetDiagTypeNameList() {
             return base.Channel.GetDiagTypeNameList();
+        }
+        
+        public System.Data.DataSet GetDiabetesDrugTypeNameList() {
+            return base.Channel.GetDiabetesDrugTypeNameList();
+        }
+        
+        public System.Data.DataSet GetHypertensionDrugTypeNameList() {
+            return base.Channel.GetHypertensionDrugTypeNameList();
         }
         
         public System.Data.DataSet GetClinicalInfoList(string UserId) {
@@ -5252,26 +5352,6 @@ namespace CDMIS.ServiceReference {
             return base.Channel.GetPatBasicInfoDtlList(UserId);
         }
         
-        public System.Data.DataSet GetClinicalInfo(string UserId) {
-            return base.Channel.GetClinicalInfo(UserId);
-        }
-        
-        public System.Data.DataSet GetDiagnosisInfo(string UserId, string VisitId) {
-            return base.Channel.GetDiagnosisInfo(UserId, VisitId);
-        }
-        
-        public System.Data.DataSet GetExaminationInfo(string UserId, string VisitId) {
-            return base.Channel.GetExaminationInfo(UserId, VisitId);
-        }
-        
-        public System.Data.DataSet GetLabTestInfo(string UserId, string VisitId) {
-            return base.Channel.GetLabTestInfo(UserId, VisitId);
-        }
-        
-        public System.Data.DataSet GetDrugRecord(string UserId, string VisitId) {
-            return base.Channel.GetDrugRecord(UserId, VisitId);
-        }
-        
         public bool TestGetCacheConnection() {
             return base.Channel.TestGetCacheConnection();
         }
@@ -5404,7 +5484,7 @@ namespace CDMIS.ServiceReference {
             return base.Channel.GetPatientBasicInfoDetail(UserId, CategoryCode);
         }
         
-        public bool SetBasicInfo(string UserId, string UserName, int Birthday, int Gender, int BloodType, string IDNo, string DoctorId, int InsuranceType, int InvalidFlag, string revUserId, string TerminalName, string TerminalIP, int DeviceType) {
+        public bool SetBasicInfo(string UserId, string UserName, int Birthday, int Gender, int BloodType, string IDNo, string DoctorId, string InsuranceType, int InvalidFlag, string revUserId, string TerminalName, string TerminalIP, int DeviceType) {
             return base.Channel.SetBasicInfo(UserId, UserName, Birthday, Gender, BloodType, IDNo, DoctorId, InsuranceType, InvalidFlag, revUserId, TerminalName, TerminalIP, DeviceType);
         }
         
@@ -5740,6 +5820,10 @@ namespace CDMIS.ServiceReference {
             return base.Channel.SetMstUserUM(UserId, UserName, Password, Class, EndDate, revUserId, TerminalName, TerminalIP, DeviceType);
         }
         
+        public int DeleteRoleData(string PatientId, string RoleClass) {
+            return base.Channel.DeleteRoleData(PatientId, RoleClass);
+        }
+        
         public string GetClassByUserId(string UserId) {
             return base.Channel.GetClassByUserId(UserId);
         }
@@ -5754,10 +5838,6 @@ namespace CDMIS.ServiceReference {
         
         public bool CheckUserExist(string UserId) {
             return base.Channel.CheckUserExist(UserId);
-        }
-        
-        public string GetPhoneNoByUserId(string UserId) {
-            return base.Channel.GetPhoneNoByUserId(UserId);
         }
     }
 }
