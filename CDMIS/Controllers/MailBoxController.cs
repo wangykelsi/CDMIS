@@ -403,7 +403,9 @@ namespace CDMIS.Controllers
         //根据ID获取联系人列表
         public List<List<ContractsInfo>> GetContactsById(string UserId, List<ModuleInfo> MList)
         {
-            string IdenClass = _ServicesSoapClient.GetClass(UserId);
+            var user = Session["CurrentUser"] as UserAndRole;
+            string IdenClass = user.Role;
+            //string IdenClass = _ServicesSoapClient.GetClass(UserId);
             int ModuleCount = MList.Count;
             List<List<ContractsInfo>> items = new List<List<ContractsInfo>>();
 

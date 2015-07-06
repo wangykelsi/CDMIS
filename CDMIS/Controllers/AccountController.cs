@@ -85,14 +85,34 @@ namespace CDMIS.Controllers
                                     CurrentUser.Role = "Doctor";
                                 }
                             }
-                            //CurrentUser.TerminalName = Dns.GetHostName();
-                            CurrentUser.TerminalName = Request.ServerVariables.Get("Remote_Host").ToString();
                             string hostAddress = Request.ServerVariables.Get("Remote_Addr").ToString();
                             if (hostAddress == "::1")
                             {
                                 hostAddress = "127.0.0.1";
                             }
                             CurrentUser.TerminalIP = hostAddress;
+
+                            //CurrentUser.TerminalName = Dns.GetHostName();
+                            //CurrentUser.TerminalName = Request.ServerVariables.Get("Remote_Host").ToString();
+                            string hostName = "";
+                            try
+                            {
+                                System.Net.IPHostEntry host = new System.Net.IPHostEntry();
+                                host = System.Net.Dns.GetHostEntry(hostAddress);
+                                hostName = host.HostName;
+                            }
+                            catch
+                            { 
+                            }
+                            finally 
+                            {
+                                if (hostName == "")
+                                {
+                                    hostName = Request.ServerVariables.Get("Remote_Host").ToString();
+                                }
+                            }
+                            CurrentUser.TerminalName = hostName;
+                            
                             CurrentUser.DeviceType = 1;
 
                             var ChangeLastLogOnTimeFlag = _ServicesSoapClient.UpdateLastLoginDateTime(CurrentUser.UserId, CurrentUser.UserName, CurrentUser.TerminalIP, CurrentUser.TerminalName, CurrentUser.DeviceType);

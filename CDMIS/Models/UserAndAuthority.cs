@@ -86,7 +86,9 @@ namespace CDMIS.Models
         public string ItemSeq { get; set; }
         public string DoctorId { get; set; }
         public string DoctorName { get; set; }
-        public List<SelectListItem> DoctorList { get; set; }
+        public string ModalName { get; set; }
+        public string DataTableName { get; set; }
+        public List<DoctorAndHCInfo> DoctorList { get; set; }
     }
 
     public class HealthCoach
@@ -94,6 +96,25 @@ namespace CDMIS.Models
         public string ItemSeq { get; set; }
         public string HealthCoachId { get; set; }
         public string HealthCoachName { get; set; }
-        public List<SelectListItem> HealthCoachList { get; set; }
+        public string HCDivName { get; set; }
+        public string DataTableName { get; set; }
+        public List<DoctorAndHCInfo> HealthCoachList { get; set; }
     }
+
+    public class DoctorAndHCInfo
+    {
+        public string DoctorId { get; set; }
+        public string DoctorName { get; set; }
+        public string Hospital { get; set; }
+        public string Dept { get; set; }
+    }
+
+    //public class DoctorAndHC
+    //{
+    //    public string Module { get; set; }
+    //    public List<DoctorAndHCInfo> InfoList { get; set; }
+    //    public DoctorAndHC() {
+    //        InfoList = new List<DoctorAndHCInfo>();
+    //    }
+    //}
 }

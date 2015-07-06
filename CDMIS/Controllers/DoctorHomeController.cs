@@ -46,7 +46,7 @@ namespace CDMIS.Controllers
 
         #region <" 患者列表 ">
         //患者列表
-        public ActionResult PatientList()
+        public ActionResult PatientList(string PatientId)
         {
             var user = Session["CurrentUser"] as UserAndRole;
             PatientListViewModel patientListView = new PatientListViewModel(user.UserId);
@@ -59,6 +59,10 @@ namespace CDMIS.Controllers
             }
             patientListView.AdvancedSearchEnable = "0";
 
+            if (PatientId != null && PatientId != "")
+            {
+                patientListView.PatientId = PatientId;
+            }
             //GetPatientsBySearchConditions()
             string patientId = patientListView.PatientId == null ? "" : patientListView.PatientId;
             string patientName = patientListView.PatientName == null ? "" : patientListView.PatientName;
