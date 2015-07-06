@@ -17,8 +17,8 @@
 <style type="text/css">
     #alert-container
     {
-        height: 120px;
-        width: 300px;
+        height: 150px;
+        width: 400px;
     }
      #simplemodal-container 
      {
@@ -292,6 +292,33 @@
         </center>
     </div>
 </div>
+
+<div id="DeleteRoleDataDiv" style="display: none;">
+    <div class="modalHeader">
+        <span>删除角色</span></div>
+    <div class="modalContent">
+        <center>
+            <p id="DeleteRoleDataP" style="font-size: 16px; color: #FF0000; font-weight: bold;">
+            </p>
+            <input type="button" class="btn btn-primary" value="确定" id="DeleteRoleDataSure" />
+            <input type="button" class="btn btn-default simplemodal-close" id="CancelDeleteRoleDataSure" value="取消" />
+        </center>
+    </div>
+</div>
+
+<div id="DeleteRoleStatusDiv" style="display: none;">
+    <div class="modalHeader">
+        <span>删除角色</span></div>
+    <div class="modalContent">
+        <center>
+            <p id="DeleteRoleStatusP" style="font-size: 16px; color: #FF0000; font-weight: bold;">
+            </p>
+            <input type="button" class="btn btn-primary" value="确定" id="DeleteRoleStatusSure" />
+            <input type="button" class="btn btn-default simplemodal-close" value="取消" />
+        </center>
+    </div>
+</div>
+
 <div id="success" style="display: none;">
     <div class="modalHeader">
         <span></span>
@@ -308,6 +335,10 @@
     var newflag = 0;
     var OriPhoneNo = "";
     var UId = "";
+    var deleteUid = "";
+    var deleteClassCode = "";
+    var deleteClass = "";
+    var deleteName = "";
 
     function hide() {
         var target = document.getElementById("UserListDT");
@@ -438,10 +469,35 @@
 
     //删除按钮触发
     $(".deleteBtn").click(function () {
-        var ret = 2;
+
         trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
         var txtUserId = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
         var userClassCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
+        var userClass = $("#TableBody tr:eq(" + trSeq + ") td:eq(4)").text().trim();
+        var txtUserName = $("#TableBody tr:eq(" + trSeq + ") td:eq(1)").text().trim();
+
+        deleteUid = txtUserId;
+        deleteName = txtUserName;
+        deleteClassCode = userClassCode;
+        deleteClass = userClass;
+        document.getElementById("DeleteRoleDataP").innerHTML = "确定删除" + txtUserName + "(" + txtUserId + ")" + "的" + userClass + "角色吗？";
+        $('#DeleteRoleDataDiv').modal({
+            closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
+            containerId: 'alert-container',
+            overlayClose: true     //点击蒙层关闭窗口
+        });
+
+    });
+    $("#DeleteRoleDataSure").click(function () {
+        var ret = 2;
+        var txtUserId = deleteUid;
+        var userClassCode = deleteClassCode;
+        var userClass = deleteClass;
+        var userName = deleteName;
+        deleteName = ""
+        deleteUid = "";
+        deleteClassCode = "";
+        deleteClass = "";
         $.ajax({                                                //初始化日期控件为系统当前时间+1年（默认密码有效期为一年）
             url: "/Management/DeleteRoleData",
             type: "GET",
@@ -453,10 +509,29 @@
             }
         });
         if (ret == 1) {
-            window.location.href = window.location.href;
+            $("#CancelDeleteRoleDataSure").click();
+            document.getElementById("DeleteRoleStatusP").innerHTML = "删除" + userName + "(" + txtUserId + ")" + "的" + userClass + "角色成功！";
+            $('#DeleteRoleStatusDiv').modal({
+                closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
+                containerId: 'alert-container',
+                overlayClose: true     //点击蒙层关闭窗口
+            });
+
+        }
+        else {
+            $("#CancelDeleteRoleDataSure").click();
+            document.getElementById("DeleteRoleStatusP").innerHTML = "删除" + userName + "(" + txtUserId + ")" + "的" + userClass + "角色失败！";
+            $('#DeleteRoleStatusDiv').modal({
+                closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
+                containerId: 'alert-container',
+                overlayClose: true     //点击蒙层关闭窗口
+            });
         }
     });
-
+    $("#DeleteRoleStatusSure").click(function () {
+        window.location.href = window.location.href;
+    });
+    
     //删除按钮触发
     $(".newroleBtn").click(function () {
         newflag = 2;
