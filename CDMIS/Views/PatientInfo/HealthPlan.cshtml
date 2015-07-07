@@ -107,27 +107,27 @@
        <div id="title_graph" style="width:700px;height:40px;display:block;margin-top:20px;" >
     
        <div style="width:150px;float:left;">
-        <select name="switch" id="switch" style="font-size:18px;">
-             <option value="Bloodpressure_1" id="Bloodpressure_1">收缩压</option>
-			 <option value="Bloodpressure_2" id="Bloodpressure_2">舒张压</option>
-             <option value="Pulserate_1" id="Pulserate_1">脉率</option>
-        </select>
+             <select name="switch" id="sign_switch" style="font-size:18px;">
+
+             </select>
      </div>
 
-       <div style="width:200px;float:left;" id="originalDiv">        
-          <p><img alt="Load" src="../../Content/Image/original.png" style="width:30px;height:5px;" />&nbsp;起始值：<span id="BPoriginal"></span>mmHg</p>         
-     </div>
+     <div id="ori_tarDiv">
+         <div style="width:200px;float:left;" id="originalDiv">        
+              <p><img alt="Load" src="../../Content/Image/original.png" style="width:30px;height:5px;" />&nbsp;起始值：<span id="BPoriginal"></span></p>         
+        </div>
 
-       <div style="width:200px;float:left;" id="targetDiv">
-        <p><img alt="Load" src="../../Content/Image/target.png" style="width:30px;height:5px;" />&nbsp;目标值：<span id="BPtarget"></span>mmHg</p>
+         <div style="width:200px;float:left;" id="targetDiv">
+             <p><img alt="Load" src="../../Content/Image/target.png" style="width:30px;height:5px;" />&nbsp;目标值：<span id="BPtarget"></span></p>
+        </div>
      </div>
 
     </div>
 
-       <div id="chartdiv" style="width:95%; height:450px;">
+       <div id="chartdiv" style="width:95%;height:500px;">
        </div>
 
-       <div style="margin:20px auto;" align="center">  
+       <div style="margin:7px auto;" align="center">  
           <p id="CompliacneValue" style="font-size:20px;color:#0048CC;"></p>
        </div>
    </div>
@@ -161,7 +161,7 @@
         var PatientId = document.getElementById("UserId").value;
         GetImplementationForWebFirst(PatientId, "M1");  //默认高血压模块
 
-       $('#switch').change(function(){ 
+       $('#sign_switch').change(function(){ 
 	      selectDataset($(this).children('option:selected').val());  //按钮切换体征
 	   });
 
@@ -210,6 +210,10 @@
                     $("#load_after").css("visibility", "hidden");
                     $("#load_first").css("display", "block");
                     $("#alertTextDiv").css("display", "block");
+
+                    NowPlanNo="";
+	                StartDate=0;
+	                EndDate=0;
                 }
 
                 else  //当前计划有正在执行
@@ -226,10 +230,13 @@
                             else if (data.TaskList[i].TaskType == "LifeStyle") {
                                 str_li_task += '<dd><div class="title"><span><img src="../../Content/Image/leftico01.png" /></span>生活方式</div><ul class="menuson">';
                             }
-                            else {
+                            else if (data.TaskList[i].TaskType == "Drug") {
                                 str_li_task += '<dd><div class="title"><span><img src="../../Content/Image/leftico01.png" /></span>用药任务</div><ul class="menuson">';
                             }
-
+                            else
+                            {
+                              str_li_task += '<dd><div class="title"><span><img src="../../Content/Image/leftico01.png" /></span>其他任务</div><ul class="menuson">';
+                            }
                             for (var j = 0; j < data.TaskList[i].TaskDeatilList.length; j++) {
                                 str_li_task += ' <li><cite></cite>' + data.TaskList[i].TaskDeatilList[j].TaskName + '</li>';
                                 if (data.TaskList[i].TaskDeatilList[j].Instruction != "") {
@@ -239,8 +246,12 @@
                             str_li_task += '</ul></dd>';
 
                         }
+                        //$(".leftmenu li").remove();
+                        $('.leftmenu').find("dd").remove();
                         $('.leftmenu').append(str_li_task);
                     }
+
+
 
 
                     //进度、依从率
@@ -252,6 +263,18 @@
                     NowPlanNo = data.PlanList[0].PlanNo;
                     StartDate = data.StartDate;
                     EndDate = data.EndDate;
+
+                    //体征切换下拉框
+				    var str_option='';
+				    for(var i=0;i<data.SignList.length;i++)
+				    {
+					    var signid="signList_"+(i+1);
+					    str_option+='<option value="'+data.SignList[i].SignCode+'" id="'+signid+'">'+data.SignList[i].SignName+'</option>';
+				    }
+	   
+				    str_option+='';
+                    $('#sign_switch').find("option").remove();
+				    $('#sign_switch').append(str_option); 
 
 
                     //画图
@@ -281,17 +304,28 @@
 					        createStockChartNoOther(data.ChartData);
 				        }
 
+
+                       //收缩压的起始值，目标值必须有！
+				        if(((data.ChartData.GraphGuide.original==null)||(data.ChartData.GraphGuide.original=="")) && ((data.ChartData.GraphGuide.target==null)||(data.ChartData.GraphGuide.target=="")))
+				        {
+					        $("#ori_tarDiv").css("display","none");
+				        }
+				        else
+				        {
+					        //$("#originalDiv").css("visibility","visible");
+				            //$("#targetDiv").css("visibility","visible");
+			                $("#BPoriginal").text(data.ChartData.GraphGuide.original);
+	                        $("#BPtarget").text(data.ChartData.GraphGuide.target);
+					        $("#ori_tarDiv").css("display","block");
+				        }
+
                         $("#graph_loading").css("display", "none");
                         $("#alertTextDiv").css("display", "none");
                         $("#load_first").css("display", "block");
                         $("#load_after").css("visibility", "visible");
                         $("#detail_plan").css("visibility", "visible");
 
-                        //收缩压的起始值，目标值必须有！
-                       $("#originalDiv").css("visibility", "visible");
-                       $("#targetDiv").css("visibility", "visible");
-                       $("#BPoriginal").text(data.ChartData.GraphGuide.original);
-                       $("#BPtarget").text(data.ChartData.GraphGuide.target);
+
 
                     }
                     else //有任务、无图表数据
@@ -314,7 +348,7 @@
     //createStockChart  有其他任务（除了体征测量)
    function createStockChart(ChartData) {
 	 
-        $("#chartdiv").height(450);
+        $("#chartdiv").height(500);
 
 	   //var minimum=50;
        //图
@@ -481,9 +515,10 @@
 					}
 				],
                 balloon:{
+                    //offsetX:8,
 					fadeOutDuration:3,   //3秒之后自动消失
 					animationDuration:0.1,
-					maxWidth:500,  //必须有，不然自排版是乱的
+					maxWidth:550,  //必须有，不然自排版是乱的
 				    textAlign:"left",
 					horizontalPadding:12,
 					verticalPadding:4,
@@ -586,37 +621,42 @@
 				  {
 					  createStockChartNoOther(data);
 				  }
+
+
+                  if((ItemCode=="Bloodpressure|Bloodpressure_1")||(ItemCode=="Bloodpressure|Bloodpressure_2"))
+				  {
+					  chart.panels[0].title="血压 （单位：mmHg）";
+				  }
+				  else if(ItemCode=="Pulserate|Pulserate_1")
+				  {
+					  chart.panels[0].title="脉率 （单位：次/分）";
+				  }
+				  chart.validateNow();
+				  
+				  //类似脉率没有初始值和目标值，则隐藏
+			   if(((data.GraphGuide.original==null)||(data.GraphGuide.original=="")) && ((data.GraphGuide.target==null)||(data.GraphGuide.target=="")))
+				{
+					$("#ori_tarDiv").css("display","none");
+				}
+				else
+				{
+					//$("#originalDiv").css("visibility","visible");
+				    //$("#targetDiv").css("visibility","visible");
+			        $("#BPoriginal").text(data.GraphGuide.original);
+	                $("#BPtarget").text(data.GraphGuide.target);
+					$("#ori_tarDiv").css("display","block");
+				}
 			}
 
-	        //chart.panels[0].valueAxes[0].guides=data.GuideList
-	       // chart.panels[0].valueAxes[0].minimum=data.GraphGuide.minimum;
-			//chart.panels[0].valueAxes[0].maximum=data.GraphGuide.maximum;
-	       //chart.dataSets[0].dataProvider= data.GraphList;
-			
 	        //chart.validateNow();
            // chart.validateData();
            //chart.animateAgain();  //只适用于serial
 	      //chart.write("chartdiv");
 
-            //$("#graph_loading").css("display","block");
 		    $("#detail_plan").css("visibility", "visible");
 			
 		     
-			  //图上说明	 
-		    if(ItemCode=="Pulserate_1")
-		    {
-				//隐藏
-				$("#originalDiv").css("visibility","hidden");
-				$("#targetDiv").css("visibility","hidden");
-		    }
-		    else
-		    { 
-			    //收缩压的起始值，目标值必须有！
-                $("#originalDiv").css("visibility","visible");
-				$("#targetDiv").css("visibility","visible");
-			    $("#BPoriginal").text(data.GraphGuide.original);
-	            $("#BPtarget").text(data.GraphGuide.target);
-		    }
+			
 			   
 			 }, 
        error: function(msg) {
@@ -667,6 +707,7 @@ function hookBtn(button_id)
 		else
 		{
             $("#play_prev").css("visibility", "visible");
+            $("#play_next").css("visibility", "visible");
 			rechange(index); //更新下拉框计划,刷新图
 		}
 	}
@@ -680,6 +721,7 @@ function hookBtn(button_id)
 		}
 		else
 		{
+            $("#play_prev").css("visibility", "visible");
             $("#play_next").css("visibility", "visible");
 			rechange(index); 
 		}
@@ -792,6 +834,18 @@ function rechange(loop){
                 }
 
 
+                //体征切换下拉框
+				    var str_option='';
+				    for(var i=0;i<data.SignList.length;i++)
+				    {
+					    var signid="signList_"+(i+1);
+					    str_option+='<option value="'+data.SignList[i].SignCode+'" id="'+signid+'">'+data.SignList[i].SignName+'</option>';
+				    }
+	   
+				    str_option+='';
+                    $('#sign_switch').find("option").remove();
+				    $('#sign_switch').append(str_option); 
+
                 if((data.ChartData.GraphList.length>0) && (data.ChartData.GraphList!=null))          //图表有数据
 			    {
                     //✔ ✘ ' 图片地址处理 
@@ -818,11 +872,28 @@ function rechange(loop){
 				  }
 
 
-                    $("#graph_loading").css("display", "none");
-                    $("#alertTextDiv").css("display", "none");
-                    $("#load_first").css("display", "block");
-                    $("#load_after").css("visibility", "visible");
-                    $("#detail_plan").css("visibility", "visible");
+                  //类似脉率没有初始值和目标值，则隐藏  类似收缩压有的则显示
+			   if(((data.ChartData.GraphGuide.original==null)||(data.ChartData.GraphGuide.original=="")) && ((data.ChartData.GraphGuide.target==null)||(data.ChartData.GraphGuide.target=="")))
+				{
+					$("#ori_tarDiv").css("display","none");
+				}
+				else
+				{
+					//$("#originalDiv").css("visibility","visible");
+				    //$("#targetDiv").css("visibility","visible");
+			        $("#BPoriginal").text(data.ChartData.GraphGuide.original);
+	                $("#BPtarget").text(data.ChartData.GraphGuide.target);
+					$("#ori_tarDiv").css("display","block");
+				}
+				
+			   $("#graph_loading").css("display", "none");
+               $("#alertTextDiv").css("display", "none");
+               $("#load_first").css("display", "block");
+               $("#load_after").css("visibility", "visible");
+               $("#detail_plan").css("visibility", "visible");
+			    //还原下拉框 收缩压被选
+			   //$("#Bloodpressure_1").attr("selected","selected");
+			   $("#signList_1").attr("selected","selected");
 
                 }
                 else //有任务、无图表数据
@@ -836,14 +907,6 @@ function rechange(loop){
 
                 }
 
-                //收缩压的起始值，目标值必须有！
-                $("#originalDiv").css("visibility","visible");
-				$("#targetDiv").css("visibility","visible");
-			    $("#BPoriginal").text(data.ChartData.GraphGuide.original);
-	            $("#BPtarget").text(data.ChartData.GraphGuide.target);
-
-                //还原下拉框 收缩压被选
-			    $("#Bloodpressure_1").attr("selected","selected");
 
             },
             error: function (msg) { alert("Error!"); },
@@ -920,7 +983,7 @@ function rechange(loop){
 				//autoMargins:false,
 				panels: [{
 						title: "血压 （单位：mmHg）",
-						showCategoryAxis: false,
+						showCategoryAxis: true,
 						percentHeight: 70,
 						autoMargins:false,
 						//marginTop:300,
