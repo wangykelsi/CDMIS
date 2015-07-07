@@ -126,7 +126,12 @@
                             <td >@item.PhoneNo
                             </td>
                             <td >
-                                @if(@item.Class=="Administrator")
+                                @if(item.Class == "Patient")
+                                {
+                                    <input type="button" value="分配医生" class="btn btn-primary setDocBtn"/>
+                                }
+                                |
+                                @*@if (item.Class == "Administrator")
                                 {
                                     <input type="button" value="新建角色" class="btn btn-primary newroleBtn" disabled="disabled"/>
                                 }
@@ -135,7 +140,7 @@
                                     <input type="button" value="新建角色" class="btn btn-primary newroleBtn" />
                                 
                                 }
-                                |
+                                |*@
                                 <input type="button" value="编辑" class="btn btn-primary editBtn" />
                                 |
                                 <input type="button" value="删除" class="btn btn-primary deleteBtn" />
@@ -1422,5 +1427,10 @@
         });
     }
 
-
+    //删除按钮触发
+    $(".setDocBtn").click(function () {
+        trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
+        var txtUserId = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
+        location.href = "/Management/ModuleManagement" + "?PatientId=" + txtUserId;
+    });
 </script>
