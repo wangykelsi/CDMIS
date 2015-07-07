@@ -32,6 +32,7 @@ namespace CDMIS.ViewModels
     public class PersonalHomepageViewModel
     {
         public PatientBasicInfo Patient { get; set; }
+        public string Role { get; set; }
         public List<SelectListItem> GenderList()
         {
             return CommonVariables.GetGenderList();
@@ -42,7 +43,6 @@ namespace CDMIS.ViewModels
         [RegularExpression(@"(^\d{18}$)|(^\d{15}$)|(^\d{17}X$)", ErrorMessage = "请填写正确格式的身份证号")]
         public string IDNO { get; set; }                        //身份证号码
 
-        [RegularExpression(@"(^\d{11}$)", ErrorMessage = "请填写11位手机号码")]
         public string PhoneNumber { get; set; }                 //手机号码
         public string Address { get; set; }                     //家庭住址
         public string Occupation { get; set; }                  //职业

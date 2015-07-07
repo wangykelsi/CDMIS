@@ -618,7 +618,7 @@ namespace CDMIS.ViewModels
         public static List<SelectListItem> GetDeptList()
         {
             List<SelectListItem> DeptList = new List<SelectListItem>();
-            DataTable dt = _ServicesSoapClient.GetDeptList("1").Tables[0];
+            DataTable dt = _ServicesSoapClient.GetDivision().Tables[0];
             foreach (DataRow dr in dt.Rows)
             {
                 DeptList.Add(new SelectListItem { Text = dr["Name"].ToString(), Value = dr["Code"].ToString() });

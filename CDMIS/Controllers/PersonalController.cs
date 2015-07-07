@@ -11,6 +11,7 @@ using CDMIS.OtherCs;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Data;
 
 namespace CDMIS.Controllers
 {
@@ -103,7 +104,7 @@ namespace CDMIS.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "数据库连接失败");
+                    ModelState.AddModelError("", "数据库操作失败");
                     return View();
                 }
 
@@ -124,6 +125,7 @@ namespace CDMIS.Controllers
             var user = Session["CurrentUser"] as UserAndRole;
             var UserId = user.UserId;
             string hostAddress = System.Configuration.ConfigurationManager.AppSettings["WebServe"];
+            PersonalHomepageModel.Role = user.Role;
             if (user.Role == "Administrator" || user.Role == "Doctor")
             {
                 var BasicInfo = _ServicesSoapClient.GetDoctorInfo(UserId);
@@ -260,6 +262,7 @@ namespace CDMIS.Controllers
                 avatarPath = s[s.Length - 1];
             }
 
+            int setSuccessFlag = 0;
             if (user.Role == "Administrator" || user.Role == "Doctor")
             {
                 var DoctorBasicInfo = _ServicesSoapClient.GetDoctorInfo(UserId);
@@ -276,7 +279,8 @@ namespace CDMIS.Controllers
                 SetDoctorPhoneNumberFlag = _ServicesSoapClient.SetPhoneNo(UserId, "PhoneNo", PhoneNumber, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType) == 1? true: false;
                 if (SetDoctorBasicFlag == true && SetDoctorPhoneNumberFlag == true && SetDoctorHomeAddressFlag == true && SetDoctorOccupationFlag == true && SetDoctorNationalityFlag == true && SetDoctorECFlag == true && SetDoctorECPNFlag == true && SetDoctorPhotoFlag == true && SetDoctorIDNoFlag == true)
                 {
-                    return 1;
+                    setSuccessFlag = 1;
+                    //return 1;
                 }
                 else
                 {
@@ -284,7 +288,25 @@ namespace CDMIS.Controllers
                     return 0;
                 }
             }
-            else
+            //判断该用户是否为患者，同步Ps.BasicInfo表
+            int isPatientFlag = 0;
+            if (user.Role == "Doctor")
+            {
+                DataSet roleDs = _ServicesSoapClient.GetAllRoleMatch(UserId);
+                if (roleDs.Tables.Count != 0)
+                {
+                    DataTable roleDt = roleDs.Tables[0];
+                    foreach (DataRow dr in roleDt.Rows)
+                    {
+                        if (dr["RoleClass"].ToString() == "Patient")
+                        {
+                            isPatientFlag = 1;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (user.Role == "Doctor" && isPatientFlag == 1)
             {
                 var GetBasicInfoList = _ServicesSoapClient.GetUserBasicInfo(UserId);
                 var BloodType = Convert.ToInt32(GetBasicInfoList.BloodType);
@@ -292,7 +314,7 @@ namespace CDMIS.Controllers
                 var InsuranceType = GetBasicInfoList.InsuranceType;
                 var InvalidFlag = GetBasicInfoList.InvalidFlag;
                 var SetPatientBasicFlag = _ServicesSoapClient.SetBasicInfo(UserId, UserName, Birthday, Gender, BloodType, null, DoctorId, InsuranceType, InvalidFlag, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
-                var SetPatientPhoneNumberFlag = _ServicesSoapClient.SetBasicInfoDetail(UserId, CategoryCode, "Contact002_1", ItemSeq, PhoneNumber, null, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                //var SetPatientPhoneNumberFlag = _ServicesSoapClient.SetBasicInfoDetail(UserId, CategoryCode, "Contact002_1", ItemSeq, PhoneNumber, null, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
                 var SetPatientHomeAddressFlag = _ServicesSoapClient.SetBasicInfoDetail(UserId, CategoryCode, "Contact002_2", ItemSeq, HomeAddress, null, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
                 var SetPatientOccupationFlag = _ServicesSoapClient.SetBasicInfoDetail(UserId, CategoryCode, "Contact001_2", ItemSeq, Occupation, null, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
                 var SetPatientNationalityFlag = _ServicesSoapClient.SetBasicInfoDetail(UserId, CategoryCode, "Contact001_3", ItemSeq, Nationality, null, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
@@ -300,15 +322,24 @@ namespace CDMIS.Controllers
                 var SetPatientECPNFlag = _ServicesSoapClient.SetBasicInfoDetail(UserId, CategoryCode, "Contact002_4", ItemSeq, EmergencyContactPhoneNumber, null, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
                 var SetPatientPhotoFlag = _ServicesSoapClient.SetBasicInfoDetail(UserId, CategoryCode, "Contact001_4", ItemSeq, avatarPath, null, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
                 var SetPatientIDNoFlag = _ServicesSoapClient.SetBasicInfoDetail(UserId, CategoryCode, "Contact001_1", ItemSeq, IDNo, null, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
-                if (SetPatientBasicFlag == true && SetPatientPhoneNumberFlag == true && SetPatientHomeAddressFlag == true && SetPatientOccupationFlag == true && SetPatientNationalityFlag == true && SetPatientECFlag == true && SetPatientECPNFlag == true && SetPatientPhotoFlag == true && SetPatientIDNoFlag == true)
+                if (SetPatientBasicFlag == true && SetPatientHomeAddressFlag == true && SetPatientOccupationFlag == true && SetPatientNationalityFlag == true && SetPatientECFlag == true && SetPatientECPNFlag == true && SetPatientPhotoFlag == true && SetPatientIDNoFlag == true)
                 {
-                    return 1;
+                    setSuccessFlag = 1;
+                    //return 1;
                 }
                 else
                 {
                     ModelState.AddModelError("", "数据库连接失败");
                     return 0;
                 }
+            }
+            if (setSuccessFlag == 1)
+            {
+                return 1;
+            }
+            else 
+            {
+                return 0;
             }
         }
 
