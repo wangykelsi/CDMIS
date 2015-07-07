@@ -119,12 +119,18 @@ namespace CDMIS.Controllers
         #endregion
 
         #region 患者模块管理
-        public ActionResult ModuleManagement()
+        public ActionResult ModuleManagement(string PatientId)
         {
             try
             {
                 var user = Session["CurrentUser"] as UserAndRole;
                 ModuleManagementViewModel MMVM = new ModuleManagementViewModel();
+                if (PatientId != null && PatientId != "")
+                {
+                    MMVM.PatientId = PatientId;
+                    MMVM.ModuleInfoList = GetModuleAndDoctorInfo(MMVM.PatientId);
+                    MMVM.HealthCoachInfoList = GetHealthCareList(MMVM.PatientId);
+                }
                 //MMVM.ModuleInfoList = GetModuleAndDoctorInfo();
                 return View(MMVM);
             }
@@ -178,6 +184,14 @@ namespace CDMIS.Controllers
             if (PreDocId != "0")
             {
                 Ret = _ServicesSoapClient.DeletePatient(PreDocId, "HM1", PatientId);
+            }
+            if (Ret == 1)
+            {
+                string planNo = _ServicesSoapClient.GetExecutingPlanByModule(PatientId, "M1");
+                if (planNo != null && planNo != "")
+                {
+                    _ServicesSoapClient.UpdatePlanStatus(planNo, 4, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                }
             }
             res.Data = Ret;
             res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;

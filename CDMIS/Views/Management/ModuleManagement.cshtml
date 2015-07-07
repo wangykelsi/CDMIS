@@ -22,7 +22,7 @@
 </style>
 @using (Html.BeginForm("ModuleManagement", "Management", FormMethod.Post, new { id = "MMForm", @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
 {
-    <div class="form-group">
+    @*<div class="form-group">
         <label class="col-sm-3 control-label">
             患者ID:</label>
         <div class="col-sm-6">
@@ -31,6 +31,12 @@
         <div class="col-sm-2">
             <button type="submit" class="btn btn-primary">
                 查看</button>
+        </div>
+    </div>*@
+    <div class="form-group">
+        <div class="col-sm-offset-10 col-sm-2">
+            <button type="button" class="btn btn-primary" onclick='location.href = "/Management/Index"'>
+                返回用户管理页面</button>
         </div>
     </div>
     <div style="width: 70%; margin: 0 auto;">
@@ -285,33 +291,12 @@
 </div>
 <script type="text/javascript">
 
-    $(document).ready(function () {
-        $("#menu a").attr("id", ""); //Reset id's 
-        $("#menu li:eq(2) a").attr("id", "current");
-
-        //        var table = $('#DataTable').DataTable({
-        //            "oLanguage": {//语言国际化
-        //                "sUrl": "/Content/jquery.dataTable.cn.txt"
-        //            },
-        //            "bAutoWidth": false,
-        //            "bPaginate": false,  //是否分页。
-        //            "sScrollX": "100%",
-        //            "sScrollY": "250px",
-        //            "bFilter": false,
-        //            "aoColumnDefs": [{ "sWidth": "30px", "aTargets": [0] },
-        //                        { "sWidth": "200px", "aTargets": [1]}],
-        //            "aaSorting": [[0, "desc"]]
-        //        });
-    });
+//    $(document).ready(function () {
+//        $("#menu a").attr("id", ""); //Reset id's 
+//        $("#menu li:eq(2) a").attr("id", "current");
+//    });
 
     //点击编辑按钮
-    //    $(".EditBtn").click(function () {
-    //        var trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
-    //        var module = $.trim($("#MMTBody tr:eq(" + trSeq + ") td:eq(0)").text());
-    //        $("#DoctorListOf" + module).removeAttr("disabled");
-    //        $(this).next().css("display", "block");
-    //        $(this).css("display", "none");
-    //    });
     $(".EditBtn").click(function () {
         var trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
         var module = $.trim($("#MMTBody tr:eq(" + trSeq + ") td:eq(0)").text());
@@ -365,42 +350,8 @@
         });
     });
 
-    //点击确认按钮
-    //    $(".ConfirmBtn").click(function () {
-    //    $(".DocConfirmBtn").click(function () {
-    //        var btn = $(this);
-    //        var trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
-    //        var module = $.trim($("#MMTBody tr:eq(" + trSeq + ") td:eq(0)").text());
-    //        var preDocId = $.trim($("#MMTBody tr:eq(" + trSeq + ") td:eq(2)").text());
-    //        var doctorId = $("#DoctorListOf" + module).val();
-    //        var seq = $.trim($("#MMTBody tr:eq(" + trSeq + ") td:eq(5)").text());
-    //        $.ajax({
-    //            url: "/Management/UpdateModuleInfo",
-    //            type: "GET",
-    //            dataType: "json",
-    //            async: false,
-    //            data: { PatientId: $("#PatientId").val(), Module: module, DoctorId: doctorId, Seq: seq, PreDocId: preDocId },
-    //            success: function (res) {
-    //                if (res == 1) {
-    //                    $("#DoctorListOf" + module).attr("disabled", "disabled");
-    //                    btn.prev().css("display", "block");
-    //                    btn.css("display", "none");
-    //                    $("#MMTBody tr:eq(" + trSeq + ") td:eq(2)").text(doctorId);
-    //                }
-    //                else if (res == 0) {
-    //                    alert("数据更新失败，请重试！");
-    //                }
-    //            }
-    //        });
-    //    });
-
     //点击编辑按钮
     $(".HCEditBtn").click(function () {
-//        var trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
-//        var seq = $.trim($("#MMTBody tr:eq(" + trSeq + ") td:eq(5)").text());
-//        $("#HCListOf" + seq).removeAttr("disabled");
-//        $(this).next().css("display", "block");
-        //        $(this).css("display", "none");
         var trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
         var preDocId = $.trim($("#MMTBody tr:eq(" + trSeq + ") td:eq(2)").text());
         var seq = $.trim($("#MMTBody tr:eq(" + trSeq + ") td:eq(5)").text());
