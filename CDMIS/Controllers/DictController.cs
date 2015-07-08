@@ -599,7 +599,7 @@ namespace CDMIS.Controllers
             {
                 k = Convert.ToInt32(SortNo);
             }
-            bool flag = _ServicesSoapClient.SetDivision(Convert.ToInt32(Type), Code, Name, k, Convert.ToInt32(StartDate), Convert.ToInt32(EndDate), user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+            bool flag = _ServicesSoapClient.SetDivision(Convert.ToInt32(Type), Code, "", Name, "", "", user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
             if (flag)
             {
                 res.Data = true;
