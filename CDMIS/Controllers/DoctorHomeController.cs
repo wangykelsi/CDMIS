@@ -58,11 +58,11 @@ namespace CDMIS.Controllers
                 dt = _DS_PatientList.Tables[0];
             }
             patientListView.AdvancedSearchEnable = "0";
-
             if (PatientId != null && PatientId != "")
             {
                 patientListView.PatientId = PatientId;
             }
+
             //GetPatientsBySearchConditions()
             string patientId = patientListView.PatientId == null ? "" : patientListView.PatientId;
             string patientName = patientListView.PatientName == null ? "" : patientListView.PatientName;
@@ -797,7 +797,7 @@ namespace CDMIS.Controllers
                                     // OptionCategory = row[12].ToString(),
                                     //OptionSelected = row[0].ToString(),
                                     //OptionList = row[0],
-                                    //ItemSeq = Convert.ToInt32(row[6]),
+                                    ItemSeq = Convert.ToInt32(row[6]),
                                     Value = row[7].ToString(),
                                     //Content = row[9].ToString()
                                     Content = _ServicesSoapClient.GetUserName(row[7].ToString())
@@ -828,7 +828,7 @@ namespace CDMIS.Controllers
                                     OptionCategory = row[12].ToString(),
                                     //OptionSelected = row[0].ToString(),
                                     //OptionList = row[0],
-                                    //ItemSeq = Convert.ToInt32(row[6]),
+                                    ItemSeq = Convert.ToInt32(row[6]),
                                     Value = row[7].ToString(),
                                     Content = row[8].ToString()
                                     //Description = row[9].ToString()
@@ -1098,6 +1098,11 @@ namespace CDMIS.Controllers
                         {
                             CategoryCode = model.moduleUnBoughtCode[i].ToString();
                             //是否购买
+                            int DeleteFlag = 0;
+                            while (DeleteFlag == 0)
+                            {
+                                DeleteFlag = _ServicesSoapClient.DeleteModuleDetail(Patient, CategoryCode);
+                            }
                             flag = _ServicesSoapClient.SetBasicInfoDetail(Patient, CategoryCode, "InvalidFlag", ItemSeq, "0", Description, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
 
                             //插入 医生详细信息表 负责患者信息
@@ -1109,10 +1114,11 @@ namespace CDMIS.Controllers
                             {
                                 ItemCode = model.InfoItemList[i][j].Code;
                                 Value = Request.Form[model.InfoItemList[i][j].Code];
-
                                 //插入患者详细信息表中的模块关注详细信息
-                                flag = _ServicesSoapClient.SetBasicInfoDetail(Patient, CategoryCode, ItemCode, ItemSeq, Value, Description, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
-                                 
+                                if (ItemCode.IndexOf("M1004_1") == -1 && ItemCode.IndexOf("M1004_2") == -1)
+                                {
+                                    flag = _ServicesSoapClient.SetBasicInfoDetail(Patient, CategoryCode, ItemCode, ItemSeq, Value, Description, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                                }
                                 //string[] Array = Value.Split(',');
                                 //if (Value ==null)
                                 //{
@@ -1221,6 +1227,7 @@ namespace CDMIS.Controllers
             return res;
         }
 
+        //编辑
         public ActionResult ModuleProfileEdit(string UserId)
         {
             var user = Session["CurrentUser"] as UserAndRole;
@@ -1261,7 +1268,7 @@ namespace CDMIS.Controllers
                                 OptionCategory = row[12].ToString(),
                                 //OptionSelected = row[0].ToString(),
                                 //OptionList = row[0],
-                                //ItemSeq = Convert.ToInt32(row[6]),
+                                ItemSeq = Convert.ToInt32(row[6]),
                                 Value = row[7].ToString(),
                                 Content = _ServicesSoapClient.GetUserName(row[7].ToString())
                                 //Description = row[9].ToString()
@@ -1291,7 +1298,7 @@ namespace CDMIS.Controllers
                                 OptionCategory = row[12].ToString(),
                                 //OptionSelected = row[0].ToString(),
                                 //OptionList = row[0],
-                                //ItemSeq = Convert.ToInt32(row[6]),
+                                ItemSeq = Convert.ToInt32(row[6]),
                                 Value = row[7].ToString(),
                                 Content = row[8].ToString(),
                                 //Description = row[9].ToString()
@@ -1336,6 +1343,7 @@ namespace CDMIS.Controllers
             int ItemSeq = 1;
             string Value = "";
             string Content = "";
+            string ControlType = "";
             int SortNo = 1;
             
             if (ItemInfoBoughtds.Tables.Count > 0)
@@ -1344,6 +1352,12 @@ namespace CDMIS.Controllers
                 {
                     if ((datatable.Rows[0][3].ToString() == "Doctor") && (datatable.Rows[0][7].ToString() == DoctorId))
                     {
+                        int DeleteFlag = 0;
+                        CategoryCode = datatable.Rows[0][1].ToString();
+                        while (DeleteFlag == 0)
+                        {
+                            DeleteFlag = _ServicesSoapClient.DeleteModuleDetail(Patient, CategoryCode);
+                        }
                         foreach (DataRow row in datatable.Rows)
                         {
                             if ((row[3].ToString() != "InvalidFlag") && (row[3].ToString() != "Doctor") && (row[4].ToString() != "伴随疾病"))
@@ -1358,10 +1372,13 @@ namespace CDMIS.Controllers
                                 //Description = row[9].ToString();
                                 Content = row[9].ToString();
                                 SortNo = Convert.ToInt32(row[10]);
+                                ControlType = row[11].ToString();
 
                                 Value = Request.Form[row[3].ToString()];   //只更改了Value
-
-                                flag = _ServicesSoapClient.SetPatBasicInfoDetail(Patient, CategoryCode, ItemCode, ItemSeq, Value, Content, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                                if (ControlType != "7")
+                                {
+                                    flag = _ServicesSoapClient.SetPatBasicInfoDetail(Patient, CategoryCode, ItemCode, ItemSeq, Value, Content, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                                }
                             }
                         }
                     }
@@ -1440,9 +1457,9 @@ namespace CDMIS.Controllers
             //ClinicalInfoModel.PatientBasicInfo = GetPatientBasicInfo(UserId);
 
             //加载患者就诊信息
-            ClinicalInfoModel.InPatientList = GetInPatientList(UserId, DoctorId);
-            ClinicalInfoModel.OutPatientList = GetOutPatientList(UserId, DoctorId);
-            ClinicalInfoModel.ClinicalInfoList = GetInPatientInfoList(UserId);
+            //ClinicalInfoModel.InPatientList = GetInPatientList(UserId, DoctorId);
+            //ClinicalInfoModel.OutPatientList = GetOutPatientList(UserId, DoctorId);
+            //ClinicalInfoModel.ClinicalInfoList = GetInPatientInfoList(UserId);
 
             return View(ClinicalInfoModel);
         }
@@ -2693,7 +2710,6 @@ namespace CDMIS.Controllers
             return HypertensionDrugTypeNameList;
         }
 
-
         //糖尿病药物类型下拉框
         public List<SelectListItem> GetDiabetesDrugTypeNameList(string selectedValue)
         {
@@ -2730,6 +2746,82 @@ namespace CDMIS.Controllers
                 }
             }
             return DiabetesDrugTypeNameList;
+        }
+
+        //根据TypeName动态加载DrugNameList下拉框
+        public JsonResult GetListbyTypeName(string TypeSelected, int Category)
+        {
+            var res = new JsonResult();
+            List<string> DrugNameList = new List<string>();
+            if (TypeSelected != "0")
+            {
+                DataSet DrugNameDS = new DataSet();
+                if (Category == 1)
+                {
+                    DrugNameDS = _ServicesSoapClient.GetHypertensionDrugNameList(TypeSelected);
+                }
+                if (Category == 2)
+                {
+                    DrugNameDS = _ServicesSoapClient.GetDiabetesDrugNameList(TypeSelected);
+                }
+                DataTable DrugNameDT = DrugNameDS.Tables[0];
+
+                foreach (DataRow DR in DrugNameDT.Rows)
+                {
+                    DrugNameList.Add(DR["Name"].ToString() + "|" + DR["Code"].ToString());
+                }
+            }
+            res.Data = DrugNameList;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+
+        //动态加载药物类型下拉框
+        public JsonResult GetTypeNameList(int Category)
+        {
+            var res = new JsonResult();
+            List<string> TypeNameList = new List<string>();
+            DataSet TypeNameDS = new DataSet();
+            if (Category == 1)
+            {
+                TypeNameDS = _ServicesSoapClient.GetHypertensionDrugTypeNameList();
+            }
+            if (Category == 2)
+            {
+                TypeNameDS = _ServicesSoapClient.GetDiabetesDrugTypeNameList();
+            }
+            DataTable TypeNameDT = TypeNameDS.Tables[0];
+            
+            foreach (DataRow DR in TypeNameDT.Rows)
+            {
+                TypeNameList.Add(DR["TypeName"].ToString() + "|" + DR["Type"].ToString());
+            }
+            res.Data = TypeNameList;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+
+        //添加口服药数据
+        public JsonResult SetDrugData(string PatientId, string CategoryCode, string ItemCode, int ItemSeq, string Value, int SortNo)
+        {
+            var res = new JsonResult();
+            var user = Session["CurrentUser"] as UserAndRole;
+            bool Flag = true;
+            Flag = _ServicesSoapClient.SetBasicInfoDetail(PatientId, CategoryCode, ItemCode, ItemSeq, Value, "", SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+            res.Data = Flag;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+
+        //删除口服药数据      
+        public JsonResult DeleteDrugData(string PatientId, string CategoryCode, string ItemCode, int ItemSeq)
+        {
+            var res = new JsonResult();
+            int flag = 0;
+            flag = _ServicesSoapClient.DeleteModule(PatientId, CategoryCode, ItemCode, ItemSeq);
+            res.Data = flag;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
         }
 
         //加载操作医生未负责患者列表

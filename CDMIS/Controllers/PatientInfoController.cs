@@ -109,11 +109,17 @@ namespace CDMIS.Controllers
             {
                 foreach (DataTable ta in set.Tables)
                 {
+                    int DeleteFlag = 0;
+                    string CategoryCode = ta.Rows[0][1].ToString();
+                    while (DeleteFlag == 0)
+                    {
+                        DeleteFlag = _ServicesSoapClient.DeleteModuleDetail(PatientId, CategoryCode);
+                    }
                     foreach (System.Data.DataRow row in ta.Rows)
                     {
                         if ((row[3].ToString() != "InvalidFlag") && (row[3].ToString() != "Doctor") && (row[4].ToString() != "伴随疾病"))
                         {
-                            string CategoryCode = row[1].ToString();  //主键  
+                            CategoryCode = row[1].ToString();  //主键  
                             string ItemCode = row[3].ToString();     //主键 
                             int ItemSeq = Convert.ToInt32(row[10]);   //主键 
 
@@ -121,10 +127,13 @@ namespace CDMIS.Controllers
                             int SortNo = Convert.ToInt32(row[10]);
 
                             string Value = Request.Form[row[3].ToString()];   //只更改了Value
+                            string ControlType = row[11].ToString();
 
                             //插入数据
-                            flag = _ServicesSoapClient.SetPatBasicInfoDetail(PatientId, CategoryCode, ItemCode, ItemSeq, Value, Description, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
-
+                            if (ControlType != "7")
+                            {
+                                flag = _ServicesSoapClient.SetPatBasicInfoDetail(PatientId, CategoryCode, ItemCode, ItemSeq, Value, Description, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                            }
                             if (flag == false)
                             {
                                 break;

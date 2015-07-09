@@ -70,7 +70,11 @@
                 { 
             <div class="form-group">
                     <label class="col-sm-4 control-label" style="font-size: 16px;">
-                        @item.ItemName
+                        @if (item.ControlType == "7" && item.ItemSeq != 1){}
+                        else
+                        {
+                            @item.ItemName
+                        }
                     </label>
                     <div class="col-sm-8">
                     @if (item.ControlType == "1")
