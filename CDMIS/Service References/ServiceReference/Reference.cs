@@ -16,6 +16,10 @@ namespace CDMIS.ServiceReference {
     [System.ServiceModel.ServiceContractAttribute(Namespace="http://bme319.org/", ConfigurationName="ServiceReference.ServicesSoap")]
     public interface ServicesSoap {
         
+	[System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/DeleteModuleDetail", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        int DeleteModuleDetail(string Patient, string CategoryCode);
+
         [System.ServiceModel.OperationContractAttribute(Action="http://bme319.org/GetClinicalInfo", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Data.DataSet GetClinicalInfo(string UserId);
@@ -4904,6 +4908,10 @@ namespace CDMIS.ServiceReference {
             return base.Channel.DeleteModule(UserId, CategoryCode, ItemCode, ItemSeq);
         }
         
+	public int DeleteModuleDetail(string Patient, string CategoryCode) {
+            return base.Channel.DeleteModuleDetail(Patient, CategoryCode);
+        }
+
         public int DeleteVitalSignsInfo(string UserId, string VitalSignsType, string VitalSignsCode, string revUserId, string TerminalName, string TerminalIP, int DeviceType) {
             return base.Channel.DeleteVitalSignsInfo(UserId, VitalSignsType, VitalSignsCode, revUserId, TerminalName, TerminalIP, DeviceType);
         }

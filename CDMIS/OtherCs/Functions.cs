@@ -410,11 +410,11 @@ namespace CDMIS.OtherCs
                                 ItemCode = row[3].ToString(),
                                 ItemName = row[4].ToString(),
                                 ParentCode = row[5].ToString(),
-                                //ControlType = row[11].ToString(),
+                                ControlType = row[11].ToString(),
                                 // OptionCategory = row[12].ToString(),
                                 //OptionSelected = row[0].ToString(),
                                 //OptionList = row[0],
-                                //ItemSeq = Convert.ToInt32(row[6]),
+                                ItemSeq = Convert.ToInt32(row[6]),
                                 //Value = row[7].ToString(),
                                 Content = _ServicesSoapClient.GetUserName(row[7].ToString())
                                 //Description = row[9].ToString()
@@ -430,11 +430,11 @@ namespace CDMIS.OtherCs
                                 ItemCode = row[3].ToString(),
                                 ItemName = row[4].ToString(),
                                 ParentCode = row[5].ToString(),
-                                //ControlType = row[11].ToString(),
+                                ControlType = row[11].ToString(),
                                 // OptionCategory = row[12].ToString(),
                                 //OptionSelected = row[0].ToString(),
                                 //OptionList = row[0],
-                                //ItemSeq = Convert.ToInt32(row[6]),
+                                ItemSeq = Convert.ToInt32(row[6]),
                                 //Value = row[7].ToString(),
                                 Content = row[8].ToString(),
                                 //Description = row[9].ToString()
@@ -483,7 +483,7 @@ namespace CDMIS.OtherCs
                                 ControlType = row[11].ToString(),         //界面    //控制是下拉框还是自由文本（放在value里，description？）
                                 OptionCategory = row[12].ToString(),               //yesorno
                                 //OptionList = row[],?                             //下拉框（需选中）
-                                //ItemSeq = Convert.ToInt32(row[6]),              //主键  
+                                ItemSeq = Convert.ToInt32(row[6]),              //主键  
                                 Value = row[7].ToString(),
                                 Content = _ServicesSoapClient.GetUserName(row[7].ToString()),           //界面
                                 Description = row[9].ToString()
@@ -515,7 +515,7 @@ namespace CDMIS.OtherCs
                                 ControlType = row[11].ToString(),         //界面    //控制是下拉框还是自由文本（放在value里，description？）
                                 OptionCategory = row[12].ToString(),               //yesorno
                                 //OptionList = row[],?                             //下拉框（需选中）
-                                //ItemSeq = Convert.ToInt32(row[6]),              //主键  
+                                ItemSeq = Convert.ToInt32(row[6]),              //主键  
                                 Value = row[7].ToString(),
                                 Content = row[8].ToString(),             //界面
                                 Description = row[9].ToString()
@@ -536,23 +536,53 @@ namespace CDMIS.OtherCs
         {
             DataSet typeset = _ServicesSoapClient.GetTypeList(Type);   //字典表
 
-            List<SelectListItem> sli = new List<SelectListItem>();
+            List<SelectListItem> dropdownList = new List<SelectListItem>();
+            dropdownList.Add(new SelectListItem { Text = "请选择", Value = "0" });
             foreach (System.Data.DataRow typerow in typeset.Tables[0].Rows)
             {
-                sli.Add(new SelectListItem { Text = typerow[1].ToString(), Value = typerow[0].ToString() });
+                dropdownList.Add(new SelectListItem { Text = typerow[1].ToString(), Value = typerow[0].ToString() });
             }
 
             if (Value != "")
             {
-                foreach (var item in sli)
+                string[] values = Value.Split(',');
+                int vLength = values.Length;
+                if (vLength > 1)
                 {
-                    if (Value == item.Value)
+                    for (int vnum = 0; vnum < vLength; vnum++)
+                    {
+                        foreach (var item in dropdownList)
+                        {
+                            if (values[vnum] == item.Value)
+                            {
+                                item.Selected = true;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var item in dropdownList)
+                    {
+                        if (Value == item.Value)
+                        {
+                            item.Selected = true;
+                        }
+                    }
+                }
+            }
+            else
+            {
+
+                foreach (var item in dropdownList)
+                {
+                    if (item.Value == "0")
                     {
                         item.Selected = true;
                     }
                 }
             }
-            return sli;
+            return dropdownList;
         }
 
         public static void GetClinicInfoDetail(ServicesSoapClient _ServicesSoapClient, ref ClinicInfoDetailViewModel ei, string PatientId, string keycode)
