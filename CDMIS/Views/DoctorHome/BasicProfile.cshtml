@@ -94,11 +94,13 @@
         <li>
             @Html.ActionLink("个人信息", "BasicProfile", "DoctorHome", new { PatientId = @Model.Patient.UserId, Role = "Patient" }, new { target = "_self" })</li>
         <li>
-            @Html.ActionLink("健康模块", "ModuleProfile", "DoctorHome", new { PatientId = @Model.Patient.UserId }, new { target = "_self" })</li>
-        <li>
             @Html.ActionLink("就诊信息", "ClinicalInfo", "DoctorHome", new { UserId = @Model.Patient.UserId }, new { target = "_self" })</li>
         <li>
             @Html.ActionLink("临床信息", "ClinicalProfile", "DoctorHome", new { UserId = @Model.Patient.UserId }, new { target = "_self" })</li>
+        <li>
+            @Html.ActionLink("健康模块", "ModuleProfile", "DoctorHome", new { PatientId = @Model.Patient.UserId }, new { target = "_self" })</li>
+        <li>
+            @Html.ActionLink("分配健康专员", "HealthCoachManagement", "DoctorHome", new { PatientId = @Model.Patient.UserId }, new { target = "_self" })</li>
     </ul>
 </div>
 @using (Html.BeginForm("BasicProfile", "DoctorHome", FormMethod.Post, new { id = "Form1", enctype = "multipart/form-data" }))

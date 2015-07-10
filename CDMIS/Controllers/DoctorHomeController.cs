@@ -655,7 +655,7 @@ namespace CDMIS.Controllers
 
                 if (flag == true)
                 {
-                    return RedirectToAction("ModuleProfile", "DoctorHome", new { PatientId = UserId });
+                    return RedirectToAction("ClinicalInfo", "DoctorHome", new { UserId = UserId });
                 }
                 else
                 {
@@ -1149,7 +1149,7 @@ namespace CDMIS.Controllers
 
                 if (flag == true)
                 {
-                    return RedirectToAction("ClinicalInfo", "DoctorHome", new { UserId = UserId });
+                    return RedirectToAction("HealthCoachManagement", "DoctorHome", new { PatientId = UserId });
                 }
                 else
                 {
@@ -3123,7 +3123,94 @@ namespace CDMIS.Controllers
         }
         #endregion
 
+        #region 分配健康专员
+        public ActionResult HealthCoachManagement(string PatientId)
+        {
+            try
+            {
+                var user = Session["CurrentUser"] as UserAndRole;
+                ModuleManagementViewModel MMVM = new ModuleManagementViewModel();
+                if (PatientId != null && PatientId != "")
+                {
+                    MMVM.PatientId = PatientId;
+                    MMVM.HealthCoachInfoList = GetHealthCareList(MMVM.PatientId);
+                    MMVM.HealthCoachList = GetHealthCoachInfoList();
+                }
+                return View(MMVM);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
+        //UpdateModuleInfo 修改某患者某模块的负责医生
+        public JsonResult UpdateHCInfo(string PatientId, string DoctorId, string Seq, string PreDocId)
+        {
+            var user = Session["CurrentUser"] as UserAndRole;
+            var res = new JsonResult();
+            int Ret = 0;
+            if (DoctorId != "0")
+            {
+                Ret = _ServicesSoapClient.SetBasicInfoDetail(PatientId, "HC", "Doctor", Convert.ToInt32(Seq), DoctorId, "", 1, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType) ? 1 : 0;
+                Ret = _ServicesSoapClient.SetPsDoctorDetailOnPat(DoctorId, "HM1", PatientId, "", 1, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType) ? 1 : 0;
+            }
+            if (PreDocId != "0")
+            {
+                Ret = _ServicesSoapClient.DeletePatient(PreDocId, "HM1", PatientId);
+            }
+            if (Ret == 1)
+            {
+                string planNo = _ServicesSoapClient.GetExecutingPlanByModule(PatientId, "M1");
+                if (planNo != null && planNo != "")
+                {
+                    _ServicesSoapClient.UpdatePlanStatus(planNo, 4, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                }
+            }
+            res.Data = Ret;
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+
+        #endregion
+
+        #region<" function ">
+        public List<HealthCoach> GetHealthCareList(string PatientId)
+        {
+            List<HealthCoach> hclist = new List<HealthCoach>();
+            DataTable hcOfPat = _ServicesSoapClient.GetConForPatient(PatientId, "HC").Tables[0];
+            foreach (DataRow row in hcOfPat.Rows)
+            {
+                HealthCoach hc = new HealthCoach()
+                {
+                    ItemSeq = row[2].ToString(),
+                    HealthCoachId = row[0].ToString(),
+                    HealthCoachName = _ServicesSoapClient.GetUserName(row[0].ToString()),
+                    HCDivName = "HC" + row[2].ToString() + "Div",
+                    DataTableName = "HC" + row[2].ToString() + "DataTable",
+                    HealthCoachList = GetHealthCoachInfoList()
+                };
+                hclist.Add(hc);
+            }
+            if (hclist.Count == 0)
+            {
+                hclist.Add(new HealthCoach { ItemSeq = "1", HealthCoachId = "0", HealthCoachName = "", HCDivName = "HC1Div", DataTableName = "HC1DataTable", HealthCoachList = GetHealthCoachInfoList() });
+            }
+            return hclist;
+        }
+
+        //获取健康专员列表
+        public List<DoctorAndHCInfo> GetHealthCoachInfoList()
+        {
+            DataTable docList = _ServicesSoapClient.GetActiveUserByRole("HealthCoach").Tables[0];
+            List<DoctorAndHCInfo> DoctorList = new List<DoctorAndHCInfo>();
+            foreach (DataRow DR in docList.Rows)
+            {
+                DoctorList.Add(new DoctorAndHCInfo { DoctorId = DR["UserId"].ToString(), DoctorName = DR["UserName"].ToString(), Hospital = DR["Hospital"].ToString(), Dept = DR["Dept"].ToString() });
+            }
+            return DoctorList;
+        }
+        #endregion
         
     }
 }

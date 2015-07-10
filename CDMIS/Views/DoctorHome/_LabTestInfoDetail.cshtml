@@ -69,13 +69,14 @@
                             {
                                 <td style="border: 0;">
                                     <input type="button" value="编辑" class="btn btn-primary editLabTestDetailInfoBtn" />
+                                    |
                                     <input type="button" value="删除" class="btn btn-primary deleteLabTestDetailInfoBtn" />
                                 </td>
                             }
                             else
                             {
                                 <td style="border: 0;">
-                                    非本人填写， 无权限编辑
+                                    无编辑权限
                                 </td>                             
                             }
                         </tr>
@@ -216,6 +217,8 @@
                         value="取消" />
                 </div>
             </div>
+            <p align="center" style="color:red" class="notice">
+            </p>
             </form>
         </div>
     </div>
@@ -410,18 +413,24 @@
                 data: { UserId: UserId, VisitId: VisitId, SortNo: SortNo, Code: Code },  //输入参数
                 success: function (res) {
                     if (res == true) {
-
-                        alert("删除成功！");
-                        $("#cancelDeleteDtl").click();
-                        var tbody = document.getElementById("DetailTableBody");
-                        tbody.deleteRow(trDetailSeq);
-                        $("#DtlItemNameDropDownList").append("<option value='" + Code + "'>" + Name + "</option>");
-                        $('#DeleteLabDetailDataDiv').hide();
+                        $('.notice').text("操作成功！");
+                        setTimeout(function () {
+                            $("#cancelDeleteDtl").click();
+                            var tbody = document.getElementById("DetailTableBody");
+                            tbody.deleteRow(trDetailSeq);
+                            $("#DtlItemNameDropDownList").append("<option value='" + Code + "'>" + Name + "</option>");
+                            $('.notice').text("");
+                            $('#DeleteLabDetailDataDiv').hide();
+                        }, 1500);
+                        
 
                     }
                     else {
-                        alert("数据删除失败，请重试！");
-                        $('#DeleteLabDetailDataDiv').hide();
+                        $('.notice').text("数据删除失败，请重试！");
+                        setTimeout(function () {
+                            $('.notice').text("");
+                            $('#DeleteLabDetailDataDiv').hide();
+                         }, 1500);
 
                     }
                 }

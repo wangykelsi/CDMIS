@@ -22,7 +22,7 @@
 </style>
 @using (Html.BeginForm("ModuleManagement", "Management", FormMethod.Post, new { id = "MMForm", @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
 {
-    @*<div class="form-group">
+    @*<div class="form-group">+
         <label class="col-sm-3 control-label">
             患者ID:</label>
         <div class="col-sm-6">
@@ -33,6 +33,7 @@
                 查看</button>
         </div>
     </div>*@
+    @Html.HiddenFor(model => model.PatientId)
     <div class="form-group">
         <div class="col-sm-offset-10 col-sm-2">
             <button type="button" class="btn btn-primary" onclick='location.href = "/Management/Index"'>
@@ -231,35 +232,7 @@
     </div>
     }
 }
-@*<div id="DoctorModal" style="display: none;">
-    <div class="modalHeader">
-        <span>选择医生界面</span></div>
-    <div class="modalContent">
-        <table id="DataTableOfDoctor" class="display" style="width: 100%; line-height: 4.0em;">
-            <thead>
-                <tr> 
-                    <th>
-                        医生ID
-                    </th>
-                    <th>
-                        医生姓名
-                    </th>
-                    <th>
-                        所在医院
-                    </th>
-                    <th>
-                        所在科室
-                    </th>
-                    <th>
-                        操作
-                    </th>
-                </tr>
-            </thead>
-            <tbody id="DoctorBody">
-            </tbody>
-        </table>
-    </div>
-</div>*@
+@*
 <div id="HCModal" style="display: none;">
     <div class="modalHeader">
         <span>选择健康专员界面</span></div>
@@ -288,7 +261,7 @@
             </tbody>
         </table>
     </div>
-</div>
+</div>*@
 <script type="text/javascript">
 
 //    $(document).ready(function () {
