@@ -68,26 +68,7 @@ namespace CDMIS.Controllers
             return View(symptoms);
         }
 
-        //诊断字典
-        public ActionResult Diagnosis()
-        {
-            List<AbsType> diagnosis = new List<AbsType>();
-            DataSet info = _ServicesSoapClient.GetDiagnosis();
-            foreach (DataRow row in info.Tables[0].Rows)
-            {
-                AbsType absinfo = new AbsType();
 
-                absinfo.Type = row[0].ToString();
-                absinfo.Code = row[1].ToString();
-                absinfo.TypeName = row[2].ToString();
-                absinfo.Name = row[3].ToString();
-                absinfo.InputCode = row[4].ToString();
-                absinfo.SortNo = Convert.ToInt32(row[5]);
-
-                diagnosis.Add(absinfo);
-            }
-            return View(diagnosis);
-        }
 
         //体征字典
         public ActionResult VitalSigns()
@@ -190,7 +171,60 @@ namespace CDMIS.Controllers
             }
             return View(basicalertview);
         }
+        
 
+        #region<"科室字典表">
+        //科室字典表布局
+        public ActionResult DivisionLayout()
+        {
+
+            return View();
+        }
+        //未匹配科室字典表
+        public ActionResult UnCompDivision()
+        {
+            UnCompDivisionViewModel UnCompDivision = new UnCompDivisionViewModel();
+            List<TmpDivisionDict> TmpDivi = UnCompDivision.TmpDivision;
+            DataSet info = _ServicesSoapClient.GetTmpDivisionByStatus(1);        
+            foreach (DataRow row in info.Tables[0].Rows)
+            {
+                TmpDivisionDict UnCompDivisioninfo = new TmpDivisionDict();
+                UnCompDivisioninfo.HospitalCode = row[0].ToString();
+                UnCompDivisioninfo.HospitalName = row[1].ToString();
+                UnCompDivisioninfo.Type = row[2].ToString();
+                UnCompDivisioninfo.Code = row[3].ToString();
+                UnCompDivisioninfo.TypeName = row[4].ToString();
+                UnCompDivisioninfo.Name = row[5].ToString();
+                UnCompDivisioninfo.InputCode = row[6].ToString();
+                UnCompDivisioninfo.Description = row[7].ToString();
+                UnCompDivisioninfo.Status = Convert.ToInt32(row[8]);
+
+                TmpDivi.Add(UnCompDivisioninfo);
+            }
+            return View(UnCompDivision);
+        }
+        //已匹配科室字典表
+        public ActionResult CompDivision()
+        {
+            List<MpDivisionCmp> division = new List<MpDivisionCmp>();
+            DataSet info = _ServicesSoapClient.GetMpDivisionCmp();
+            foreach (DataRow row in info.Tables[0].Rows)
+            {
+                MpDivisionCmp CompDivisioninfo = new MpDivisionCmp();
+                CompDivisioninfo.HospitalCode = row[0].ToString();
+                CompDivisioninfo.HospitalName = row[1].ToString();
+                CompDivisioninfo.Type = Convert.ToInt32(row[2]);
+                CompDivisioninfo.TypeName = row[3].ToString();
+                CompDivisioninfo.Code = row[4].ToString();
+                CompDivisioninfo.Name = row[5].ToString();
+                CompDivisioninfo.HZCode = row[6].ToString();
+                CompDivisioninfo.HZName = row[7].ToString();
+                CompDivisioninfo.Redundance = row[8].ToString();
+
+                division.Add(CompDivisioninfo);
+            }
+            return View(division);
+        }
         //科室字典表
         public ActionResult Division()
         {
@@ -202,15 +236,198 @@ namespace CDMIS.Controllers
 
                 divisioninfo.Type = Convert.ToInt32(row[0]);
                 divisioninfo.Code = row[1].ToString();
-                divisioninfo.Name = row[2].ToString();
-                divisioninfo.SortNo = Convert.ToInt32(row[3]);
-                divisioninfo.StartDate = row[4].ToString();
-                divisioninfo.EndDate = row[5].ToString();
+                divisioninfo.TypeName = row[2].ToString();
+                divisioninfo.Name = row[3].ToString();
+                divisioninfo.InputCode = row[4].ToString();
+                divisioninfo.Description = row[5].ToString();
 
                 division.Add(divisioninfo);
             }
             return View(division);
         }
+
+        //科室字典表数据插入
+        public JsonResult DivisionEdit(int Type, string Code, string TypeName, string Name, string InputCode, string Description)
+        {
+            var user = Session["CurrentUser"] as UserAndRole;
+            var res = new JsonResult();
+            bool flag = _ServicesSoapClient.SetDivision(Type, Code, TypeName, Name, InputCode, Description, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+            if (flag)
+            {
+                res.Data = true;
+            }
+            else
+            {
+                res.Data = false;
+            }
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+        //由未匹配科室表插入匹配科室
+        public JsonResult AddToCompDivision(string HospitalCode, string HZType, string HZCode, string Type, string Code)
+        {
+            var user = Session["CurrentUser"] as UserAndRole;
+            var res = new JsonResult();
+            int TypeInt = Convert.ToInt32(Type);
+            bool flag = _ServicesSoapClient.SetMpDivisionCmp(HospitalCode, TypeInt, Code, HZCode, "手动匹配", user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+
+            if (flag)
+            {
+                flag = _ServicesSoapClient.ChangeStatusForTmpDivision(HospitalCode, HZType, HZCode, 2);
+                if (flag)
+                {
+                    res.Data = true;
+                }
+                else
+                {
+                    res.Data = false;
+                }
+            }
+            else
+            {
+                res.Data = false;
+            }
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+        //获取科室类别名称
+        public JsonResult GetDivisionTypeNamebyType(string Type)
+        {
+            var user = Session["CurrentUser"] as UserAndRole;
+            var res = new JsonResult();
+            int TypeInt = Convert.ToInt32(Type);
+            string TypeName = _ServicesSoapClient.GetDivisionTypeNamebyType(TypeInt);
+
+            res.Data = TypeName;
+
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+        //获取科室名称
+        public JsonResult GetDivisionNamebyCode(string Code)
+        {
+            var user = Session["CurrentUser"] as UserAndRole;
+            var res = new JsonResult();
+            string Name = _ServicesSoapClient.GetDivisionNamebyCode(Code);
+
+            res.Data = Name;
+
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+        #endregion
+        
+        #region<"诊断字典表">
+        //字典表布局
+        public ActionResult DiagnosisLayout()
+        {
+
+            return View();
+        }
+        //未匹配科室字典表
+        public ActionResult UnCompDiagnosis()
+        {
+            UnCompDivisionViewModel UnCompDivision = new UnCompDivisionViewModel();
+            List<TmpDivisionDict> TmpDivi = UnCompDivision.TmpDivision;
+            DataSet info = _ServicesSoapClient.GetTmpDivisionByStatus(1);
+            foreach (DataRow row in info.Tables[0].Rows)
+            {
+                TmpDivisionDict UnCompDivisioninfo = new TmpDivisionDict();
+                UnCompDivisioninfo.HospitalCode = row[0].ToString();
+                UnCompDivisioninfo.HospitalName = row[1].ToString();
+                UnCompDivisioninfo.Type = row[2].ToString();
+                UnCompDivisioninfo.Code = row[3].ToString();
+                UnCompDivisioninfo.TypeName = row[4].ToString();
+                UnCompDivisioninfo.Name = row[5].ToString();
+                UnCompDivisioninfo.InputCode = row[6].ToString();
+                UnCompDivisioninfo.Description = row[7].ToString();
+                UnCompDivisioninfo.Status = Convert.ToInt32(row[8]);
+
+                TmpDivi.Add(UnCompDivisioninfo);
+            }
+            return View(UnCompDivision);
+        }
+        //已匹配科室字典表
+        public ActionResult CompDiagnosis()
+        {
+            List<MpDivisionCmp> division = new List<MpDivisionCmp>();
+            DataSet info = _ServicesSoapClient.GetMpDivisionCmp();
+            foreach (DataRow row in info.Tables[0].Rows)
+            {
+                MpDivisionCmp CompDivisioninfo = new MpDivisionCmp();
+                CompDivisioninfo.HospitalCode = row[0].ToString();
+                CompDivisioninfo.HospitalName = row[1].ToString();
+                CompDivisioninfo.Type = Convert.ToInt32(row[2]);
+                CompDivisioninfo.TypeName = row[3].ToString();
+                CompDivisioninfo.Code = row[4].ToString();
+                CompDivisioninfo.Name = row[5].ToString();
+                CompDivisioninfo.HZCode = row[6].ToString();
+                CompDivisioninfo.HZName = row[7].ToString();
+                CompDivisioninfo.Redundance = row[8].ToString();
+
+                division.Add(CompDivisioninfo);
+            }
+            return View(division);
+        }
+        //科室字典表
+        public ActionResult Diagnosis()
+        {
+            List<Hospital> division = new List<Hospital>();
+            DataSet info = _ServicesSoapClient.GetDivision();
+            foreach (DataRow row in info.Tables[0].Rows)
+            {
+                Hospital divisioninfo = new Hospital();
+
+                divisioninfo.Type = Convert.ToInt32(row[0]);
+                divisioninfo.Code = row[1].ToString();
+                divisioninfo.TypeName = row[2].ToString();
+                divisioninfo.Name = row[3].ToString();
+                divisioninfo.InputCode = row[4].ToString();
+                divisioninfo.Description = row[5].ToString();
+
+                division.Add(divisioninfo);
+            }
+            return View(division);
+        }
+        ////诊断字典
+        //public ActionResult Diagnosis()
+        //{
+        //    List<AbsType> diagnosis = new List<AbsType>();
+        //    DataSet info = _ServicesSoapClient.GetDiagnosis();
+        //    foreach (DataRow row in info.Tables[0].Rows)
+        //    {
+        //        AbsType absinfo = new AbsType();
+
+        //        absinfo.Type = row[0].ToString();
+        //        absinfo.Code = row[1].ToString();
+        //        absinfo.TypeName = row[2].ToString();
+        //        absinfo.Name = row[3].ToString();
+        //        absinfo.InputCode = row[4].ToString();
+        //        absinfo.SortNo = Convert.ToInt32(row[5]);
+
+        //        diagnosis.Add(absinfo);
+        //    }
+        //    return View(diagnosis);
+        //}
+        //诊断字典表数据插入
+        public JsonResult DiagnosisEdit(string Type, string Code, string TypeName, string Name, string InputCode)
+        {
+            var res = new JsonResult();
+            
+            bool flag = _ServicesSoapClient.SetDiagnosis(Type, Code, TypeName, Name, InputCode, "", 0);
+            if (flag)
+            {
+                res.Data = true;
+            }
+            else
+            {
+                res.Data = false;
+            }
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
+        }
+
+        #endregion
 
         //医院字典表
         public ActionResult Hospital()
@@ -223,10 +440,10 @@ namespace CDMIS.Controllers
 
                 hospitalinfo.Type = Convert.ToInt32(row[1]);
                 hospitalinfo.Code = row[0].ToString();       //数据库调用方法写反了，故此处也交换次序
-                hospitalinfo.Name = row[2].ToString();
-                hospitalinfo.SortNo = Convert.ToInt32(row[3]);
-                hospitalinfo.StartDate = row[4].ToString();
-                hospitalinfo.EndDate = row[5].ToString();
+                hospitalinfo.TypeName = row[2].ToString();
+                hospitalinfo.Name = row[3].ToString();
+                hospitalinfo.InputCode = row[4].ToString();
+                hospitalinfo.Description = row[5].ToString();
 
                 hospital.Add(hospitalinfo);
             }
@@ -282,6 +499,8 @@ namespace CDMIS.Controllers
             }
             return View(infoitemview);
         }
+
+
 
         //治疗字典表数据插入
         public JsonResult TreatmentEdit(string Type, string Code, string TypeName, string Name, string InputCode)
@@ -359,23 +578,7 @@ namespace CDMIS.Controllers
             return res;
         }
 
-        //诊断字典表数据插入
-        public JsonResult DiagnosisEdit(string Type, string Code, string TypeName, string Name, string InputCode, string SortNo)
-        {
-            var res = new JsonResult();
-            if (SortNo == "") SortNo = _ServicesSoapClient.GetDiagnosisMaxCode(Type);
-            bool flag = _ServicesSoapClient.SetDiagnosis(Type, Code, TypeName, Name, InputCode, Convert.ToInt32(SortNo), "", 0);
-            if (flag)
-            {
-                res.Data = true;
-            }
-            else
-            {
-                res.Data = false;
-            }
-            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-            return res;
-        }
+
 
         //诊断字典表数据删除
         public JsonResult DiagnosisDelete(string Type, string Code)
@@ -585,32 +788,7 @@ namespace CDMIS.Controllers
             return res;
         }
 
-        //科室字典表数据插入
-        public JsonResult DivisionEdit(string Type, string Code, string Name, string SortNo, string StartDate, string EndDate)
-        {
-            var user = Session["CurrentUser"] as UserAndRole;
-            var res = new JsonResult();
-            int k;
-            if (SortNo == "")
-            {
-                k = _ServicesSoapClient.GetDivisionMaxCode() + 1;
-            }
-            else
-            {
-                k = Convert.ToInt32(SortNo);
-            }
-            bool flag = _ServicesSoapClient.SetDivision(Convert.ToInt32(Type), Code, Name, k, Convert.ToInt32(StartDate), Convert.ToInt32(EndDate), user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
-            if (flag)
-            {
-                res.Data = true;
-            }
-            else
-            {
-                res.Data = false;
-            }
-            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-            return res;
-        }
+
 
         //科室字典表数据删除
         public JsonResult DivisionDelete(string Type, string Code)

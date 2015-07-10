@@ -32,14 +32,53 @@ namespace CDMIS.Models
         public int SortNo { get; set; }
     }
 
+    //public class Hospital
+    //{
+    //    public int Type { get; set; }
+    //    public string Code { get; set; }
+    //    public string Name { get; set; }
+    //    public int SortNo { get; set; }
+    //    public string StartDate { get; set; }
+    //    public string EndDate { get; set; }
+    //}
+
+
     public class Hospital
     {
         public int Type { get; set; }
         public string Code { get; set; }
+        public string TypeName { get; set; }
         public string Name { get; set; }
-        public int SortNo { get; set; }
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
+        public string InputCode { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class TmpDivisionDict
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Type { get; set; }
+        public string Code { get; set; }
+        public string TypeName { get; set; }
+        public string Name { get; set; }
+        public string InputCode { get; set; }
+        public string Description { get; set; }
+        public int Status { get; set; }
+
+    }
+
+    public class MpDivisionCmp
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public int Type { get; set; }
+        public string TypeName { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string HZCode { get; set; }
+        public string HZName { get; set; }
+        public string Redundance { get; set; }
+
     }
 
     public class InfoItemCategory

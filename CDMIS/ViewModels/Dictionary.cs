@@ -67,4 +67,21 @@ namespace CDMIS.ViewModels
             BasicAlertList = new List<BasicAlert>();
         }
     }
+
+    //未匹配科室字典表 WF 2015-07-07
+    public class UnCompDivisionViewModel
+    {
+        public List<TmpDivisionDict> TmpDivision{ get; set; } 
+        public List<SelectListItem> DivisionList()
+        {
+            return CommonVariables.GetDivisionList();
+        }
+        public string DivisionSelected { get; set; }
+
+        public UnCompDivisionViewModel()
+        {
+            TmpDivision = new List<TmpDivisionDict>();
+        }
+    }
+
 }
