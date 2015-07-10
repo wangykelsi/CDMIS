@@ -845,6 +845,19 @@ namespace CDMIS.ViewModels
             }
             return DurationNameList;
         }
+
+        public static List<SelectListItem> GetDivisionList()
+        {
+            DataSet Divisioninfo = _ServicesSoapClient.GetDivision();
+            List<SelectListItem> DivisionList = new List<SelectListItem>();
+            DivisionList.Add(new SelectListItem { Text = "---请选择---", Value = "0" });
+            foreach (DataRow row in Divisioninfo.Tables[0].Rows)
+            {
+                DivisionList.Add(new SelectListItem { Text = row["Name"].ToString().Trim(), Value = row["Type"].ToString().Trim() + "#" + row["Code"].ToString().Trim() });
+            }
+            return DivisionList;
+        }
+
         #endregion
 
     }
