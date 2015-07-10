@@ -103,11 +103,13 @@
         <li>
             @Html.ActionLink("个人信息", "BasicProfile", "DoctorHome", new { PatientId = @Model.UserId, Role = "Patient" }, new { target = "_self" })</li>
         <li>
-            @Html.ActionLink("健康模块", "ModuleProfile", "DoctorHome", new { PatientId = @Model.UserId }, new { target = "_self" })</li>
-        <li>
             @Html.ActionLink("就诊信息", "ClinicalInfo", "DoctorHome", new { UserId = @Model.UserId }, new { target = "_self" })</li>
         <li>
             @Html.ActionLink("临床信息", "ClinicalProfile", "DoctorHome", new { UserId = @Model.UserId }, new { target = "_self" })</li>
+        <li>
+            @Html.ActionLink("健康模块", "ModuleProfile", "DoctorHome", new { PatientId = @Model.UserId }, new { target = "_self" })</li>
+        <li>
+            @Html.ActionLink("分配健康专员", "HealthCoachManagement", "DoctorHome", new { PatientId = @Model.UserId }, new { target = "_self" })</li>
     </ul>
 </div>
 @{Html.RenderAction("PatientBasicInfo", "PatientInfo");}
@@ -502,7 +504,7 @@
         $("#menu a").attr("id", ""); //Reset id's 
         $("#menu li:eq(1) a").attr("id", "current");
         $("#nav a").attr("id", ""); //Reset id's 
-        $("#nav li:eq(2) a").attr("id", "currentnav");
+        $("#nav li:eq(1) a").attr("id", "currentnav");
 
         document.getElementById('HospitalListDropDownListFor').value = "";
         document.getElementById('VisitTypeListDropDownListFor').value = "";

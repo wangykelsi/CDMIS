@@ -149,10 +149,12 @@ namespace CDMIS.ViewModels
         public string PatientId { get; set; }
         public List<ModuleAndDoctor> ModuleInfoList { get; set; }
         public List<HealthCoach> HealthCoachInfoList { get; set; }
+        public List<DoctorAndHCInfo> HealthCoachList { get; set; }
         public ModuleManagementViewModel()
         {
             ModuleInfoList = new List<ModuleAndDoctor>();
             HealthCoachInfoList = new List<HealthCoach>();
+            HealthCoachList = new List<DoctorAndHCInfo>();
         }
         
     }
