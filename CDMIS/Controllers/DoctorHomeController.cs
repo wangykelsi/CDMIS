@@ -1071,6 +1071,7 @@ namespace CDMIS.Controllers
                 string Value = "";
                 string Description = "";
                 int SortNo = 1;
+                string OptionCategory = "";
                 
                
 
@@ -1115,9 +1116,10 @@ namespace CDMIS.Controllers
                             for (j = 0; j < model.InfoItemList[i].Count; j++)
                             {
                                 ItemCode = model.InfoItemList[i][j].Code;
+                                OptionCategory = model.InfoItemList[i][j].OptionCategory;
                                 Value = Request.Form[model.InfoItemList[i][j].Code];
                                 //插入患者详细信息表中的模块关注详细信息
-                                if (ItemCode.IndexOf("M1004_1") == -1 && ItemCode.IndexOf("M1004_2") == -1)
+                                if (OptionCategory != "Cm.MstHypertensionDrug" && OptionCategory != "Cm.MstDiabetesDrug")
                                 {
                                     flag = _ServicesSoapClient.SetBasicInfoDetail(Patient, CategoryCode, ItemCode, ItemSeq, Value, Description, SortNo, user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
                                 }
