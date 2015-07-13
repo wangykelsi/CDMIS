@@ -57,7 +57,7 @@ namespace CDMIS.Models
     public class ExaminationInfo
     {
         public string UserId { get; set; }
-        public int SortNo { get; set; }
+        public string SortNo { get; set; }
         public string ExamType { get; set; }
         public string ExamTypeName { get; set; }
         public string ExamDate { get; set; }
@@ -91,7 +91,7 @@ namespace CDMIS.Models
     public class LabTestInfo
     {
         public string UserId { get; set; }
-        public int SortNo { get; set; }
+        public string SortNo { get; set; }
         //CSQ 2014/12/11
         public string LabItemType { get; set; }
         //CSQ 2014/12/11

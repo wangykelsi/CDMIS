@@ -625,7 +625,7 @@ namespace CDMIS.OtherCs
             }
         }
 
-        public static void GetClinicInfoDetailByType(ServicesSoapClient _ServicesSoapClient, ref ClinicInfoDetailByTypeViewModel ei, string PatientId, string vid, string type, int sortno, string itemcode)
+        public static void GetClinicInfoDetailByType(ServicesSoapClient _ServicesSoapClient, ref ClinicInfoDetailByTypeViewModel ei, string PatientId, string vid, string type, string sortno, string itemcode)
         {
             ei.NowDetailType = type;
             ei.ExamDetailsTable = new DataTable();
@@ -637,8 +637,8 @@ namespace CDMIS.OtherCs
 
             if (type == "ExamDetails")
             {
-                DataSet ExamDetailsset = _ServicesSoapClient.GetExamDtlList(PatientId, vid, sortno, itemcode); //检查子表 
-                ei.ExamDetailsTable = ExamDetailsset.Tables[0];
+                //DataSet ExamDetailsset = _ServicesSoapClient.GetExamDtlList(PatientId, vid, sortno, itemcode); //检查子表 
+                //ei.ExamDetailsTable = ExamDetailsset.Tables[0];
             }
             else
             {

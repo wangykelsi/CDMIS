@@ -209,7 +209,7 @@ namespace CDMIS.Controllers
         }
 
         //临床-大类详细信息
-        public ActionResult ClinicInfoDetailByType(string PatientId, string vid, string type, int sortno, string itemcode)
+        public ActionResult ClinicInfoDetailByType(string PatientId, string vid, string type, string sortno, string itemcode)
         {
 
             ClinicInfoDetailByTypeViewModel ei = new ClinicInfoDetailByTypeViewModel();
