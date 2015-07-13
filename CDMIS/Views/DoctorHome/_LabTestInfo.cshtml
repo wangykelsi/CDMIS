@@ -1,5 +1,5 @@
 ﻿@model CDMIS.ViewModels.LabTestProfileViewModel
-           
+<script type="text/javascript" src="../../Scripts/chosen.jquery.min.js"></script>        
 <style type="text/css">
     #Redirect
     {
@@ -48,7 +48,7 @@
     }
     #LabDtl-container 
     {
-         height: 670px;
+         height: 700px;
         width: 900px;
     }
 </style>
@@ -181,7 +181,7 @@
     @*详细信息*@
     <div class="modalHeader">
         <span>添加化验信息</span></div>
-    <div class="modalContent" style="margin-top: 15px; text-align: center;" id="addLabTestDiv">
+    <div class="modalContent" style="margin-top: 15px;" id="addLabTestDiv">
         <div class="form-horizontal" role="form">
             <div class="form-group">
                 <label class="col-sm-4 control-label">
@@ -197,7 +197,7 @@
                     *化验项目
                 </label>
                 <div class="col-sm-8">
-                    <select id="LabItemNameListDropDownList" name="DiagnosisNameSelected" class="form-control">
+                    <select id="LabItemNameListDropDownList" name="DiagnosisNameSelected" class="form-control chosen">
                         <option value="0"></option>
                     </select>
                 </div>
@@ -207,7 +207,7 @@
                     开单科室
                 </label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(model => model.LabTestInfo.DeptCode, Model.DeptList(), new { id = "DeptListDropDownList", @class = "form-control" })
+                    @Html.DropDownListFor(model => model.LabTestInfo.DeptCode, Model.DeptList(), new { id = "DeptListDropDownList", @class = "form-control chosen" })
                 </div>
                 </div>
             <div class="form-group">
@@ -253,7 +253,11 @@
                     </p>
                 </div>
             </div>
-            <input type="button" class="btn btn-primary addLabTestInfoBtn" value="添加" />
+            <div class="form-group">
+                <div class="col-sm-offset-5 col-sm-7">
+                    <input type="button" class="btn btn-primary addLabTestInfoBtn" value="添加" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -295,7 +299,7 @@
             <label for="LabItemName" class="col-sm-4 control-label">
                 *化验名称</label>
             <div class="col-sm-8">
-                <select id="LabItemName" name="LabItemNameSelected" class="form-control">
+                <select id="LabItemName" name="LabItemNameSelected" class="form-control chosen">
                 </select>
             </div>
         </div>
@@ -303,7 +307,7 @@
             <label for="DeptCode" class="col-sm-4 control-label">
                 开单科室</label>
             <div class="col-sm-8">
-                @Html.DropDownListFor(model => model.LabTestInfo.DeptCode, Model.DeptList(), new { id = "DeptCode", @class = "form-control" })
+                @Html.DropDownListFor(model => model.LabTestInfo.DeptCode, Model.DeptList(), new { id = "DeptCode", @class = "form-control chosen" })
             </div>
         </div>
         <div class="form-group">
@@ -411,6 +415,21 @@
                 closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
                 overlayClose: true     //点击蒙层关闭窗口
             });
+
+            $('#LabItemTypeNameListDropDownList').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
+
+            $('#LabItemNameListDropDownList').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
+
+            $('#DeptListDropDownList').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
         })
 
         //$(".readLabTestSubInfoBtn").click(function () {
@@ -448,6 +467,21 @@
             var DeptCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(12)").text().trim();
 
             EditData(SortNo, LabItemType, LabItemTypeName, LabItemCode, LabItemName, ExamDate, Status, ReportDate, StatusCode, DeptCode);
+
+            $('#LabItemTypeName').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
+
+            $('#LabItemName').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
+
+            $('#DeptCode').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
         });
 
         //编辑数据界面
@@ -721,6 +755,8 @@
                     NewElement.attr('value', Code);
                     $("#LabItemNameListDropDownList").append(NewElement);
                 }
+
+                $("#LabItemNameListDropDownList").trigger("chosen:updated");
             }
         });
     }
@@ -749,6 +785,7 @@
                     NewElement.attr('value', Code);
                     $("#LabItemName").append(NewElement);
                 }
+                $("#LabItemName").trigger("chosen:updated");
             }
         });
     }
