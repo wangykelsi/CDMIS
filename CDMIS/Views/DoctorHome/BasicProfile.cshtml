@@ -144,7 +144,7 @@
                     <label class="col-sm-2 control-label">
                         就诊号</label>
                     <div class="col-sm-2">
-                        @Html.TextBox("HospitalUserId", "", new { id = "HospitalUserId", @class = "form-control" })
+                        @Html.TextBoxFor(model => model.Patient.HospitalId, new { id = "HospitalUserId", @class = "form-control" })
                     </div>
                     @*<div class="col-sm-2">
                         <input type="button" value="新建" class="btn btn-primary addNewPat" disabled="disabled" />
@@ -329,7 +329,7 @@
 
             GetPhoneNoByUserId(UserId);
             //$(".basicInfo").hide();
-            
+
         }
         else {
             $(".basicInfo").hide();
@@ -434,13 +434,13 @@
                     else {
                         //管理员使用该手机号码 没有使用过其他角色
                         $("#PhoneNoTip").show();
-//                        $(".validatePhoneNo").hide();
-//                        $("#PhoneNo").attr("readonly", "readonly");
-//                        $(".basicInfo").show();
-//                        addNewPat();
-//                        $(".idClass").show();
-//                        $(".integrateBasicInfoDiv").show();
-//                        $(".submitBtn").show();
+                        //                        $(".validatePhoneNo").hide();
+                        //                        $("#PhoneNo").attr("readonly", "readonly");
+                        //                        $(".basicInfo").show();
+                        //                        addNewPat();
+                        //                        $(".idClass").show();
+                        //                        $(".integrateBasicInfoDiv").show();
+                        //                        $(".submitBtn").show();
 
 
                     }
@@ -513,22 +513,22 @@
                 //                var test = res;
                 //if (res.trim() != "") {
                 //ID存在，有角色
-                    for (var item in res) {
-                        if (res[item] == "Patient") {
-                            //患者角色
-                            window.location.href = "/DoctorHome/BasicProfile?PatientId=" + UserId + "&Role=" + res[item];
-                        }
-                    }
-                    for (var item in res) {
-                        //alert(res[item]);
-                        //医生和健康专员角色
+                for (var item in res) {
+                    if (res[item] == "Patient") {
+                        //患者角色
                         window.location.href = "/DoctorHome/BasicProfile?PatientId=" + UserId + "&Role=" + res[item];
-
                     }
-                    //ID存在，没有角色
-               // }
-              // // else
-             //   {
+                }
+                for (var item in res) {
+                    //alert(res[item]);
+                    //医生和健康专员角色
+                    window.location.href = "/DoctorHome/BasicProfile?PatientId=" + UserId + "&Role=" + res[item];
+
+                }
+                //ID存在，没有角色
+                // }
+                // // else
+                //   {
                 //该手机号码被管理员使用
                 //addNewPat();
                 //$(".basicInfo").show();
@@ -536,7 +536,7 @@
                 //$(".submitBtn").show();
                 //$(".validatePhoneNo").hide();
                 //}
-              //  }
+                //  }
             }
         })
     }

@@ -17,6 +17,9 @@ namespace CDMIS.Models
         public string UserId { get; set; }
         public string VisitId { get; set; }
 
+        // 就诊医院Id/就诊号
+        public string HospitalId { get; set; }
+
         [Required(ErrorMessage = "姓名必填")]
         public string UserName { get; set; }
         [Required(ErrorMessage = "性别必填")]
