@@ -14,7 +14,7 @@
     {
         overflow: hidden;
         width: 100%;
-        margin: 0;
+        margin: 0 0 1.0em 0;
         padding: 0;
         list-style: none;
     }
@@ -113,7 +113,6 @@
     </ul>
 </div>
 @{Html.RenderAction("PatientBasicInfo", "PatientInfo");}
-
 @*就诊卡信息*@
 <div>
     <h4>
@@ -133,7 +132,6 @@
                 <div class="col-sm-4">
                     @Html.TextBox("PIDJC", "", new { id = "PIDJC", @class = "form-control" })
                 </div>
-                
             </div>
             <div class="form-group">
                 @*<label class="col-sm-2 control-label">
@@ -148,23 +146,20 @@
                 <div class="col-sm-4">
                     @Html.TextBox("StartDateTime", "", new { id = "StartDateTime", @onclick = "WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})", @class = "form-control" })
                 </div>
-                
-               
                 @*<div class="col-sm-4">
                     <input style="font-size: 16px; font-weight: bold; text-align: center" value="起始日期未填时，将同步所有临床信息"
                         class="form-control" disabled="disabled" />
                 </div>*@
-                <label class="col-sm-3 control-label">
+                <label class="col-sm-4 control-label">
                     起始日期未填，将同步所有临床信息
                 </label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <input type="button" class="btn btn-primary" id="synchronization" value="同步" />
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 @using (Html.BeginForm("ClinicalInfo", "DoctorHome", FormMethod.Post, new { id = "Form1", enctype = "multipart/form-data" }))
 {
 @*读取就诊信息*@
@@ -325,7 +320,7 @@
     <div>
         <h4 id="moduleInfoToggle">
             添加就诊信息</h4>
-        <div class="modalContent" style="margin-top: 15px; text-align: center;">
+        <div class="modalContent" style="margin-top: 15px;">
             <div class="form-horizontal" role="form">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">
@@ -348,7 +343,7 @@
                     <label class="col-sm-2 control-label">
                         *就诊科室</label>
                     <div class="col-sm-4">
-                        @Html.DropDownListFor(model => model.ClinicalInfo.DepartmentCode, Model.DeptList(), new { id = "DeptListDropDownListFor", @class = "form-control" })
+                        @Html.DropDownListFor(model => model.ClinicalInfo.DepartmentCode, Model.DeptList(), new { id = "DeptListDropDownListFor", @class = "form-control chzn-select" })
                     </div>
                 </div>
                 <div class="form-group ">
@@ -380,7 +375,11 @@
                         @Html.TextBox("DischargeDate", "", new { id = "DischargeDateInput", @onclick = "WdatePicker({minDate:'#F{$dp.$D(AdmissionDateInput)}',dateFmt:'yyyy-MM-dd HH:mm:ss'})", @class = "form-control" })
                     </div>
                 </div>
-                <input type="button" class="btn btn-primary addClinicalInfoBtn" value="添加" />
+                <div class="form-group">
+                    <div class="col-sm-offset-5 col-sm-7">
+                        <input type="button" class="btn btn-primary addClinicalInfoBtn" value="添加" />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -479,7 +478,6 @@
         </form>
     </div>
 </div>
-
 @*alert弹出框*@
 <div id="alertDiv" style="display: none;">
     <div class="modalHeader">
@@ -516,7 +514,7 @@
         $("#nav a").attr("id", ""); //Reset id's 
         $("#nav li:eq(1) a").attr("id", "currentnav");
 
-  
+
         document.getElementById('HospitalListDropDownListFor').value = "";
         document.getElementById('VisitTypeListDropDownListFor').value = "";
 
@@ -714,28 +712,28 @@
             StartDateTime = "1900-01-01";
             //alert(StartDateTime);
         }
-         
-            setTimeout(function () {
-                $.ajax({
-                    url: "/DoctorHome/GetIntegrationData",
-                    type: "GET",
-                    dataType: "json",
-                    async: false,
-                    data: { UserId: CDMISPatientId, PatientId: PatientId, StartDateTime: StartDateTime, HospitalCode: "HJZYY" },  //输入参数
-                    success: function (res) {
-                        if (res != "") {
-                            //alert(res);
-                            $("#simple-overlay").hide();
-                            location.reload();
-                        }
-                        else {
-                            alert("数据库连接失败，请重试！");
-                        }
-                    }
 
-                });
-            }, 2000);
-        
+        setTimeout(function () {
+            $.ajax({
+                url: "/DoctorHome/GetIntegrationData",
+                type: "GET",
+                dataType: "json",
+                async: false,
+                data: { UserId: CDMISPatientId, PatientId: PatientId, StartDateTime: StartDateTime, HospitalCode: "HJZYY" },  //输入参数
+                success: function (res) {
+                    if (res != "") {
+                        //alert(res);
+                        $("#simple-overlay").hide();
+                        location.reload();
+                    }
+                    else {
+                        alert("数据库连接失败，请重试！");
+                    }
+                }
+
+            });
+        }, 2000);
+
 
         //setTimeout(function () {
         //        $.ajax({
@@ -795,6 +793,11 @@
     });
 
     $(function () {
+        $('.chzn-select').chosen({
+            no_results_text: "没有找到相应的选项",
+            placeholder_text: "请选择……"
+        });
+
         $("#VisitTypeName").change(function () {
             var value = $(this).val();
 

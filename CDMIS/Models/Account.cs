@@ -15,11 +15,11 @@ namespace CDMIS.Models
     //登录 TDY-20141209
     public class LogOnModel
     {
-        [Required]
+        [Required(ErrorMessage = "请输入用户名或手机号")]
         public string UserId { get; set; }          //用户ID
-        [Required]
+        [Required(ErrorMessage = "请输入密码")]
         public string Password { get; set; }        //用户名
-        [Required]
+        [Required(ErrorMessage = "请输入验证码")]
         public string ValidateCode { get; set; }    //登录时的验证码
         public bool RememberMe { get; set; }        //是否记住密码
     }

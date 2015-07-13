@@ -1,4 +1,5 @@
 ﻿@model CDMIS.ViewModels.ExaminationProfileViewModel
+<script type="text/javascript" src="../../Scripts/chosen.jquery.min.js"></script>
 <style type="text/css">
     #Redirect
     {
@@ -47,15 +48,15 @@
     }
     #Exam-container
     {
-         height: 760px;
+        height: 760px;
         width: 600px;
     }
 </style>
 <h3 style="font-weight: bold;">
     检查信息</h3>
-     <div style="text-align:right">
-     <input  type="button" value="添加检查信息" class="btn btn-primary addExaminationInfo" style="margin-bottom: 5px"/>
-     </div>
+<div style="text-align: right">
+    <input type="button" value="添加检查信息" class="btn btn-primary addExaminationInfo" style="margin-bottom: 5px" />
+</div>
 <input type="text" id="UId" style="display:none" value="@Model.UserId"/>
 <input type="text" style="display:none" value="@ViewBag.MaxSortNo" id="MaxSortNo"/>
 <table id="ExaminationInfoList" class="display">
@@ -65,13 +66,11 @@
                 检查序号
             </th>
             <th style="display: none;">
-          
             </th>
             <th>
                 检查类型
             </th>
-             <th style="display: none;">
-          
+            <th style="display: none;">
             </th>
             <th>
                 检查项目
@@ -88,23 +87,17 @@
             <th>
                 报告日期
             </th>
-             <th style="display: none;">
-          
+            <th style="display: none;">
             </th>
-             <th style="display: none;">
-          
+            <th style="display: none;">
             </th>
-             <th style="display: none;">
-          
+            <th style="display: none;">
             </th>
-             <th style="display: none;">
-          
+            <th style="display: none;">
             </th>
-             <th style="display: none;">
-          
+            <th style="display: none;">
             </th>
-             <th style="display: none;">
-          
+            <th style="display: none;">
             </th>
             <th>
                 详细
@@ -113,10 +106,8 @@
                 操作
             </th>
             <th>
-          
             </th>
             <th style="display: none;">
-          
             </th>
         </tr>
     </thead>
@@ -129,16 +120,16 @@
                 <td style="border: 0; display: none;">
                     @item.SortNo
                 </td>
-                <td  style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.ExamType
                 </td>
-                <td  style="border: 0;">
+                <td style="border: 0;">
                     @item.ExamTypeName
                 </td>
-                <td  style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.ItemCode
                 </td>
-                <td  style="border: 0;">
+                <td style="border: 0;">
                     @item.ExamName
                 </td>
                 <td style="border: 0;">
@@ -147,63 +138,65 @@
                 <td style="border: 0;">
                     @item.Status
                 </td>
-                <td  style="border: 0;">
+                <td style="border: 0;">
                     @item.IsAbnormal
                 </td>
-                <td  style="border: 0;">
+                <td style="border: 0;">
                     @item.ReportDate
                 </td>
-                <td  style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.ExamPara
                 </td>
-                <td  style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.Description
                 </td>
-                <td  style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.Impression
                 </td>
-                <td  style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.Recommendation
                 </td>
-                <td  style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.StatusCode
                 </td>
-                <td  style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @item.IsAbnormalCode
                 </td>
-                <td  style="border: 0;">
-                        <input type="button" value="详细" class="btn btn-primary readExaminationInfoBtn" />
-
+                <td style="border: 0;">
+                    <input type="button" value="详细" class="btn btn-primary readExaminationInfoBtn" />
                     @*@Ajax.ActionLink("详细", "ExaminationInfoDetail", new { UserId = @Model.UserId, VisitId = @Model.VisitId, SortNo = @item.SortNo, ItemCode = @item.ItemCode }, new AjaxOptions { UpdateTargetId = "ExamDetails", InsertionMode = InsertionMode.Replace }, new { onclick = "addExamInfoDivHide()" })*@
-             </td>
+                </td>
                 @if (item.IsAllowed == true)
                 {
-                    <td  style="border: 0;">
+                    <td style="border: 0;">
                         <input type="button" value="编辑" class="btn btn-primary editExaminationInfoBtn" />
-                  </td>
-                    <td  style="border: 0;">
+                    </td>
+                    <td style="border: 0;">
                         <input type="button" value="删除" class="btn btn-primary deleteExaminationInfoBtn" />
-                   </td>
+                    </td>
                 }
                 else
                 {
-                   @* <td width="5%" style="border: 0;">
+@* <td width="5%" style="border: 0;">
                         <input type="button" value="编辑" class="btn btn-primary editExaminationInfoBtn" disabled="disabled" />
                     </td>
                     <td width="5%" style="border: 0;">
                         <input type="button" value="删除" class="btn btn-primary deleteExaminationInfoBtn"
                             disabled="disabled" />
                     </td> *@  
-                     <td>无编辑权限</td><td></td>                        
+                    <td>
+                        无编辑权限
+                    </td>
+                    <td>
+                    </td>                        
                 }
-                 
                 <td style="border: 0; display: none">
                     @item.DeptCode
                 </td>
             </tr>
             }
         }
-       @* else
+@* else
         {
             <tr id="NotExist">
                 <td style="font-size: 15px;" colspan="9">
@@ -215,10 +208,10 @@
     </tbody>
 </table>
 @*没有就诊卡时，添加检查信息*@
-<div id = "addDataDiv" style="display: none;">
+<div id="addDataDiv" style="display: none;">
     <div class="modalHeader">
         <span>添加检查信息</span></div>
-    <div class="modalContent" style="margin-top: 15px; text-align: center;" id="addExamInfoDiv">
+    <div class="modalContent" style="margin-top: 15px;" id="addExamInfoDiv">
         <div class="form-horizontal" role="form">
             <div class="form-group">
                 <label class="col-sm-4 control-label">
@@ -227,9 +220,8 @@
                 <div class="col-sm-8">
                     @Html.DropDownListFor(model => model.ExamInfo.ExamTypeName, Model.ExamTypeList(), new { id = "ExamTypeListDropDownList", onchange = "ExamTypeChanged();", @class = "form-control" })
                 </div>
-                </div>
+            </div>
             <div class="form-group">
-
                 <label class="col-sm-4 control-label">
                     *检查项目
                 </label>
@@ -244,11 +236,10 @@
                     开单科室
                 </label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(model => model.ExamInfo.DeptCode, Model.DeptList(), new { id = "DeptListDropDownList", @class = "form-control" })
+                    @Html.DropDownListFor(model => model.ExamInfo.DeptCode, Model.DeptList(), new { id = "DeptListDropDownList", @class = "form-control chosen" })
                 </div>
-                </div>
+            </div>
             <div class="form-group">
-
                 <label class="col-sm-4 control-label">
                     *检查日期
                 </label>
@@ -270,9 +261,8 @@
                 <div class="col-sm-8">
                     @Html.TextBoxFor(model => model.ExamInfo.ReportDate, new { id = "ReportDateInput", @onclick = "WdatePicker({minDate:'#F{$dp.$D(ExamDateInput)}',dateFmt:'yyyy-MM-dd HH:mm:ss'})", @class = "form-control" })
                 </div>
-                </div>
+            </div>
             <div class="form-group">
-
                 <label class="col-sm-4 control-label">
                     检查结果状态
                 </label>
@@ -287,9 +277,8 @@
                 <div class="col-sm-8">
                     @Html.DropDownListFor(model => model.ExamInfo.IsAbnormal, Model.IsAbnormal(), new { id = "IsAbnormalInput", @class = "form-control" })
                 </div>
-                </div>
+            </div>
             <div class="form-group">
-
                 <label class="col-sm-4 control-label">
                     检查参数
                 </label>
@@ -306,9 +295,8 @@
                     @Html.TextBoxFor(model => model.ExamInfo.Description, new { id = "DescriptionInput", @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ExamInfo.Description)
                 </div>
-                </div>
+            </div>
             <div class="form-group">
-
                 <label class="col-sm-4 control-label">
                     印象
                 </label>
@@ -326,16 +314,19 @@
                     @Html.ValidationMessageFor(model => model.ExamInfo.Recommendation)
                 </div>
             </div>
-              @*alert弹出框*@
+            @*alert弹出框*@
             <div id="alertExaminationInfoDiv" style="display: none" class="form-group">
                 <div class="col-sm-12">
                     <p id="ExaminationInfoWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
-                    text-align: center">
-                       
+                        text-align: center">
                     </p>
                 </div>
             </div>
-            <input type="button" class="btn btn-primary addExaminationInfoBtn" value="添加" />
+            <div class="form-group">
+                <div class="col-sm-offset-5 col-sm-7">
+                    <input type="button" class="btn btn-primary addExaminationInfoBtn" value="添加" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -376,7 +367,7 @@
             <label for="DeptCode" class="col-sm-3 control-label">
                 开单科室</label>
             <div class="col-sm-9">
-                @Html.DropDownListFor(model => model.ExamInfo.DeptCode, Model.DeptList(), new { id = "DeptCode", @class = "form-control" })
+                @Html.DropDownListFor(model => model.ExamInfo.DeptCode, Model.DeptList(), new { id = "DeptCode", @class = "form-control chosen" })
             </div>
         </div>
         <div class="form-group">
@@ -468,8 +459,6 @@
         </form>
     </div>
 </div>
-
-
 @*read检查信息*@
 <div id="readDataDiv" style="display: none; overflow: none">
     <div class="modalHeader">
@@ -580,14 +569,13 @@
                 @Html.ValidationMessageFor(model => model.ExamInfo.Recommendation)
             </div>
         </div>
-       @* <div class="form-group" style="display: none;" id="ExaminationTip">
+        @* <div class="form-group" style="display: none;" id="ExaminationTip">
             <div class="col-sm-12">
                 <p id="ExaminationEditWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
                     text-align: center">
                 </p>
             </div>
-        </div>*@
-       @* <div class="form-group">
+        </div>*@ @* <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <input type="button" class="btn btn-primary saveExaminationInfoBtn" value="保存" />
                 <input type="button" class="btn btn-default simplemodal-close" id="cancel" value="取消" />
@@ -596,8 +584,6 @@
         </form>
     </div>
 </div>
-
-
 @*删除信息*@
 <div id="DeleteDataDiv" style="display: none;">
     <div class="modalHeader">
@@ -659,6 +645,11 @@
             $('#addDataDiv').modal({
                 closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
                 overlayClose: true     //点击蒙层关闭窗口
+            });
+
+            $('#DeptListDropDownList').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
             });
         })
 
@@ -745,6 +736,11 @@
             var DeptCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(18)").text().trim();
 
             EditData(SortNo, ExamType, ExamTypeName, ItemCode, ExamName, ExamDate, Status, IsAbnormal, ReportDate, ExamPara, Description, Impression, Recommendation, DeptCode);
+
+            $('#DeptCode').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
         });
 
 
@@ -1112,15 +1108,15 @@
         });
     }
 
-//    function addExamInfoDivHide() {
-//        $("#addExamInfoDiv").hide(500);
-//        $("#ExamDetails").show(500);
-//    }
+    //    function addExamInfoDivHide() {
+    //        $("#addExamInfoDiv").hide(500);
+    //        $("#ExamDetails").show(500);
+    //    }
 
-//    function addExamInfoDivShow() {
-//        $("#addExamInfoDiv").show(500);
-//        $("#ExamDetails").hide(500);
-//    }
+    //    function addExamInfoDivShow() {
+    //        $("#addExamInfoDiv").show(500);
+    //        $("#ExamDetails").hide(500);
+    //    }
 
     $(document).ready(function () {
         //鼠标移动到行变色,单独建立css类hover

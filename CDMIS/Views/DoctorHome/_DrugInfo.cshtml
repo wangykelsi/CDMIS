@@ -1,4 +1,5 @@
 ﻿@model CDMIS.ViewModels.DrugInfoProfileViewModel
+<script type="text/javascript" src="../../Scripts/chosen.jquery.min.js"></script>       
 <style type="text/css">
     #Redirect
     {
@@ -201,14 +202,14 @@
 <div id="addDrugInfoDiv" style="display: none;">
     <div class="modalHeader">
         <span>添加药物治疗信息</span></div>
-    <div class="modalContent" style="margin-top: 15px; text-align: center;">
+    <div class="modalContent" style="margin-top: 15px;">
         <div class="form-horizontal" role="form">
             <div class="form-group">
                 <label class="col-sm-4 control-label">
                     *药物类型
                 </label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(model => model.DrugInfo.OrderClass, Model.DrugTypeList(), new { id = "DrugTypeDropDownList", @class = "form-control" })
+                    @Html.DropDownListFor(model => model.DrugInfo.OrderClass, Model.DrugTypeList(), new { id = "DrugTypeDropDownList", @class = "form-control add-chosen" })
                 </div>
             </div>
             <div class="form-group">
@@ -231,7 +232,7 @@
                     *药品名称
                 </label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(model => model.DrugInfo.OrderCode, Model.DrugNameList(), new { id = "OrderCodeInput", @class = "form-control" })
+                    @Html.DropDownListFor(model => model.DrugInfo.OrderCode, Model.DrugNameList(), new { id = "OrderCodeInput", @class = "form-control add-chosen" })
                     @* @Html.TextBoxFor(model => model.DrugInfo.OrderContent, new { id = "OrderContentInput", @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.DrugInfo.OrderContent)*@
                 </div>
@@ -253,7 +254,7 @@
                     开单科室
                 </label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(model => model.DrugInfo.DeptCode, Model.DeptList(), new { id = "DeptListDropDownList", @class = "form-control" })
+                    @Html.DropDownListFor(model => model.DrugInfo.DeptCode, Model.DeptList(), new { id = "DeptListDropDownList", @class = "form-control add-chosen" })
                 </div>
             </div>
             <div class="form-group">
@@ -261,7 +262,7 @@
                     *给药途径
                 </label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(model => model.DrugInfo.Administration, Model.RouteList(), new { id = "RouteDropDownList", @class = "form-control" })
+                    @Html.DropDownListFor(model => model.DrugInfo.Administration, Model.RouteList(), new { id = "RouteDropDownList", @class = "form-control add-chosen" })
                 </div>
             </div>
             <div class="form-group">
@@ -321,7 +322,11 @@
                     </p>
                 </div>
             </div>
-            <input type="button" class="btn btn-primary addDrugInfoBtn" value="添加" />
+            <div class="form-group">
+                <div class="col-sm-offset-5 col-sm-7">
+                    <input type="button" class="btn btn-primary addDrugInfoBtn" value="添加" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -343,7 +348,7 @@
                 *药物类别</label>
             <div class="col-sm-9">
                 @*<input type="text" class="form-control" id="OrderClass" readonly="readonly" />*@
-                @Html.DropDownListFor(model => model.DrugInfo.OrderClass, Model.DrugTypeList(), new { id = "OrderClass", @class = "form-control" })
+                @Html.DropDownListFor(model => model.DrugInfo.OrderClass, Model.DrugTypeList(), new { id = "OrderClass", @class = "form-control chosen" })
             </div>
         </div>
         <div class="form-group">
@@ -366,7 +371,7 @@
                 *药品名称</label>
             <div class="col-sm-9">
                 @*<input type="text" class="form-control" id="OrderContent" />*@
-                @Html.DropDownListFor(model => model.DrugInfo.OrderCode, Model.DrugNameList(), new { id = "OrderCode", @class = "form-control" })
+                @Html.DropDownListFor(model => model.DrugInfo.OrderCode, Model.DrugNameList(), new { id = "OrderCode", @class = "form-control chosen" })
             </div>
         </div>
         <div class="form-group">
@@ -388,7 +393,7 @@
             <label for="DeptCode" class="col-sm-3 control-label">
                 开单科室</label>
             <div class="col-sm-9">
-                @Html.DropDownListFor(model => model.DrugInfo.DeptCode, Model.DeptList(), new { id = "DeptCode", @class = "form-control" })
+                @Html.DropDownListFor(model => model.DrugInfo.DeptCode, Model.DeptList(), new { id = "DeptCode", @class = "form-control chosen" })
             </div>
         </div>
         <div class="form-group">
@@ -396,7 +401,7 @@
                 *给药途径</label>
             <div class="col-sm-9">
                 @*<input type="text" class="form-control" id="Administration" />*@
-                @Html.DropDownListFor(model => model.DrugInfo.Administration, Model.RouteList(), new { id = "Administration", @class = "form-control" })
+                @Html.DropDownListFor(model => model.DrugInfo.Administration, Model.RouteList(), new { id = "Administration", @class = "form-control chosen" })
             </div>
         </div>
         <div class="form-group">
@@ -528,6 +533,11 @@
                 closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
                 overlayClose: true     //点击蒙层关闭窗口
             });
+
+            $('.add-chosen').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
         })
 
         //        $("#TableBody").ajaxComplete(function () { //待请求完成时 执行 
@@ -552,6 +562,11 @@
             var OrderCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(18)").text().trim();
 
             EditData(OrderNo, OrderSubNo, OrderClass, OrderContent, Dosage, DosageUnits, DosageUnitsText, Administration, RepeatIndicator, StartDateTime, StopDateTime, FreqCounter, Frequency, FreqInteval, FreqIntevalUnit, DeptCode, OrderCode);
+
+            $('.chosen').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
         });
 
         //编辑数据界面

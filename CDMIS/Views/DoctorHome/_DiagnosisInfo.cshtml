@@ -1,4 +1,5 @@
 ﻿@model CDMIS.ViewModels.DiagnosisInfoProfileViewModel
+<script type="text/javascript" src="../../Scripts/chosen.jquery.min.js"></script>
 <style type="text/css">
     #Redirect
     {
@@ -49,9 +50,9 @@
 @*读取诊断信息*@
 <h3 style="font-weight: bold;">
     诊断信息</h3>
-    <div style="text-align:right">
-     <input  type="button" value="添加诊断信息" class="btn btn-primary addDiagnosisInfo" style="margin-bottom: 5px" />
-     </div>
+<div style="text-align: right">
+    <input type="button" value="添加诊断信息" class="btn btn-primary addDiagnosisInfo" style="margin-bottom: 5px" />
+</div>
 <input type="text" id="UId" style="display:none" value="@Model.UserId"/>
 <input type="text" style="display:none" value="@ViewBag.MaxDiagnosisNo" id="MaxDiagnosisNo"/>
 <table id="DiagnosisInfoList" class="display">
@@ -60,8 +61,7 @@
             <th style="display: none;">
                 诊断序号
             </th>
-             <th style="display: none;">
-              
+            <th style="display: none;">
             </th>
             <th>
                 诊断来源
@@ -69,11 +69,9 @@
             <th style="display: none;">
                 诊断类型
             </th>
-              <th style="display: none;">
-              
+            <th style="display: none;">
             </th>
-             <th style="display: none;">
-              
+            <th style="display: none;">
             </th>
             <th>
                 诊断名称
@@ -87,6 +85,8 @@
             <th>
                 操作
             </th>
+            <th>
+            </th>
         </tr>
     </thead>
     <tbody id="TableBody">
@@ -96,55 +96,60 @@
             for (int i = 0; i < Model.DiagnosisList.Count; i++)
             {            
             <tr>
-                <td  style="border: 0; display: none;">
+                <td style="border: 0; display: none;">
                     @Model.DiagnosisList[i].DiagnosisNo
                 </td>
-                <td  style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @Model.DiagnosisList[i].DiagnosisType
                 </td>
-                <td  style="border: 0;">
+                <td style="border: 0;">
                     @Model.DiagnosisList[i].DiagnosisTypeName
                 </td>
-                <td  style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @Model.DiagnosisList[i].Type
                 </td>
-                <td  style="border: 0;display:none">
+                <td style="border: 0; display: none">
                     @Model.DiagnosisList[i].TypeName
                 </td>
-                <td  style="border: 0; display: none">
+                <td style="border: 0; display: none">
                     @Model.DiagnosisList[i].DiagnosisCode
                 </td>
-                <td  style="border: 0;">
+                <td style="border: 0;">
                     @Model.DiagnosisList[i].DiagnosisName
                 </td>
-                <td  style="border: 0;">
+                <td style="border: 0;">
                     @Model.DiagnosisList[i].Description
                 </td>
-                <td  style="border: 0;">
+                <td style="border: 0;">
                     @Model.DiagnosisList[i].RecordDate
                 </td>
                 @if (Model.DiagnosisList[i].IsAllowed == true)
                 {
-                    <td  style="border: 0;">
+                    <td style="border: 0;">
                         <input type="button" value="编辑" class="btn btn-primary editDiagnosisInfoBtn" />
-                   
+                    </td>
+                    <td style="border: 0;">
                         <input type="button" value="删除" class="btn btn-primary deleteDiagnosisInfoBtn" />
                     </td>
                 }
                 else
                 {
-                   @* <td width="5%" style="border: 0;">
+@* <td width="5%" style="border: 0;">
                         <input type="button" value="编辑" class="btn btn-primary editDiagnosisInfoBtn" disabled="disabled" />
                     </td>
                     <td width="5%" style="border: 0;">
                         <input type="button" value="删除" class="btn btn-primary deleteDiagnosisInfoBtn" disabled="disabled" />
                     </td>   *@      
-                     <td>无编辑权限</td>                     
+                    <td>
+                        无编辑权限
+                    </td>  
+                    <td>
+                    </td>                    
                 }
             </tr>    
             }
         }
-       @* else
+@* else
         {
             <tr id="NotExist">
                 <td style="font-size: 15px;" colspan="9">
@@ -156,10 +161,10 @@
     </tbody>
 </table>
 @*添加诊断信息*@
-<div id = "addDataDiv" style="display: none;">
+<div id="addDataDiv" style="display: none;">
     <div class="modalHeader">
         <span>添加诊断信息</span></div>
-    <div class="modalContent" style="margin-top: 15px; text-align: center;">
+    <div class="modalContent" style="margin-top: 15px;">
         <div class="form-horizontal" role="form">
             <div class="form-group">
                 <label class="col-sm-4 control-label">
@@ -170,13 +175,13 @@
                     <p style="display: none; color: red" id="alertDiagnosisType">
                         此项必填</p>
                 </div>
-                </div>
-                 <div class="form-group">
+            </div>
+            <div class="form-group">
                 <label class="col-sm-4 control-label">
                     *诊断类型
                 </label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(model => model.DiagnosisInfo.TypeName, Model.TypeList(), new { id = "TypeNameDropDownListFor", onchange = "TypeNameChanged();", @class = "form-control" })
+                    @Html.DropDownListFor(model => model.DiagnosisInfo.TypeName, Model.TypeList(), new { id = "TypeNameDropDownListFor", onchange = "TypeNameChanged();", @class = "form-control chzn-select" })
                 </div>
             </div>
             <div class="form-group">
@@ -184,12 +189,12 @@
                     *诊断名称
                 </label>
                 <div class="col-sm-8">
-                    <select id="DiagnosisNameDropDownListFor" name="DiagnosisNameSelected" class="form-control">
+                    <select id="DiagnosisNameDropDownListFor" name="DiagnosisNameSelected" class="form-control chzn-select">
                         <option value=""></option>
                     </select>
                 </div>
-                </div>
-                  <div class="form-group">
+            </div>
+            <div class="form-group">
                 <label class="col-sm-4 control-label">
                     *诊断日期
                 </label>
@@ -213,18 +218,20 @@
                     @Html.ValidationMessageFor(model => model.DiagnosisInfo.Description)
                 </div>
             </div>
-             @*alert弹出框*@
+            @*alert弹出框*@
             <div id="alertDiagnosisInfoDiv" style="display: none" class="form-group">
                 <div class="col-sm-12">
                     <p id="DiagnosisInfoWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
-                    text-align: center">
-                       
+                        text-align: center">
                     </p>
                 </div>
             </div>
-           <input type="button" class="btn btn-primary addDiagnosisInfoBtn" value="添加" />
+            <div class="form-group">
+                <div class="col-sm-offset-5 col-sm-7">
+                    <input type="button" class="btn btn-primary addDiagnosisInfoBtn" value="添加" />
+                </div>
+            </div>
         </div>
-         
     </div>
 </div>
 @*编辑诊断信息*@
@@ -253,7 +260,7 @@
                 *诊断类型</label>
             <div class="col-sm-9">
                 @*<input type="text" class="form-control" id="TypeName" />*@
-                @Html.DropDownListFor(model => model.TypeSelected, Model.TypeList(), new { id = "TypeName", onchange = "editTypeChanged();", @class = "form-control" })
+                @Html.DropDownListFor(model => model.TypeSelected, Model.TypeList(), new { id = "TypeName", onchange = "editTypeChanged();", @class = "form-control chzn-select" })
             </div>
         </div>
         <div class="form-group">
@@ -261,7 +268,7 @@
                 *诊断名称</label>
             <div class="col-sm-9">
                 @*<input type="text" class="form-control" id="DiagnosisName" />*@
-                <select id="DiagnosisName" name="DiagnosisNameSelected" class="form-control">
+                <select id="DiagnosisName" name="DiagnosisNameSelected" class="form-control chzn-select">
                 </select>
             </div>
         </div>
@@ -336,7 +343,7 @@
         document.getElementById("DiagnosisTypeNameDropDownListFor").value = "";
         document.getElementById("TypeNameDropDownListFor").value = "";
 
-       
+
         var table2 = $('#DiagnosisInfoList').DataTable({
             "oLanguage": {//语言国际化
                 "sUrl": "/Content/jquery.dataTable.cn.txt"
@@ -361,6 +368,16 @@
                 closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
                 overlayClose: true     //点击蒙层关闭窗口
             });
+
+            $('#TypeNameDropDownListFor').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
+
+            $('#DiagnosisNameDropDownListFor').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
         })
 
         $(document).on("click", ".editDiagnosisInfoBtn", function () {
@@ -376,6 +393,16 @@
             var RecordDate = $("#TableBody tr:eq(" + trSeq + ") td:eq(8)").text().trim();
 
             EditData(DiagnosisNo, DiagnosisType, DiagnosisTypeName, Type, TypeName, DiagnosisCode, DiagnosisName, Description, RecordDate);
+
+            $('#TypeName').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
+
+            $('#DiagnosisName').chosen({
+                no_results_text: "没有找到相应的选项",
+                placeholder_text: "请选择"
+            });
         });
 
         //编辑数据界面
@@ -469,9 +496,9 @@
 
         $(".addDiagnosisInfoBtn").click(function () {
             var tbody = document.getElementById("TableBody");
-//            if (document.getElementById("NotExist")) {//存在 
-//                var tr = document.getElementById("NotExist");
-//                tbody.removeChild(tr);
+            //            if (document.getElementById("NotExist")) {//存在 
+            //                var tr = document.getElementById("NotExist");
+            //                tbody.removeChild(tr);
             //            }
 
             if ($("#TableBody tr").length == 1) {
@@ -500,11 +527,11 @@
                 $("#alertDiagnosisInfoDiv").show();
 
                 //alert(Text);
-//                $('#alertDiv').modal({
-//                    closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
-//                    containerId: 'alert-container',
-//                    overlayClose: true     //点击蒙层关闭窗口
-//                });
+                //                $('#alertDiv').modal({
+                //                    closeHTML: "<a href='#' title='Close' class='modal-close'>x</a>",
+                //                    containerId: 'alert-container',
+                //                    overlayClose: true     //点击蒙层关闭窗口
+                //                });
             }
             else {
                 $.ajax({
@@ -538,7 +565,7 @@
                             td4.innerHTML = document.getElementById("TypeNameDropDownListFor").options[document.getElementById("TypeNameDropDownListFor").selectedIndex].text;
                             tr.appendChild(td4);
                             //tr.insertCell(4).innerHTML = document.getElementById("TypeNameDropDownListFor").options[document.getElementById("TypeNameDropDownListFor").selectedIndex].text;
-                            
+
                             var td5 = document.createElement("td");
                             td5.setAttribute("style", "display:none");
                             td5.innerHTML = DiagnosisCode;
@@ -546,8 +573,8 @@
                             tr.insertCell(6).innerHTML = document.getElementById("DiagnosisNameDropDownListFor").options[document.getElementById("DiagnosisNameDropDownListFor").selectedIndex].text;
                             tr.insertCell(7).innerHTML = Description;
                             tr.insertCell(8).innerHTML = RecordDate;
-                            tr.insertCell(9).innerHTML = "<input type='button' value='编辑' class='btn btn-primary editDiagnosisInfoBtn' /><input type='button' value='删除' class='btn btn-primary deleteDiagnosisInfoBtn' />";
-                            //tr.insertCell(10).innerHTML = "<input type='button' value='删除' class='btn btn-primary deleteDiagnosisInfoBtn' />";
+                            tr.insertCell(9).innerHTML = "<input type='button' value='编辑' class='btn btn-primary editDiagnosisInfoBtn' />";
+                            tr.insertCell(10).innerHTML = "<input type='button' value='删除' class='btn btn-primary deleteDiagnosisInfoBtn' />";
                             document.getElementById("DiagnosisTypeNameDropDownListFor").value = "";
                             document.getElementById("TypeNameDropDownListFor").value = "";
                             document.getElementById("DiagnosisNameDropDownListFor").value = "";
@@ -623,6 +650,8 @@
                     NewElement.attr('value', Type);
                     $("#DiagnosisNameDropDownListFor").append(NewElement);
                 }
+
+                $("#DiagnosisNameDropDownListFor").trigger("chosen:updated");
             }
         });
     }
@@ -649,6 +678,8 @@
                     NewElement.attr('value', Code);
                     $("#DiagnosisName").append(NewElement);
                 }
+
+                $("#DiagnosisName").trigger("chosen:updated");
             }
         });
     }
