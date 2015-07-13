@@ -163,9 +163,9 @@
                 <td>
                     图像地址
                 </td>
-                <td>
+                @*<td>
                     具体参数
-                </td>
+                </td>*@
             </tr>
         </thead>
         <tbody>
@@ -198,9 +198,9 @@
                     </td>
                     <td>@item["ImageURL"]
                     </td>
-                    <td>
+                    @*<td>
                         @Ajax.ActionLink("详细", "ClinicInfoDetailByType", new { PatientId = @Model.UserId, vid = @Model.VisitId, type = "ExamDetails", sortno = @item["SortNo"], itemcode = @item["ItemCode"] }, new AjaxOptions() { OnSuccess = "success3();", OnBegin = "hide3();", UpdateTargetId = "part", HttpMethod = "Get", InsertionMode = InsertionMode.Replace, LoadingElementId = "loading" })
-                    </td>
+                    </td>*@
                 </tr>
                 }
             }
@@ -403,11 +403,14 @@
                                     {"sWidth": "70px", "aTargets": [0] },
                                     { "sWidth": "70px", "aTargets": [1] },
                                     { "sWidth": "120px", "aTargets": [2] },
+                                    { "sWidth": "150px", "aTargets": [3] },
+                                    { "sWidth": "500px", "aTargets": [4] },
+                                    { "sWidth": "150px", "aTargets": [5] },
                                     { "sWidth": "70px", "aTargets": [7] },
                                     { "sWidth": "70px", "aTargets": [8] },
                                     { "sWidth": "70px", "aTargets": [9] },
-                                    { "sWidth": "70px", "aTargets": [10] },
-                                    { "sWidth": "40px", "aTargets": [11] }
+                                    { "sWidth": "70px", "aTargets": [10] }
+//                                    { "sWidth": "40px", "aTargets": [11] }
                   ]    //限定列宽
             });
 
