@@ -139,7 +139,7 @@
                     <label class="col-sm-2 control-label">
                         就诊医院</label>
                     <div class="col-sm-4">
-                        @Html.DropDownList("HospitalCode", Model.HospitalList(), new { id = "HospitalCode", @class = "form-control" })
+                        @Html.DropDownListFor(model=>model.Patient.HospitalCode, Model.HospitalList(), new { id = "HospitalCode", @class = "form-control" })
                     </div>
                     <label class="col-sm-2 control-label">
                         就诊号</label>
@@ -386,7 +386,7 @@
     //验证输入参数值合法性
     function IsLegal(o) {
         if (document.getElementById(o).value != "") {
-            var re = /^\d{11}$/;
+            var re = /^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$/;
             if (!re.test(document.getElementById(o).value)) {
                 $("#PhoneNoError").show();
                 $(".validatePhoneNo").hide();
@@ -560,7 +560,8 @@
                     //alert(res);
                     //$("#simple-overlay").hide();
                     //集成成功后操作
-                    IntegrationSuccess(CDMISPatientId, PhoneNo);
+                    //alert(UserId);
+                    IntegrationSuccess(CDMISPatientId, PhoneNo, PatientId, HospitalCode);
                 }
                 else {
                     alert("基本信息集成失败，请重试！");
@@ -571,13 +572,13 @@
 
     })
 
-    function IntegrationSuccess(UserId, PhoneNo) {
+    function IntegrationSuccess(UserId, PhoneNo, HospitalId, HospitalCode) {
         $.ajax({
             url: "/DoctorHome/setMstUserPhoneNoRoleMatch",
             type: "GET",
             dataType: "json",
             async: false,
-            data: { UserId: UserId, PhoneNo: PhoneNo },  //输入参数
+            data: { UserId: UserId, PhoneNo: PhoneNo, HospitalId: HospitalId, HospitalCode: HospitalCode },  //输入参数
             success: function (res) {
                 if (res == "1") {
                     //操作成功

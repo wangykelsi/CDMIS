@@ -124,7 +124,7 @@
                     就诊医院
                 </label>
                 <div class="col-sm-4">
-                    @Html.DropDownListFor(model => model.HospitalSelected, Model.HospitalList(), new { id = "HospitalListDropDownListFor", @class = "form-control" })
+                    @Html.DropDownListFor(model => model.HospitalSelected, Model.HospitalList(), new { id = "HospitalListDropDownListFor", @class = "form-control", onclick = "HospitalChange()" })
                 </div>
                 <label class="col-sm-2 control-label">
                     就诊ID
@@ -155,6 +155,13 @@
                 </label>
                 <div class="col-sm-2">
                     <input type="button" class="btn btn-primary" id="synchronization" value="同步" />
+                </div>
+            </div>
+            <div class="form-group" style="display: none;" id="synchronizationTip">
+                <div class="col-sm-12">
+                    <p id="synchronizationWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
+                        text-align: center">
+                    </p>
                 </div>
             </div>
         </div>
@@ -698,10 +705,12 @@
     $("#synchronization").click(function () {
         var screenheight = document.body.scrollHeight;
         $("#simple-overlay").css("height", screenheight);
-        $("#simple-overlay").show();
+
         var CDMISPatientId = "@Model.UserId";
+        var HCode = $("#HospitalListDropDownListFor").val();
         var PatientId = $("#PIDJC").val();
         var StartDateTime = $("#StartDateTime").val();
+
         //alert(CDMISPatientId);
         //alert(PatientId);
         //alert(StartDateTime);
@@ -713,46 +722,38 @@
             //alert(StartDateTime);
         }
 
-        setTimeout(function () {
-            $.ajax({
-                url: "/DoctorHome/GetIntegrationData",
-                type: "GET",
-                dataType: "json",
-                async: false,
-                data: { UserId: CDMISPatientId, PatientId: PatientId, StartDateTime: StartDateTime, HospitalCode: "HJZYY" },  //输入参数
-                success: function (res) {
-                    if (res != "") {
-                        //alert(res);
-                        $("#simple-overlay").hide();
-                        location.reload();
+        if (PatientId == "" || HCode == "") {
+            var Text = "提示：";
+            if (HCode == "") { Text = Text + "就诊医院 "; }
+            if (PatientId == "") { Text = Text + "就诊号 "; }
+
+            Text = Text + "不能为空！";
+            $("#synchronizationWarning").html(Text);
+            //alert(Text);
+            $('#synchronizationTip').show();
+        }
+        else {
+            $("#simple-overlay").show();
+            setTimeout(function () {
+                $.ajax({
+                    url: "/DoctorHome/GetIntegrationData",
+                    type: "GET",
+                    dataType: "json",
+                    async: false,
+                    data: { UserId: CDMISPatientId, PatientId: PatientId, StartDateTime: StartDateTime, HospitalCode: "HJZYY" },  //输入参数
+                    success: function (res) {
+                        if (res != "") {
+                            //alert(res);
+                            $("#simple-overlay").hide();
+                            location.reload();
+                        }
+                        else {
+                            alert("数据库连接失败，请重试！");
+                        }
                     }
-                    else {
-                        alert("数据库连接失败，请重试！");
-                    }
-                }
-
-            });
-        }, 2000);
-
-
-        //setTimeout(function () {
-        //        $.ajax({
-        //            type: "Get",
-        //            dataType: "xml",
-        //            timeout: 600000,
-        //            url: "http://" + ipAddress + "/csp/hz_integration/Bs.WebService.cls?soap_method=GetPatient",
-        //            async: false,
-        //            data: { UserId: CDMISPatientId, PatientId: "10156471", StartDateTime: 0, HospitalCode: "HJZYY" },
-        //            success: function (result) {
-        //                var ret = $(result).text();
-        //                //if (ret == 1) {
-        //                $("#simple-overlay").hide();
-        //                alert(ret);
-        //                //}
-        //            },
-        //            error: function (msg) { alert("Error!"); }
-        //        });
-        // }, 2000);
+                });
+            }, 2000);
+        }
     });
 
     $(".DischargeDateInput").hide();
@@ -823,4 +824,31 @@
         })
     });
 
+    function HospitalChange() {
+        var CDMISPatientId = "@Model.UserId";
+        var HCode = $("#HospitalListDropDownListFor").val();
+
+        if (HCode != "") {
+            $.ajax({
+                url: "/DoctorHome/getLatestHUserIdByHCode",
+                type: "GET",
+                dataType: "json",
+                async: false,
+                data: { UserId: CDMISPatientId, HCode: HCode },  //输入参数
+                success: function (res) {
+                    if (res != "") {
+                        //alert(res);
+                        $("#PIDJC").val(res);
+                    }
+                    else {
+                        alert("数据库连接失败，请重试！");
+                    }
+                }
+
+            });
+        }
+        else {
+            $("#PIDJC").val("");
+        }
+    }
 </script>

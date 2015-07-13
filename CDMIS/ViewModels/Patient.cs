@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using CDMIS.Models;
 using System.Web.UI.WebControls;
 using System.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace CDMIS.ViewModels
 {
@@ -66,11 +67,14 @@ namespace CDMIS.ViewModels
         public ArrayList moduleUnBoughtCode = new ArrayList();
         public ArrayList moduleUnBoughtName = new ArrayList();
 
+         [RegularExpression(@"(^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$)|(^([0-9]{3,4}-)?[0-9]{7,8}$)", ErrorMessage = "联系方式输入不正确")]
         public string Phone { get; set; }
         public string Address { get; set; }
         public string Occupation { get; set; }              //职业
         public string Nationality { get; set; }             //国籍
         public string EmergencyContact { get; set; }        //紧急联系人
+
+         [RegularExpression(@"(^((\+?86)|(\(\+86\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$)|(^([0-9]{3,4}-)?[0-9]{7,8}$)", ErrorMessage = "联系方式输入不正确")]
         public string EmergencyContactNumber { get; set; }  //紧急联系电话
 
         public List<List<InfoItem>> InfoItemList { get; set; }    //模块信息、模块关注详细信息  从字典表获取   //20141215修改 
