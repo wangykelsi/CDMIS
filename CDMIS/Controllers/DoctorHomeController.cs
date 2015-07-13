@@ -489,6 +489,7 @@ namespace CDMIS.Controllers
         }
         #endregion
 
+     
 
         #region 建档--个人信息
         public ActionResult BasicProfile(string PatientId, string Role)
@@ -577,6 +578,7 @@ namespace CDMIS.Controllers
 
                 string UserId = model.Patient.UserId;
                 Session["PatientId"] = model.Patient.UserId;
+               
 
                 #region 插入患者基本信息
                 //插入患者基本信息         
@@ -1449,6 +1451,7 @@ namespace CDMIS.Controllers
         {
             var user = Session["CurrentUser"] as UserAndRole;
             string DoctorId = user.UserId;
+        
 
             ClinicalInfoProfileViewModel ClinicalInfoModel = new ClinicalInfoProfileViewModel();
             ClinicalInfoModel.UserId = UserId;
@@ -1457,9 +1460,9 @@ namespace CDMIS.Controllers
             //ClinicalInfoModel.PatientBasicInfo = GetPatientBasicInfo(UserId);
 
             //加载患者就诊信息
-            //ClinicalInfoModel.InPatientList = GetInPatientList(UserId, DoctorId);
-            //ClinicalInfoModel.OutPatientList = GetOutPatientList(UserId, DoctorId);
-            //ClinicalInfoModel.ClinicalInfoList = GetInPatientInfoList(UserId);
+            ClinicalInfoModel.InPatientList = GetInPatientList(UserId, DoctorId);
+            ClinicalInfoModel.OutPatientList = GetOutPatientList(UserId, DoctorId);
+            ClinicalInfoModel.ClinicalInfoList = GetInPatientInfoList(UserId);
 
             return View(ClinicalInfoModel);
         }
@@ -1874,7 +1877,7 @@ namespace CDMIS.Controllers
         }
 
         //局部刷新
-        public ActionResult ExaminationInfoDetail(string UserId, string VisitId, int SortNo, string ItemCode)
+        public ActionResult ExaminationInfoDetail(string UserId, string VisitId, string SortNo, string ItemCode)
         {
             var user = Session["CurrentUser"] as UserAndRole;
             string DoctorId = user.UserId;
@@ -2077,7 +2080,7 @@ namespace CDMIS.Controllers
         }
 
         //局部刷新
-        public ActionResult LabTestInfoDetail(string UserId, string VisitId, int SortNo, string LabItemType, string LabItemCode)
+        public ActionResult LabTestInfoDetail(string UserId, string VisitId, string SortNo, string LabItemType, string LabItemCode)
         {
             var user = Session["CurrentUser"] as UserAndRole;
             string DoctorId = user.UserId;
@@ -2202,7 +2205,7 @@ namespace CDMIS.Controllers
         }
 
         //编辑
-        public JsonResult LabTestInfoDetailEdit(string UserId, string VisitId, int SortNo, string Code, string Value, int UnitCode, string IsAbnormalCode)
+        public JsonResult LabTestInfoDetailEdit(string UserId, string VisitId, string SortNo, string Code, string Value, int UnitCode, string IsAbnormalCode)
         {
             var user = Session["CurrentUser"] as UserAndRole;
             var res = new JsonResult();
@@ -2223,7 +2226,7 @@ namespace CDMIS.Controllers
         }
 
         //增加
-        public JsonResult LabTestInfoDetailAdd(string UserId, string VisitId, int SortNo, string SubCode, string Value, string UnitCode, int IsAbnormalCode)
+        public JsonResult LabTestInfoDetailAdd(string UserId, string VisitId, string SortNo, string SubCode, string Value, string UnitCode, int IsAbnormalCode)
         {
             var user = Session["CurrentUser"] as UserAndRole;
             var res = new JsonResult();
@@ -2967,7 +2970,7 @@ namespace CDMIS.Controllers
                 foreach (DataRow dr in ExaminationListdt.Rows)
                 {
                     ExaminationInfo item = new ExaminationInfo();
-                    item.SortNo = Convert.ToInt32(dr["SortNo"]);
+                    item.SortNo = dr["SortNo"].ToString();
                     item.ExamType = dr["ExamType"].ToString();
                     item.ExamTypeName = dr["ExamTypeName"].ToString();
                     item.ExamDate = dr["ExamDate"].ToString();
@@ -3015,7 +3018,7 @@ namespace CDMIS.Controllers
         {
             string UserId = model.UserId;
             string VisitId = model.VisitId;
-            int SortNo = model.ExamInfo.SortNo;
+            string SortNo = model.ExamInfo.SortNo;
             string ItemCode = model.ExamInfo.ItemCode;
             DataSet ExamDtlDs = _ServicesSoapClient.GetExamDtlList(UserId, VisitId, SortNo, ItemCode);
             if (ExamDtlDs.Tables.Count != 0)
@@ -3073,11 +3076,11 @@ namespace CDMIS.Controllers
             {
                 DataTable LabTestListdt = LabTestListds.Tables[0];
                 List<LabTestInfo> list = new List<LabTestInfo>();
-                int max = 0;
+                string max = "";
                 foreach (DataRow dr in LabTestListdt.Rows)
                 {
                     LabTestInfo item = new LabTestInfo();
-                    item.SortNo = Convert.ToInt32(dr["SortNo"]);
+                    item.SortNo = dr["SortNo"].ToString();
                     item.LabItemType = dr["LabItemType"].ToString();
                     item.LabItemTypeName = dr["LabItemTypeName"].ToString();
                     item.LabItemCode = dr["LabItemCode"].ToString();
@@ -3096,7 +3099,7 @@ namespace CDMIS.Controllers
                         item.IsAllowed = false;
                     }
                     list.Add(item);
-                    max = Convert.ToInt32(dr["SortNo"]);
+                    max = dr["SortNo"].ToString();
                 }
                 model.LabTestList = list;
                 model.MaxSortNo = max;
@@ -3109,7 +3112,7 @@ namespace CDMIS.Controllers
         {
             string UserId = model.UserId;
             string VisitId = model.VisitId;
-            int SortNo = model.LabTestInfo.SortNo;
+            string SortNo = model.LabTestInfo.SortNo;
             string LabItemType = model.LabTestInfo.LabItemType;
             string LabItemCode = model.LabTestInfo.LabItemCode;
             //string Code = LabItemType + "**" + LabItemCode;

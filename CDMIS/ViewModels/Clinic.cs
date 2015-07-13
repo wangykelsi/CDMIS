@@ -473,7 +473,7 @@ namespace CDMIS.ViewModels
     {
         public string UserId { get; set; }
         public string VisitId { get; set; }
-        public int MaxSortNo { get; set; }
+        public string MaxSortNo { get; set; }
 
         public PatientBasicInfo PatientBasicInfo { get; set; }
         //已同步化验列表 
