@@ -221,21 +221,25 @@
                                      @if (items.ControlType == "7")
                                      { 
                                         @* 两层选择 *@
-                                         <div class="col-sm-3">
                                        @* @Html.TextBox(items.Code, "", new { id = items.Code, style = "font-size:17px;", @class = "form-control", disabled = "disabled" })*@
-                                         @if (items.OptionCategory == "Cm.MstHypertensionDrug")
+                                         if (items.OptionCategory == "Cm.MstHypertensionDrug")
                                          {
+                                            <div class="col-sm-3" id="Hypertension" title="@items.Code">
                                             @Html.DropDownList(items.Code, items.OptionList, new { id = "TypeNameDropDownList1_1", style = "font-size:18px", @class = "form-control defaultSelected", onchange = "DrugTypeChanged(1,1);" })
+                                            </div>
                                          }
-                                         @if (items.OptionCategory == "Cm.MstDiabetesDrug")
+                                         if (items.OptionCategory == "Cm.MstDiabetesDrug")
                                          {
+                                            <div class="col-sm-3" id="Diabetes" title="@items.Code">
                                             @Html.DropDownList(items.Code, items.OptionList, new { id = "TypeNameDropDownList2_1", style = "font-size:18px", @class = "form-control defaultSelected", onchange = "DrugTypeChanged(2,1);" })
+                                            </div>
                                          }
-                                         @if (items.OptionCategory == "")
+                                         if (items.OptionCategory == "")
                                          {
+                                            <div class="col-sm-3">
                                             @Html.DropDownList(items.Code, items.OptionList, new { id = "TypeNameDropDownList3_1", style = "font-size:18px", @class = "form-control defaultSelected", onchange = "DrugTypeChanged(3,1);" })
+                                            </div>
                                          }
-                                         </div>
                                          <div class="col-sm-3">
                                             @if (items.OptionCategory == "Cm.MstHypertensionDrug")
                                             {
@@ -333,6 +337,8 @@
     </div>
 </div>
 <script type="text/javascript">
+    var HypertensionDrugCode = $("#Hypertension").attr("title");
+    var DiabetesDrugCode = $("#Diabetes").attr("title");
     var HPNumber = 1;
     var DANumber = 1;
     var PatientId = "@Model.Patient.UserId";
@@ -450,7 +456,7 @@
                 type: "GET",
                 dataType: "json",
                 async: false,
-                data: { PatientId: PatientId, CategoryCode: "M1", ItemCode: "M1004_1", ItemSeq: j },  //输入参数
+                data: { PatientId: PatientId, CategoryCode: "M1", ItemCode: HypertensionDrugCode, ItemSeq: j },  //输入参数
                 success: function (res) {
                     i = res;
                 }
@@ -462,7 +468,7 @@
             type: "GET",
             dataType: "json",
             async: false,
-            data: { PatientId: PatientId, CategoryCode: "M1", ItemCode: "M1004_1", ItemSeq: 1, Value: "0", SortNo: 1 },  //输入参数
+            data: { PatientId: PatientId, CategoryCode: "M1", ItemCode: HypertensionDrugCode, ItemSeq: 1, Value: "0", SortNo: 1 },  //输入参数
             success: function (res) { }
         });
         i = 0;
@@ -473,7 +479,7 @@
                 type: "GET",
                 dataType: "json",
                 async: false,
-                data: { PatientId: PatientId, CategoryCode: "M1", ItemCode: "M1004_2", ItemSeq: j },  //输入参数
+                data: { PatientId: PatientId, CategoryCode: "M1", ItemCode: DiabetesDrugCode, ItemSeq: j },  //输入参数
                 success: function (res) {
                     i = res;
                 }
@@ -485,7 +491,7 @@
             type: "GET",
             dataType: "json",
             async: false,
-            data: { PatientId: PatientId, CategoryCode: "M1", ItemCode: "M1004_2", ItemSeq: 1, Value: "0", SortNo: 1 },  //输入参数
+            data: { PatientId: PatientId, CategoryCode: "M1", ItemCode: DiabetesDrugCode, ItemSeq: 1, Value: "0", SortNo: 1 },  //输入参数
             success: function (res) { }
         });
         j = 1;
@@ -499,7 +505,7 @@
                     type: "GET",
                     dataType: "json",
                     async: false,
-                    data: { PatientId: PatientId, CategoryCode: "M1", ItemCode: "M1004_1", ItemSeq: j, Value: Value, SortNo: j },  //输入参数
+                    data: { PatientId: PatientId, CategoryCode: "M1", ItemCode: HypertensionDrugCode, ItemSeq: j, Value: Value, SortNo: j },  //输入参数
                     success: function (res) { }
                 });
                 j = j + 1;
@@ -516,7 +522,7 @@
                     type: "GET",
                     dataType: "json",
                     async: false,
-                    data: { PatientId: PatientId, CategoryCode: "M1", ItemCode: "M1004_2", ItemSeq: j, Value: Value, SortNo: j },  //输入参数
+                    data: { PatientId: PatientId, CategoryCode: "M1", ItemCode: DiabetesDrugCode, ItemSeq: j, Value: Value, SortNo: j },  //输入参数
                     success: function (res) { }
                 });
                 j = j + 1;
