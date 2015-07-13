@@ -438,6 +438,7 @@ namespace CDMIS.ViewModels
         public static List<SelectListItem> GetHospitalList()
         {
             List<SelectListItem> HospitalList = new List<SelectListItem>();
+            HospitalList.Add(new SelectListItem { Text = "请选择", Value = ""});
             DataTable dt = _ServicesSoapClient.GetHospitalList().Tables[0];
             foreach (DataRow dr in dt.Rows)
             {
