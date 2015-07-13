@@ -113,7 +113,6 @@
     </ul>
 </div>
 @{Html.RenderAction("PatientBasicInfo", "PatientInfo");}
-
 @*就诊卡信息*@
 <div>
     <h4>
@@ -125,7 +124,7 @@
                     就诊医院
                 </label>
                 <div class="col-sm-4">
-                    @Html.DropDownListFor(model => model.HospitalSelected, Model.HospitalList(), new { id = "HospitalListDropDownListFor", @class = "form-control" })
+                    @Html.DropDownListFor(model => model.HospitalSelected, Model.HospitalList(), new { id = "HospitalListDropDownListFor", @class = "form-control", onclick = "HospitalChange()" })
                 </div>
                 <label class="col-sm-2 control-label">
                     就诊ID
@@ -133,7 +132,6 @@
                 <div class="col-sm-4">
                     @Html.TextBox("PIDJC", "", new { id = "PIDJC", @class = "form-control" })
                 </div>
-                
             </div>
             <div class="form-group">
                 @*<label class="col-sm-2 control-label">
@@ -148,8 +146,6 @@
                 <div class="col-sm-4">
                     @Html.TextBox("StartDateTime", "", new { id = "StartDateTime", @onclick = "WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})", @class = "form-control" })
                 </div>
-                
-               
                 @*<div class="col-sm-4">
                     <input style="font-size: 16px; font-weight: bold; text-align: center" value="起始日期未填时，将同步所有临床信息"
                         class="form-control" disabled="disabled" />
@@ -161,10 +157,16 @@
                     <input type="button" class="btn btn-primary" id="synchronization" value="同步" />
                 </div>
             </div>
+            <div class="form-group" style="display: none;" id="synchronizationTip">
+                <div class="col-sm-12">
+                    <p id="synchronizationWarning" style="font-size: 16px; color: #FF0000; font-weight: bold;
+                        text-align: center">
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 @using (Html.BeginForm("ClinicalInfo", "DoctorHome", FormMethod.Post, new { id = "Form1", enctype = "multipart/form-data" }))
 {
 @*读取就诊信息*@
@@ -479,7 +481,6 @@
         </form>
     </div>
 </div>
-
 @*alert弹出框*@
 <div id="alertDiv" style="display: none;">
     <div class="modalHeader">
@@ -516,7 +517,7 @@
         $("#nav a").attr("id", ""); //Reset id's 
         $("#nav li:eq(1) a").attr("id", "currentnav");
 
-  
+
         document.getElementById('HospitalListDropDownListFor').value = "";
         document.getElementById('VisitTypeListDropDownListFor').value = "";
 
@@ -700,10 +701,12 @@
     $("#synchronization").click(function () {
         var screenheight = document.body.scrollHeight;
         $("#simple-overlay").css("height", screenheight);
-        $("#simple-overlay").show();
+        
         var CDMISPatientId = "@Model.UserId";
+        var HCode = $("#HospitalListDropDownListFor").val();
         var PatientId = $("#PIDJC").val();
         var StartDateTime = $("#StartDateTime").val();
+
         //alert(CDMISPatientId);
         //alert(PatientId);
         //alert(StartDateTime);
@@ -714,7 +717,18 @@
             StartDateTime = "1900-01-01";
             //alert(StartDateTime);
         }
-         
+        if (PatientId == "" || HCode == "") {
+            var Text = "提示：";
+            if (HCode == "") { Text = Text + "就诊医院 "; }
+            if (PatientId == "") { Text = Text + "就诊号 "; }
+
+            Text = Text + "不能为空！";
+            $("#synchronizationWarning").html(Text);
+            //alert(Text);
+            $('#synchronizationTip').show();
+        }
+        else {
+            $("#simple-overlay").show();
             setTimeout(function () {
                 $.ajax({
                     url: "/DoctorHome/GetIntegrationData",
@@ -735,7 +749,7 @@
 
                 });
             }, 2000);
-        
+        }
 
         //setTimeout(function () {
         //        $.ajax({
@@ -820,4 +834,31 @@
         })
     });
 
+    function HospitalChange() {
+        var CDMISPatientId = "@Model.UserId";
+        var HCode = $("#HospitalListDropDownListFor").val();
+
+        if (HCode != "") {
+            $.ajax({
+                url: "/DoctorHome/getLatestHUserIdByHCode",
+                type: "GET",
+                dataType: "json",
+                async: false,
+                data: { UserId: CDMISPatientId, HCode: HCode },  //输入参数
+                success: function (res) {
+                    if (res != "") {
+                        //alert(res);
+                        $("#PIDJC").val(res);
+                    }
+                    else {
+                        alert("数据库连接失败，请重试！");
+                    }
+                }
+
+            });
+        }
+        else {
+            $("#PIDJC").val("");
+        }
+    }
 </script>

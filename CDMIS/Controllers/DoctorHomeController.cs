@@ -627,6 +627,8 @@ namespace CDMIS.Controllers
                     {
                         flag = true;
                     }
+                    //flag = _ServicesSoapClient.SetHUserId(UserId, model.Patient.HospitalId, model.Patient.HospitalCode, "", user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType);
+                  
                 }
                 #endregion
 
@@ -731,7 +733,7 @@ namespace CDMIS.Controllers
         }
 
         //插入用户相关信息和角色信息
-        public JsonResult setMstUserPhoneNoRoleMatch(string UserId,string PhoneNo)
+        public JsonResult setMstUserPhoneNoRoleMatch(string UserId, string PhoneNo, string HospitalId, string HospitalCode)
         {
             var user = Session["CurrentUser"] as UserAndRole;
 
@@ -744,7 +746,11 @@ namespace CDMIS.Controllers
                 {
                     if (_ServicesSoapClient.SetPsRoleMatch(UserId, "Patient", "", "1", "") == 1)
                     {
-                        result = 1;
+
+                        if (_ServicesSoapClient.SetHUserId(UserId, HospitalId, HospitalCode, "", user.UserId, user.TerminalName, user.TerminalIP, user.DeviceType)==true)
+                        {
+                            result = 1;
+                        }
                     }
                 }
             }
@@ -1539,6 +1545,22 @@ namespace CDMIS.Controllers
             {
                 return View(model);
             }
+        }
+
+        //获取就诊医院最新一个就诊号
+        public JsonResult getLatestHUserIdByHCode(string UserId, string HCode)
+        {
+            var res = new JsonResult();
+            /*对数据进行处理*/
+
+
+            string HUserId = _ServicesSoapClient.getLatestHUserIdByHCode(UserId, HCode);
+
+
+            res.Data = HUserId;
+       
+            res.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return res;
         }
 
         //删除
