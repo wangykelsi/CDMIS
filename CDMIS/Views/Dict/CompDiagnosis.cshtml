@@ -1,7 +1,8 @@
-﻿@model IEnumerable<CDMIS.Models.MpDivisionCmp>
+﻿
+@model IEnumerable<CDMIS.Models.MpDiagnosisCmp>
 
 @{
-    ViewBag.Title = "CompDivision";
+    ViewBag.Title = "CompDiagnosis";
 }
 
 <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
@@ -19,11 +20,11 @@
 </style>
 <ul id="tabs" style="margin: 5px 0 20px 0;">
     <li>
-        @Html.ActionLink("未匹配科室字典表", "UnCompDivision", new { })</li>
+        @Html.ActionLink("未匹配诊断字典表", "UnCompDiagnosis", new { })</li>
     <li>
-        @Html.ActionLink("已匹配科室字典表", "CompDivision", new { }, new { id = "current" })</li>
+        @Html.ActionLink("已匹配诊断字典表", "CompDiagnosis", new { }, new { id = "current" })</li>
     <li>
-        @Html.ActionLink("科室字典表", "Division", new { })</li>
+        @Html.ActionLink("诊断字典表", "Diagnosis", new { })</li>
 </ul>
 
 <div id="tableContainer1" class="tableContainer" style="margin-top: 5px" >
@@ -40,7 +41,7 @@
                     HZ代码
                 </th>
                 <th align="left">
-                    医院科室名称
+                    医院诊断名称
                 </th>
                 <th align="left" style="display:none">
                     类别
@@ -52,7 +53,7 @@
                     编码
                 </th>
                 <th align="left">
-                    字典科室名称
+                    字典诊断名称
                 </th>        
                 <th align="left">
                     备注
@@ -122,7 +123,10 @@
             "bLengthChange": false,
             "bFilter": true
         });
-   })
-
+        
+        $("#DataTable").attr("width", "auto");
+    })
+    
 </script>
+
 

@@ -1,8 +1,9 @@
-﻿@model IEnumerable<CDMIS.Models.Hospital>
+﻿@model IEnumerable<CDMIS.Models.LabItem>
 
 @{
-    ViewBag.Title = "Diagnosis";
+    ViewBag.Title = "LabTestItems";
 }
+
 <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
 <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
 <link href="../../Content/jquery.dataTables.css" rel="stylesheet" type="text/css" />
@@ -16,13 +17,14 @@
     #simplemodal-container {height:420px; width:400px;}
     #delete-container {height:320px; width:400px;}
 </style>
+
 <ul id="tabs" style="margin: 5px 0 20px 0;">
     <li>
-        @Html.ActionLink("未匹配诊断字典表", "UnCompDiagnosis", new { })</li>
+        @Html.ActionLink("未匹配检验项目字典表", "UnCompLabTestItem", new { })</li>
     <li>
-        @Html.ActionLink("已匹配诊断字典表", "CompDiagnosis", new { })</li>
+        @Html.ActionLink("已匹配检验项目字典表", "CompLabTestItem", new { })</li>
     <li>
-        @Html.ActionLink("诊断字典表", "Diagnosis", new { }, new { id = "current" })</li>
+        @Html.ActionLink("检验项目字典表", "LabTestItem", new { }, new { id = "current" })</li>
 </ul>
 <div style="text-align: right;">
     <input type="button" value="新增数据" class="btn btn-primary insertBtn" style="margin-right: 10px"/>
@@ -42,6 +44,9 @@
                 </th>
                 <th align="left">
                     名称
+                </th>
+                <th align="left" style="display:none">
+                    序号
                 </th>
                 <th align="left" style="display:none">
                     输入码
@@ -71,6 +76,9 @@
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
                     <td style="display:none">
+                        @Html.DisplayFor(modelItem => item.SortNo)
+                    </td>
+                    <td style="display:none">
                         @Html.DisplayFor(modelItem => item.InputCode)
                     </td>
                     <td>
@@ -89,7 +97,7 @@
 @*编辑页面弹框*@
 <div id="addDataDiv" style="display: none;">
     <div class="modalHeader">
-        <span>诊断字典表编辑</span>
+        <span>检验项目字典表编辑</span>
     </div>
     <div class="modalContent">
         <form class="form-horizontal" role="form">
@@ -100,6 +108,14 @@
                 <div class="col-sm-7">
                     <input type="text" class="form-control" id="Type" value="" readonly="readonly"  onkeyup="GetTypeName();" />
                     <p id="TypeWrn" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
+                </div>
+            </div>   
+            <div class="form-group">
+                <label for="TypeName" class="col-sm-3 control-label">
+                    类别名称
+                </label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" id="TypeName" />
                 </div>
             </div>
             <div class="form-group">
@@ -112,19 +128,19 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="TypeName" class="col-sm-3 control-label">
-                    类别名称
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" id="TypeName" />
-                </div>
-            </div>
-            <div class="form-group">
                 <label for="Name" class="col-sm-3 control-label">
                     名称
                 </label>
                 <div class="col-sm-7">
                     <input type="text" class="form-control" id="Name" />
+                </div>
+            </div>
+            <div class="form-group" style="display:none;">
+                <label for="InputCode" class="col-sm-3 control-label" >
+                    序号
+                </label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" id="SortNo"  />
                 </div>
             </div>
             <div class="form-group">
@@ -178,7 +194,6 @@
             "bFilter": true
         });
     })
-    $("#DataTable").attr("width", "auto");
 
     //编辑按钮触发
     $(".editBtn").click(function () {
@@ -198,9 +213,10 @@
         var Code = $("#TableBody tr:eq(" + trSeq + ") td:eq(1)").text().trim();
         var TypeName = $("#TableBody tr:eq(" + trSeq + ") td:eq(2)").text().trim();
         var Name = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
-        var InputCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(4)").text().trim();
-        var Description = $("#TableBody tr:eq(" + trSeq + ") td:eq(5)").text().trim();
-        EditData(Type, Code, TypeName, Name, InputCode, Description);
+        var SortNo = $("#TableBody tr:eq(" + trSeq + ") td:eq(4)").text().trim();
+        var InputCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(5)").text().trim();
+        var Description = $("#TableBody tr:eq(" + trSeq + ") td:eq(6)").text().trim();
+        EditData(Type, Code, TypeName, Name, SortNo, InputCode, Description);
     });
 
     //新增按钮触发
@@ -222,11 +238,12 @@
 
 
     //编辑数据
-    function EditData(Type, Code, TypeName, Name, InputCode, Description) {
+    function EditData(Type, Code, TypeName, Name, SortNo, InputCode, Description) {
         document.getElementById("Type").value = Type;
         document.getElementById("Code").value = Code;
         document.getElementById("TypeName").value = TypeName;
         document.getElementById("Name").value = Name;
+        document.getElementById("SortNo").value = SortNo;
         document.getElementById("InputCode").value = InputCode;
         document.getElementById("Description").value = Description;
 
@@ -243,6 +260,7 @@
         document.getElementById("Code").value = "";
         document.getElementById("TypeName").value = "";
         document.getElementById("Name").value = "";
+        document.getElementById("SortNo").value = "0";
         document.getElementById("InputCode").value = "";
         document.getElementById("Description").value = "";
 
@@ -260,10 +278,11 @@
         var Code = document.getElementById("Code").value;
         var TypeName = document.getElementById("TypeName").value;
         var Name = document.getElementById("Name").value;
+        var SortNo = document.getElementById("SortNo").value;
         var InputCode = document.getElementById("InputCode").value;
         var Description = document.getElementById("Description").value;
         $.ajax({
-            url: "/Dict/DiagnosisEdit",
+            url: "/Dict/LabItemEdit",
             type: "GET",
             dataType: "json",
             async: false,
@@ -271,6 +290,7 @@
                 Code: Code,
                 TypeName: TypeName,
                 Name: Name,
+                SortNo: SortNo,
                 InputCode: InputCode,
                 Description: Description
             },  //输入参数
@@ -325,21 +345,28 @@
         $('.save').attr('disabled', 'disabled');
         IsSaveOk(Type, Code);
         $('#TypeWrn').css("display", "none");
-        if (Type != "") {
-            $.ajax({
-                url: "/Dict/GetDiagnosisTypeNamebyType",
-                type: "GET",
-                dataType: "json",
-                async: false,
-                data: { Type: Type
-                },  //输入参数
-                success: function (res) {
-                    if (res != "") {
-                        document.getElementById("TypeName").value = res;
-                    }
+//        if (!IsTypeLegal(Type)) {
+//            var Text = "类型必须为整数！";
+//            $('#TypeWrn').html(Text);
+//            $('#TypeWrn').css("display", "block");
+//        }
+//        else {
+            if (Type != "") {
+                $.ajax({
+                    url: "/Dict/GetLabItemTypeNamebyType",
+                    type: "GET",
+                    dataType: "json",
+                    async: false,
+                    data: { Type: Type
+                    },  //输入参数
+                    success: function (res) {
+                        if (res != "") {
+                            document.getElementById("TypeName").value = res;
+                        }
 
-                }
-            });
+                    }
+                });
+           // }
         }
     }
 
@@ -353,11 +380,12 @@
 
         if (Code != "") {
             $.ajax({
-                url: "/Dict/GetDiagnosisNamebyCode",
+                url: "/Dict/GetLabItemName",
                 type: "GET",
                 dataType: "json",
                 async: false,
                 data: {
+                    Type: Type,
                     Code: Code
 
                 },  //输入参数
@@ -386,7 +414,7 @@
             $('.save').attr('disabled', 'disabled');
         }
         else {
-            if ((saveflag == 1)) {
+            if (saveflag == 1) {
                 $('.save').removeAttr('disabled');
             }
             else {

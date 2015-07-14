@@ -332,12 +332,16 @@ namespace CDMIS.ViewModels
             DictList.Add(new SelectListItem { Text = "诊断字典表", Value = "7" });
             DictList.Add(new SelectListItem { Text = "体征字典表", Value = "8" });
             DictList.Add(new SelectListItem { Text = "检查字典表", Value = "9" });
-            DictList.Add(new SelectListItem { Text = "检验字典表", Value = "10" });
-            DictList.Add(new SelectListItem { Text = "治疗字典表", Value = "11" });
-            DictList.Add(new SelectListItem { Text = "警戒字典表", Value = "12" });
-            DictList.Add(new SelectListItem { Text = "血压字典表", Value = "13" });
-            DictList.Add(new SelectListItem { Text = "生活方式字典表", Value = "14" });//父子表
-            DictList.Add(new SelectListItem { Text = "生活方式详细字典表", Value = "15" });
+            DictList.Add(new SelectListItem { Text = "检查子项目字典表", Value = "10" });
+            DictList.Add(new SelectListItem { Text = "检验字典表", Value = "11" });
+            DictList.Add(new SelectListItem { Text = "检验子项目字典表", Value = "12" });
+            DictList.Add(new SelectListItem { Text = "治疗字典表", Value = "13" });
+            DictList.Add(new SelectListItem { Text = "警戒字典表", Value = "14" });
+            DictList.Add(new SelectListItem { Text = "血压字典表", Value = "15" });
+            DictList.Add(new SelectListItem { Text = "生活方式字典表", Value = "16" });//父子表
+            DictList.Add(new SelectListItem { Text = "生活方式详细字典表", Value = "17" });
+            DictList.Add(new SelectListItem { Text = "手术字典表", Value = "18" });
+            DictList.Add(new SelectListItem { Text = "药物字典表", Value = "19" });
             return DictList;
         }
 
@@ -438,7 +442,6 @@ namespace CDMIS.ViewModels
         public static List<SelectListItem> GetHospitalList()
         {
             List<SelectListItem> HospitalList = new List<SelectListItem>();
-            HospitalList.Add(new SelectListItem { Text = "请选择", Value = ""});
             DataTable dt = _ServicesSoapClient.GetHospitalList().Tables[0];
             foreach (DataRow dr in dt.Rows)
             {
@@ -540,14 +543,14 @@ namespace CDMIS.ViewModels
             return LabItemTypeNameList;
         }
 
-        public static List<SelectListItem> GetLabSubItemList()
-        {
-            List<SelectListItem> LabSubItemList = new List<SelectListItem>();
-            LabSubItemList.Add(new SelectListItem { Text = "红细胞", Value = "1" });
-            LabSubItemList.Add(new SelectListItem { Text = "血红蛋白", Value = "2" });
-            LabSubItemList.Add(new SelectListItem { Text = "白细胞", Value = "3" });
-            return LabSubItemList;
-        }
+        //public static List<SelectListItem> GetLabSubItemList()
+        //{
+        //    List<SelectListItem> LabSubItemList = new List<SelectListItem>();
+        //    LabSubItemList.Add(new SelectListItem { Text = "红细胞", Value = "1" });
+        //    LabSubItemList.Add(new SelectListItem { Text = "血红蛋白", Value = "2" });
+        //    LabSubItemList.Add(new SelectListItem { Text = "白细胞", Value = "3" });
+        //    return LabSubItemList;
+        //}
 
         public static List<SelectListItem> GetDrugTypeList()
         {
@@ -619,7 +622,7 @@ namespace CDMIS.ViewModels
         public static List<SelectListItem> GetDeptList()
         {
             List<SelectListItem> DeptList = new List<SelectListItem>();
-            DataTable dt = _ServicesSoapClient.GetDivision().Tables[0];
+            DataTable dt = _ServicesSoapClient.GetDeptList("1").Tables[0];
             foreach (DataRow dr in dt.Rows)
             {
                 DeptList.Add(new SelectListItem { Text = dr["Name"].ToString(), Value = dr["Code"].ToString() });
@@ -859,6 +862,118 @@ namespace CDMIS.ViewModels
             return DivisionList;
         }
 
+        public static List<SelectListItem> GetDiagnosisList()
+        {
+            DataSet Divisioninfo = _ServicesSoapClient.GetDiagnosis();
+            List<SelectListItem> DivisionList = new List<SelectListItem>();
+            DivisionList.Add(new SelectListItem { Text = "---请选择---", Value = "0" });
+            foreach (DataRow row in Divisioninfo.Tables[0].Rows)
+            {
+                DivisionList.Add(new SelectListItem { Text = row["Name"].ToString().Trim(), Value = row["Type"].ToString().Trim() + "#" + row["Code"].ToString().Trim() });
+            }
+            return DivisionList;
+        }
+
+        //获得手术列表
+        public static List<SelectListItem> GetOperationList()
+        {
+            DataSet Operationinfo = _ServicesSoapClient.GetOperation();
+            List<SelectListItem> OperationList = new List<SelectListItem>();
+            OperationList.Add(new SelectListItem { Text = "---请选择---", Value = "0" });
+            foreach (DataRow row in Operationinfo.Tables[0].Rows)
+            {
+                OperationList.Add(new SelectListItem { Text = row["Name"].ToString().Trim(), Value = row["Code"].ToString().Trim() });
+            }
+            return OperationList;
+        }
+
+        //获得体征列表
+        public static List<SelectListItem> GetVitalSignsList()
+        {
+            DataSet VitalSignsinfo = _ServicesSoapClient.GetVitalSigns();
+            List<SelectListItem> VitalSignsList = new List<SelectListItem>();
+            VitalSignsList.Add(new SelectListItem { Text = "---请选择---", Value = "0" });
+            foreach (DataRow row in VitalSignsinfo.Tables[0].Rows)
+            {
+                VitalSignsList.Add(new SelectListItem { Text = row["Name"].ToString().Trim(), Value = row["Type"].ToString().Trim() + "#" + row["Code"].ToString().Trim() });
+            }
+            return VitalSignsList;
+        }
+
+        #endregion
+
+        #region "WY"
+
+        public static List<SelectListItem> GetDrugList()
+        {
+            DataSet Druginfo = _ServicesSoapClient.GetDrugNameList();
+            List<SelectListItem> DrugList = new List<SelectListItem>();
+            DrugList.Add(new SelectListItem { Text = "---请选择---", Value = "0" });
+            foreach (DataRow row in Druginfo.Tables[0].Rows)
+            {
+                DrugList.Add(new SelectListItem { Text = row["DrugName"].ToString().Trim(), Value = row["DrugCode"].ToString().Trim() + "#" + row["DrugSpec"].ToString().Trim() });
+            }
+            return DrugList;
+        }
+
+        public static List<SelectListItem> GetOrderingMaterialUnitList() //获取药物单位字典
+        {
+            List<SelectListItem> Unit = new List<SelectListItem>();
+            DataTable dt = _ServicesSoapClient.GetTypeList("OrderingMaterialUnit").Tables[0];
+            foreach (DataRow dr in dt.Rows)
+            {
+                Unit.Add(new SelectListItem { Text = dr["Name"].ToString(), Value = dr["Name"].ToString() });
+            }
+            return Unit;
+        }
+
+        public static List<SelectListItem> GetLabItemList()
+        {
+            DataSet LabTestIteminfo = _ServicesSoapClient.GetLabTestItems();
+            List<SelectListItem> LabTestItemList = new List<SelectListItem>();
+            LabTestItemList.Add(new SelectListItem { Text = "---请选择---", Value = "0" });
+            foreach (DataRow row in LabTestIteminfo.Tables[0].Rows)
+            {
+                LabTestItemList.Add(new SelectListItem { Text = row["Name"].ToString().Trim(), Value = row["Type"].ToString().Trim() + "#" + row["Code"].ToString().Trim() });
+            }
+            return LabTestItemList;
+        }
+
+        public static List<SelectListItem> GetLabSubItemList()
+        {
+            DataSet LabSubIteminfo = _ServicesSoapClient.GetLabTestSubItems();
+            List<SelectListItem> LabSubItemList = new List<SelectListItem>();
+            LabSubItemList.Add(new SelectListItem { Text = "---请选择---", Value = "0" });
+            foreach (DataRow row in LabSubIteminfo.Tables[0].Rows)
+            {
+                LabSubItemList.Add(new SelectListItem { Text = row["Name"].ToString().Trim(), Value = row["Code"].ToString().Trim() });
+            }
+            return LabSubItemList;
+        }
+
+        public static List<SelectListItem> GetExamSubItemList()
+        {
+            DataSet ExamSubIteminfo = _ServicesSoapClient.GetExaminationSubItem();
+            List<SelectListItem> ExamSubItemList = new List<SelectListItem>();
+            ExamSubItemList.Add(new SelectListItem { Text = "---请选择---", Value = "0" });
+            foreach (DataRow dr in ExamSubIteminfo.Tables[0].Rows)
+            {
+                ExamSubItemList.Add(new SelectListItem { Text = dr["Name"].ToString(), Value = dr["Code"].ToString() });
+            }
+            return ExamSubItemList;
+        }
+
+        public static List<SelectListItem> GetExaminationItemList()
+        {
+            DataSet ExamIteminfo = _ServicesSoapClient.GetExaminationItem();
+            List<SelectListItem> ExamItemList = new List<SelectListItem>();
+            ExamItemList.Add(new SelectListItem { Text = "---请选择---", Value = "0" });
+            foreach (DataRow row in ExamIteminfo.Tables[0].Rows)
+            {
+                ExamItemList.Add(new SelectListItem { Text = row["Name"].ToString().Trim(), Value = row["Type"].ToString().Trim() + "#" + row["Code"].ToString().Trim() });
+            }
+            return ExamItemList;
+        }
         #endregion
 
     }

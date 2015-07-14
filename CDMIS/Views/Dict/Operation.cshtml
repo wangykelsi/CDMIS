@@ -1,7 +1,6 @@
-﻿@model IEnumerable<CDMIS.Models.Hospital>
-
+﻿@model IEnumerable<CDMIS.Models.CmMstOperation>
 @{
-    ViewBag.Title = "Diagnosis";
+    ViewBag.Title = "Operation";
 }
 <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
 <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
@@ -18,11 +17,11 @@
 </style>
 <ul id="tabs" style="margin: 5px 0 20px 0;">
     <li>
-        @Html.ActionLink("未匹配诊断字典表", "UnCompDiagnosis", new { })</li>
+        @Html.ActionLink("未匹配手术字典表", "UnCompOperation", new { })</li>
     <li>
-        @Html.ActionLink("已匹配诊断字典表", "CompDiagnosis", new { })</li>
+        @Html.ActionLink("已匹配手术字典表", "CompOperation", new { })</li>
     <li>
-        @Html.ActionLink("诊断字典表", "Diagnosis", new { }, new { id = "current" })</li>
+        @Html.ActionLink("手术字典表", "Operation", new { }, new { id = "current" })</li>
 </ul>
 <div style="text-align: right;">
     <input type="button" value="新增数据" class="btn btn-primary insertBtn" style="margin-right: 10px"/>
@@ -31,14 +30,8 @@
     <table width="100%" id="DataTable" class="display">
         <thead>
             <tr>
-                <th align="left" >
-                    类别
-                </th>
                 <th align="left">
                     编码
-                </th>
-                <th align="left">
-                    类别名称
                 </th>
                 <th align="left">
                     名称
@@ -59,13 +52,7 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Type)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.Code)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TypeName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
@@ -74,7 +61,7 @@
                         @Html.DisplayFor(modelItem => item.InputCode)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Description)
+                        @Html.DisplayFor(modelItem => item.Redundance)
                     </td>
                     <td>
                         <input type="button" value="编辑" class="btn btn-primary editBtn " /> 
@@ -89,19 +76,10 @@
 @*编辑页面弹框*@
 <div id="addDataDiv" style="display: none;">
     <div class="modalHeader">
-        <span>诊断字典表编辑</span>
+        <span>科室字典表编辑</span>
     </div>
     <div class="modalContent">
         <form class="form-horizontal" role="form">
-            <div class="form-group">
-                <label for="Type" class="col-sm-3 control-label">
-                    类型
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" id="Type" value="" readonly="readonly"  onkeyup="GetTypeName();" />
-                    <p id="TypeWrn" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
-                </div>
-            </div>
             <div class="form-group">
                 <label for="Code" class="col-sm-3 control-label">
                     编码
@@ -109,14 +87,6 @@
                 <div class="col-sm-7">
                     <input type="text" class="form-control" id="Code"  value="" readonly="readonly"  onkeyup="IsCodeOk();" />
                     <p id="CodeWrn" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="TypeName" class="col-sm-3 control-label">
-                    类别名称
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" id="TypeName" />
                 </div>
             </div>
             <div class="form-group">
@@ -178,7 +148,6 @@
             "bFilter": true
         });
     })
-    $("#DataTable").attr("width", "auto");
 
     //编辑按钮触发
     $(".editBtn").click(function () {
@@ -194,13 +163,11 @@
         $('#Code').attr('readonly', "readonly");
 
         trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
-        var Type = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
-        var Code = $("#TableBody tr:eq(" + trSeq + ") td:eq(1)").text().trim();
-        var TypeName = $("#TableBody tr:eq(" + trSeq + ") td:eq(2)").text().trim();
-        var Name = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
-        var InputCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(4)").text().trim();
-        var Description = $("#TableBody tr:eq(" + trSeq + ") td:eq(5)").text().trim();
-        EditData(Type, Code, TypeName, Name, InputCode, Description);
+        var Code = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
+        var Name = $("#TableBody tr:eq(" + trSeq + ") td:eq(1)").text().trim();
+        var InputCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(2)").text().trim();
+        var Description = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
+        EditData(Code, Name, InputCode, Description);
     });
 
     //新增按钮触发
@@ -222,10 +189,8 @@
 
 
     //编辑数据
-    function EditData(Type, Code, TypeName, Name, InputCode, Description) {
-        document.getElementById("Type").value = Type;
+    function EditData(Code, Name, InputCode, Description) {
         document.getElementById("Code").value = Code;
-        document.getElementById("TypeName").value = TypeName;
         document.getElementById("Name").value = Name;
         document.getElementById("InputCode").value = InputCode;
         document.getElementById("Description").value = Description;
@@ -239,9 +204,7 @@
 
     //新增数据
     function InsertData() {
-        document.getElementById("Type").value = "";
         document.getElementById("Code").value = "";
-        document.getElementById("TypeName").value = "";
         document.getElementById("Name").value = "";
         document.getElementById("InputCode").value = "";
         document.getElementById("Description").value = "";
@@ -256,20 +219,17 @@
 
     //编辑or新增提交
     function AddDataToDB() {
-        var Type = document.getElementById("Type").value;
         var Code = document.getElementById("Code").value;
-        var TypeName = document.getElementById("TypeName").value;
         var Name = document.getElementById("Name").value;
         var InputCode = document.getElementById("InputCode").value;
         var Description = document.getElementById("Description").value;
         $.ajax({
-            url: "/Dict/DiagnosisEdit",
+            url: "/Dict/OperationEdit",
             type: "GET",
             dataType: "json",
             async: false,
-            data: { Type: Type,
+            data: {
                 Code: Code,
-                TypeName: TypeName,
                 Name: Name,
                 InputCode: InputCode,
                 Description: Description
@@ -325,21 +285,28 @@
         $('.save').attr('disabled', 'disabled');
         IsSaveOk(Type, Code);
         $('#TypeWrn').css("display", "none");
-        if (Type != "") {
-            $.ajax({
-                url: "/Dict/GetDiagnosisTypeNamebyType",
-                type: "GET",
-                dataType: "json",
-                async: false,
-                data: { Type: Type
-                },  //输入参数
-                success: function (res) {
-                    if (res != "") {
-                        document.getElementById("TypeName").value = res;
-                    }
+        if (!IsTypeLegal(Type)) {
+            var Text = "类型必须为整数！";
+            $('#TypeWrn').html(Text);
+            $('#TypeWrn').css("display", "block");
+        }
+        else {
+            if (Type != "") {
+                $.ajax({
+                    url: "/Dict/GetDivisionTypeNamebyType",
+                    type: "GET",
+                    dataType: "json",
+                    async: false,
+                    data: { Type: Type
+                    },  //输入参数
+                    success: function (res) {
+                        if (res != "") {
+                            document.getElementById("TypeName").value = res;
+                        }
 
-                }
-            });
+                    }
+                });
+            }
         }
     }
 
@@ -347,13 +314,12 @@
     function IsCodeOk() {
         $('#CodeWrn').css("display", "none");
         saveflag = 1;
-        var Type = document.getElementById("Type").value;
         var Code = document.getElementById("Code").value;
 
 
         if (Code != "") {
             $.ajax({
-                url: "/Dict/GetDiagnosisNamebyCode",
+                url: "/Dict/GetOperationName",
                 type: "GET",
                 dataType: "json",
                 async: false,
@@ -374,15 +340,14 @@
                     }
                 }
             });
-
+            $('.save').attr('disabled', 'disabled');
+            IsSaveOk(Type, Code);
         }
-        $('.save').attr('disabled', 'disabled');
-        IsSaveOk(Type, Code);
     }
 
     function IsSaveOk(Type, Code) {
         //alert("test is save ok? Type:" + Type +" Code:"+ Code);
-        if ((Type == "") || (Code == "")) {
+        if ((Code == "")) {
             $('.save').attr('disabled', 'disabled');
         }
         else {

@@ -1,7 +1,7 @@
-﻿@model IEnumerable<CDMIS.Models.MpDivisionCmp>
+﻿@model IEnumerable<CDMIS.Models.MpDrugCmp>
 
 @{
-    ViewBag.Title = "CompDivision";
+    ViewBag.Title = "CompDrug";
 }
 
 <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
@@ -17,43 +17,43 @@
     #simplemodal-container {height:390px; width:400px;}
     #delete-container {height:320px; width:400px;}
 </style>
+
 <ul id="tabs" style="margin: 5px 0 20px 0;">
     <li>
-        @Html.ActionLink("未匹配科室字典表", "UnCompDivision", new { })</li>
+        @Html.ActionLink("未匹配药物字典表", "UnCompDrug", new { })</li>
     <li>
-        @Html.ActionLink("已匹配科室字典表", "CompDivision", new { }, new { id = "current" })</li>
+        @Html.ActionLink("已匹配药物字典表", "CompDrug", new { }, new { id = "current" })</li>
     <li>
-        @Html.ActionLink("科室字典表", "Division", new { })</li>
+        @Html.ActionLink("药物字典表", "Drug", new { })</li>
 </ul>
-
 <div id="tableContainer1" class="tableContainer" style="margin-top: 5px" >
     <table width="100%" id="DataTable" class="display">
         <thead>
             <tr>
-                <th align="left" style="display:none">
+                <th align="left" style="display:none" >
                     医院代码
                 </th>
-                <th align="left">
+                <th align="left" style="width:70px">
                     医院名称
                 </th>
                 <th align="left" style="display:none">
-                    HZ代码
+                    医院药物代码
                 </th>
-                <th align="left">
-                    医院科室名称
+                <th align="left" style="width:240px">
+                    医院药物名称
                 </th>
-                <th align="left" style="display:none">
-                    类别
-                </th>
-                <th align="left">
-                    类别名称
+                <th align="left" style="width:100px">
+                    医院药物规格
                 </th>
                 <th align="left" style="display:none">
-                    编码
+                    字典药物编码
                 </th>
-                <th align="left">
-                    字典科室名称
-                </th>        
+                <th align="left" style="width:240px">
+                    字典药物名称
+                </th>
+                <th align="left" style="width:100px">
+                    字典药物规格
+                </th>   
                 <th align="left">
                     备注
                 </th>
@@ -76,17 +76,17 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.HZName)
                     </td>
-                    <td  style="display:none">
-                        @Html.DisplayFor(modelItem => item.Type)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TypeName)
+                    <td  >
+                        @Html.DisplayFor(modelItem => item.HZSpec)
                     </td>
                     <td style="display:none">
-                        @Html.DisplayFor(modelItem => item.Code)
+                        @Html.DisplayFor(modelItem => item.DrugCode)
+                    </td>
+                    <td >
+                        @Html.DisplayFor(modelItem => item.DrugName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.DisplayFor(modelItem => item.DrugSpec)
                     </td>
                     
                     <td>
@@ -118,11 +118,13 @@
             },
             "bPaginate": true,  //是否分页。
             "sScrollY": "420px",
-            "iDisplayLength": 11,
+            "iDisplayLength": 10,
             "bLengthChange": false,
             "bFilter": true
         });
-   })
+
+        $('#DataTable').attr("width", "auto");
+    })
 
 </script>
 

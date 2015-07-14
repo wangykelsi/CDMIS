@@ -1,8 +1,9 @@
-﻿@model CDMIS.ViewModels.UnCompDivisionViewModel
+﻿@model CDMIS.ViewModels.UnCompExamSubViewModel
 
 @{
-    ViewBag.Title = "UnCompDivision";
+    ViewBag.Title = "UnCompExamSubItem";
 }
+
 <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
 <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
 <link href="../../Content/jquery.dataTables.css" rel="stylesheet" type="text/css" />
@@ -18,15 +19,15 @@
     #simplemodal-container {height:500px; width:450px;}
     #delete-container {height:320px; width:400px;}
 </style>
+
 <ul id="tabs" style="margin: 5px 0 20px 0;">
     <li>
-        @Html.ActionLink("未匹配科室字典表", "UnCompDivision", new { }, new { id = "current" })</li>
+        @Html.ActionLink("未匹配检查子项目字典表", "UnCompExamSubItem", new { }, new { id = "current" })</li>
     <li>
-        @Html.ActionLink("已匹配科室字典表", "CompDivision", new { })</li>
+        @Html.ActionLink("已匹配检查子项目字典表", "CompExamSubItem", new { })</li>
     <li>
-        @Html.ActionLink("科室字典表", "Division", new { })</li>
+        @Html.ActionLink("检查子项目字典表", "ExamSubItem", new { })</li>
 </ul>
-
 <div id="tableContainer1" class="tableContainer" style="margin-top: 5px" >
     <table width="100%" id="DataTable" class="display">
         <thead>
@@ -38,13 +39,7 @@
                     医院名称
                 </th>
                 <th align="left" style="display:none">
-                    类别
-                </th>
-                <th align="left" style="display:none">
                     编码
-                </th>
-                <th align="left">
-                    类别名称
                 </th>
                 <th align="left">
                     名称
@@ -67,7 +62,7 @@
             </tr>
         </thead>
         <tbody id="TableBody">
-             @foreach (var item in Model.TmpDivision)
+             @foreach (var item in Model.TmpExamSubItem)
             {
                 <tr>
                     <td style="display:none">
@@ -77,13 +72,7 @@
                         @Html.DisplayFor(modelItem => item.HospitalName)
                     </td>
                     <td style="display:none">
-                        @Html.DisplayFor(modelItem => item.Type)
-                    </td>
-                    <td style="display:none">
                         @Html.DisplayFor(modelItem => item.Code)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TypeName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
@@ -112,7 +101,7 @@
 @*编辑页面弹框*@
 <div id="addDataDiv" style="display: none;">
     <div class="modalHeader">
-        <span>科室字典表匹配</span>
+        <span>检查子项目字典表匹配</span>
     </div>
     <div class="modalContent">
         <form class="form-horizontal" role="form">
@@ -134,26 +123,10 @@
             </div>
             <div class="form-group" style="display:none">
                 <label class="col-sm-3 control-label">
-                    类别
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" id="Type" readonly="readonly"  />
-                </div>
-            </div>
-            <div class="form-group" style="display:none">
-                <label class="col-sm-3 control-label">
                     编码
                 </label>
                 <div class="col-sm-7">
                     <input type="text" class="form-control" id="Code"   readonly="readonly"  />
-                </div>
-            </div>
-            <div class="form-group" >
-                <label class="col-sm-3 control-label">
-                    类别名称
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" id="TypeName"  readonly="readonly"  />
                 </div>
             </div>
             <div class="form-group">
@@ -182,10 +155,10 @@
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">
-                    匹配科室
+                    匹配检验项目
                 </label>
                 <div class="col-sm-7">
-                    @Html.DropDownListFor(model => model.DivisionSelected, Model.DivisionList(), new { id = "DivisionDropDownList", @class = "form-control chosen", style = "font-size:18px" })                     
+                    @Html.DropDownListFor(model => model.ExamSubItemSelected, Model.ExamSubItemList(), new { id = "ExamItemDropDownList", @class = "form-control chosen", style = "font-size:18px" })                     
                 </div>
             </div>
             <div class="form-group">
@@ -217,7 +190,7 @@
             },
             "bPaginate": true,  //是否分页。
             "sScrollY": "420px",
-            "iDisplayLength": 8,
+            "iDisplayLength": 10,
             "bLengthChange": false,
             "bFilter": true
         });
@@ -233,27 +206,23 @@
             trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
             var HospitalCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
             var HospitalName = $("#TableBody tr:eq(" + trSeq + ") td:eq(1)").text().trim();
-            var Type = $("#TableBody tr:eq(" + trSeq + ") td:eq(2)").text().trim();
-            var Code = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
-            var TypeName = $("#TableBody tr:eq(" + trSeq + ") td:eq(4)").text().trim();
-            var Name = $("#TableBody tr:eq(" + trSeq + ") td:eq(5)").text().trim();
-            var InputCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(6)").text().trim();
-            var Description = $("#TableBody tr:eq(" + trSeq + ") td:eq(7)").text().trim();
-            EditData(HospitalCode,HospitalName, Type, Code, TypeName, Name, InputCode, Description);
+            var Code = $("#TableBody tr:eq(" + trSeq + ") td:eq(2)").text().trim();
+            var Name = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
+            var InputCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(4)").text().trim();
+            var Description = $("#TableBody tr:eq(" + trSeq + ") td:eq(5)").text().trim();
+            EditData(HospitalCode, HospitalName, Code, Name, InputCode, Description);
         });
 
- 
+
 
 
     });
 
     //编辑数据
-    function EditData(HospitalCode, HospitalName, Type, Code, TypeName, Name, InputCode, Description) {
+    function EditData(HospitalCode, HospitalName, Code, Name, InputCode, Description) {
         document.getElementById("HospitalCode").value = HospitalCode;
         document.getElementById("HospitalName").value = HospitalName;
-        document.getElementById("Type").value = Type;
         document.getElementById("Code").value = Code;
-        document.getElementById("TypeName").value = TypeName;
         document.getElementById("Name").value = Name;
         document.getElementById("InputCode").value = InputCode;
         document.getElementById("Description").value = Description;
@@ -272,24 +241,22 @@
         });
     }
 
-    
+
 
 
     //编辑or新增提交
     function AddDataToDB() {
         var HospitalCode = document.getElementById("HospitalCode").value;
-        var HZType = document.getElementById("Type").value;
         var HZCode = document.getElementById("Code").value;
-        var DivisionDropDownList = document.getElementById("DivisionDropDownList").value;
-        var Type = DivisionDropDownList.split("#")[0];
-        var Code = DivisionDropDownList.split("#")[1];
-      
+        //var LabItemDropDownList = document.getElementById("LabItemDropDownList").value;
+        var Code = document.getElementById("ExamItemDropDownList").value;
+
         $.ajax({
-            url: "/Dict/AddToCompDivision",
+            url: "/Dict/AddToCompExamSubItem",
             type: "GET",
             dataType: "json",
             async: false,
-            data: {   HospitalCode:HospitalCode,  HZType:HZType,  HZCode:HZCode,  Type:Type,  Code:Code},  //输入参数
+            data: { HospitalCode: HospitalCode, HZCode: HZCode, Code: Code },  //输入参数
             success: function (res) {
                 if (res == true) {
                     if (editType == 1) {
@@ -323,7 +290,7 @@
         }
     }
 
-   
+
 
     //去除空格
     String.prototype.trim = function () {
@@ -331,3 +298,4 @@
     }
 
 </script>
+

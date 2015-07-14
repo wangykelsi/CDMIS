@@ -45,7 +45,7 @@ namespace CDMIS.Models
 
     public class Hospital
     {
-        public int Type { get; set; }
+        public string Type { get; set; }
         public string Code { get; set; }
         public string TypeName { get; set; }
         public string Name { get; set; }
@@ -64,7 +64,6 @@ namespace CDMIS.Models
         public string InputCode { get; set; }
         public string Description { get; set; }
         public int Status { get; set; }
-
     }
 
     public class MpDivisionCmp
@@ -78,7 +77,19 @@ namespace CDMIS.Models
         public string HZCode { get; set; }
         public string HZName { get; set; }
         public string Redundance { get; set; }
+    }
 
+    public class MpDiagnosisCmp
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Type { get; set; }
+        public string TypeName { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string HZCode { get; set; }
+        public string HZName { get; set; }
+        public string Redundance { get; set; }
     }
 
     public class InfoItemCategory
@@ -167,6 +178,231 @@ namespace CDMIS.Models
         public string Unit { get; set; }
         public string Redundance { get; set; }
 
+    }
+
+    public class MpVitalSignsCmp //lpf 20150709
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Type { get; set; }
+        public string TypeName { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string HZCode { get; set; }
+        public string HZName { get; set; }
+        public string Redundance { get; set; }
+
+    }
+
+    public class MpOperationCmp //lpf 20150710
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string HZCode { get; set; }
+        public string HZName { get; set; }
+        public string Redundance { get; set; }
+    }
+
+    public class TmpOperationDict //lpf 20150710
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string InputCode { get; set; }
+        public string Description { get; set; }
+        public int Status { get; set; }
+    }
+
+    public class CmMstOperation //lpf 20150710
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string InputCode { get; set; }
+        public string Redundance { get; set; }
+    }
+    #endregion
+
+    #region "WY"
+    public class TmpDrugDict
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string DrugCode { get; set; }
+        public string DrugName { get; set; }
+        public string DrugSpec { get; set; }
+        public string Units { get; set; }
+        public string InputCode { get; set; }
+        public string Description { get; set; }
+        public int Status { get; set; }
+
+    }
+
+    public class MpDrugCmp
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string DrugCode { get; set; }
+        public string DrugName { get; set; }
+        public string DrugSpec { get; set; }
+        public string HZCode { get; set; }
+        public string HZName { get; set; }
+        public string HZSpec { get; set; }
+        public string Redundance { get; set; }
+
+    }
+
+    public class Drug
+    {
+        public string DrugCode { get; set; }
+        public string DrugName { get; set; }
+        public string DrugSpec { get; set; }
+        public string Units { get; set; }
+        public string Indicator { get; set; }
+        public string InputCode { get; set; }
+    }
+
+    public class TmpLabItemDict
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string InputCode { get; set; }
+        public string Description { get; set; }
+        public int Status { get; set; }
+
+    }
+
+    public class MpLabItemCmp
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Type { get; set; }
+        public string TypeName { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string HZCode { get; set; }
+        public string HZName { get; set; }
+        public string Redundance { get; set; }
+
+    }
+
+    public class LabItem
+    {
+        public string Type { get; set; }
+        public string Code { get; set; }
+        public string TypeName { get; set; }
+        public string Name { get; set; }
+        public int SortNo { get; set; }
+        public string InputCode { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class TmpLabSubItemDict
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string InputCode { get; set; }
+        public string Description { get; set; }
+        public int Status { get; set; }
+
+    }
+
+    public class MpLabSubItemCmp
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string HZCode { get; set; }
+        public string HZName { get; set; }
+        public string Redundance { get; set; }
+
+    }
+
+    public class LabSubItem
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public int SortNo { get; set; }
+        public string InputCode { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class TmpExamSubItemDict
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string InputCode { get; set; }
+        public string Description { get; set; }
+        public int Status { get; set; }
+
+    }
+
+    public class MpExamSubItemCmp
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string HZCode { get; set; }
+        public string HZName { get; set; }
+        public string Redundance { get; set; }
+
+    }
+
+    public class ExamSubItem
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public int SortNo { get; set; }
+        public string InputCode { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class TmpExamDict
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Code { get; set; }
+        public string TypeName { get; set; }
+        public string Name { get; set; }
+        public string InputCode { get; set; }
+        public string Description { get; set; }
+        public int Status { get; set; }
+
+    }
+
+    public class MpExaminationCmp
+    {
+        public string HospitalCode { get; set; }
+        public string HospitalName { get; set; }
+        public string Type { get; set; }
+        public string TypeName { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string HZCode { get; set; }
+        public string HZName { get; set; }
+        public string Redundance { get; set; }
+
+    }
+
+    public class ExaminationItem
+    {
+        public string Type { get; set; }
+        public string Code { get; set; }
+        public string TypeName { get; set; }
+        public string Name { get; set; }
+        public int SortNo { get; set; }
+        public string InputCode { get; set; }
+        public string Description { get; set; }
     }
     #endregion
 

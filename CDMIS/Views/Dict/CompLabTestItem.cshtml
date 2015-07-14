@@ -1,7 +1,7 @@
-﻿@model IEnumerable<CDMIS.Models.MpDivisionCmp>
+﻿@model IEnumerable<CDMIS.Models.MpLabItemCmp>
 
 @{
-    ViewBag.Title = "CompDivision";
+    ViewBag.Title = "CompLabItem";
 }
 
 <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
@@ -17,15 +17,15 @@
     #simplemodal-container {height:390px; width:400px;}
     #delete-container {height:320px; width:400px;}
 </style>
+
 <ul id="tabs" style="margin: 5px 0 20px 0;">
     <li>
-        @Html.ActionLink("未匹配科室字典表", "UnCompDivision", new { })</li>
+        @Html.ActionLink("未匹配检验项目字典表", "UnCompLabTestItem", new { })</li>
     <li>
-        @Html.ActionLink("已匹配科室字典表", "CompDivision", new { }, new { id = "current" })</li>
+        @Html.ActionLink("已匹配检验项目字典表", "CompLabTestItem", new { }, new { id = "current" })</li>
     <li>
-        @Html.ActionLink("科室字典表", "Division", new { })</li>
+        @Html.ActionLink("检验项目字典表", "LabTestItem", new { })</li>
 </ul>
-
 <div id="tableContainer1" class="tableContainer" style="margin-top: 5px" >
     <table width="100%" id="DataTable" class="display">
         <thead>
@@ -37,22 +37,22 @@
                     医院名称
                 </th>
                 <th align="left" style="display:none">
-                    HZ代码
+                    医院检验项目编码
                 </th>
                 <th align="left">
-                    医院科室名称
+                    医院检验项目名称
                 </th>
                 <th align="left" style="display:none">
-                    类别
+                    字典类别
                 </th>
                 <th align="left">
-                    类别名称
+                    字典类别名称
                 </th>
                 <th align="left" style="display:none">
-                    编码
+                    字典检验项目编码
                 </th>
                 <th align="left">
-                    字典科室名称
+                    字典检验项目名称
                 </th>        
                 <th align="left">
                     备注
@@ -118,11 +118,11 @@
             },
             "bPaginate": true,  //是否分页。
             "sScrollY": "420px",
-            "iDisplayLength": 11,
+            "iDisplayLength": 10,
             "bLengthChange": false,
             "bFilter": true
         });
-   })
+    })
 
 </script>
 

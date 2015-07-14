@@ -1,8 +1,10 @@
-﻿@model IEnumerable<CDMIS.Models.Hospital>
+﻿@model CDMIS.ViewModels.DrugViewModel
+
 
 @{
-    ViewBag.Title = "Diagnosis";
+    ViewBag.Title = "Drug";
 }
+
 <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
 <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
 <link href="../../Content/jquery.dataTables.css" rel="stylesheet" type="text/css" />
@@ -16,13 +18,14 @@
     #simplemodal-container {height:420px; width:400px;}
     #delete-container {height:320px; width:400px;}
 </style>
+
 <ul id="tabs" style="margin: 5px 0 20px 0;">
     <li>
-        @Html.ActionLink("未匹配诊断字典表", "UnCompDiagnosis", new { })</li>
+        @Html.ActionLink("未匹配药物字典表", "UnCompDrug", new { })</li>
     <li>
-        @Html.ActionLink("已匹配诊断字典表", "CompDiagnosis", new { })</li>
+        @Html.ActionLink("已匹配药物字典表", "CompDrug", new { })</li>
     <li>
-        @Html.ActionLink("诊断字典表", "Diagnosis", new { }, new { id = "current" })</li>
+        @Html.ActionLink("药物字典表", "Drug", new { }, new { id = "current" })</li>
 </ul>
 <div style="text-align: right;">
     <input type="button" value="新增数据" class="btn btn-primary insertBtn" style="margin-right: 10px"/>
@@ -32,22 +35,19 @@
         <thead>
             <tr>
                 <th align="left" >
-                    类别
+                    药物编码
                 </th>
                 <th align="left">
-                    编码
+                    药物名称
                 </th>
                 <th align="left">
-                    类别名称
+                    药物规格
                 </th>
                 <th align="left">
-                    名称
+                    单位
                 </th>
                 <th align="left" style="display:none">
                     输入码
-                </th>
-                <th align="left">
-                    描述
                 </th>
                 <th>
                     操作
@@ -55,26 +55,23 @@
             </tr>
         </thead>
         <tbody id="TableBody">
-             @foreach (var item in Model)
+             @foreach (var item in Model.Drug)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Type)
+                        @Html.DisplayFor(modelItem => item.DrugCode)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Code)
+                        @Html.DisplayFor(modelItem => item.DrugName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TypeName)
+                        @Html.DisplayFor(modelItem => item.DrugSpec)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.DisplayFor(modelItem => item.Units)
                     </td>
                     <td style="display:none">
                         @Html.DisplayFor(modelItem => item.InputCode)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
                     </td>
                     <td>
                         <input type="button" value="编辑" class="btn btn-primary editBtn " /> 
@@ -89,58 +86,58 @@
 @*编辑页面弹框*@
 <div id="addDataDiv" style="display: none;">
     <div class="modalHeader">
-        <span>诊断字典表编辑</span>
+        <span>药物字典表编辑</span>
     </div>
     <div class="modalContent">
         <form class="form-horizontal" role="form">
-            <div class="form-group">
+@*            <div class="form-group">
                 <label for="Type" class="col-sm-3 control-label">
-                    类型
+                    药物编码
                 </label>
                 <div class="col-sm-7">
                     <input type="text" class="form-control" id="Type" value="" readonly="readonly"  onkeyup="GetTypeName();" />
                     <p id="TypeWrn" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
                 </div>
-            </div>
+            </div>*@
             <div class="form-group">
-                <label for="Code" class="col-sm-3 control-label">
-                    编码
+                <label for="DrugCode" class="col-sm-3 control-label">
+                    药物编码
                 </label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control" id="Code"  value="" readonly="readonly"  onkeyup="IsCodeOk();" />
+                    <input type="text" class="form-control" id="DrugCode"  value="" readonly="readonly"  onkeyup="IsCodeOk();" />
                     <p id="CodeWrn" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
                 </div>
             </div>
             <div class="form-group">
-                <label for="TypeName" class="col-sm-3 control-label">
-                    类别名称
+                <label for="DrugName" class="col-sm-3 control-label">
+                    药物名称
                 </label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control" id="TypeName" />
+                    <input type="text" class="form-control" id="DrugName" />
                 </div>
             </div>
             <div class="form-group">
-                <label for="Name" class="col-sm-3 control-label">
-                    名称
+                <label for="DrugSpec" class="col-sm-3 control-label">
+                    药物规格
                 </label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control" id="Name" />
+                    <input type="text" class="form-control" id="DrugSpec" readonly="readonly"  onkeyup="IsCodeOk();" />
                 </div>
             </div>
             <div class="form-group">
-                <label for="InputCode" class="col-sm-3 control-label" >
+                <label for="Units" class="col-sm-3 control-label" >
+                    单位
+                </label>
+                <div class="col-sm-7">
+                    @Html.DropDownListFor(model => model.UnitsSelectd, Model.UnitsList(), new { id = "Units", @class = "form-control chosen", style = "font-size:18px" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="InputCode" class="col-sm-3 control-label">
                     输入码
                 </label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control" id="InputCode"  />
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="Description" class="col-sm-3 control-label">
-                    描述
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" id="Description" />
+                    <input type="text" class="form-control" id="InputCode" />
                 </div>
             </div>
             <div class="form-group">
@@ -167,18 +164,25 @@
     var trSeq = -1; //选定的行标
     var editType = 0; //编辑类型，0：无  1：编辑  2：新增
     $(document).ready(function () {
+        
+
         var table = $('#DataTable').DataTable({
             "oLanguage": {//语言国际化
                 "sUrl": "/Content/jquery.dataTable.cn.txt"
             },
             "bPaginate": true,  //是否分页。
             "sScrollY": "420px",
-            "iDisplayLength": 11,
+            "iDisplayLength": 10,
             "bLengthChange": false,
             "bFilter": true
         });
     })
-    $("#DataTable").attr("width", "auto");
+
+    $("#tabs li:eq(2) a").click(function () {
+        $(this).attr("id", "current");
+        $("#tabs li:eq(0) a").attr("id", "");
+        $("#tabs li:eq(1) a").attr("id", "");
+    });
 
     //编辑按钮触发
     $(".editBtn").click(function () {
@@ -190,17 +194,17 @@
         enddateflag = 1;
         editType = 1;
 
-        $('#Type').attr('readonly', "readonly");
-        $('#Code').attr('readonly', "readonly");
+        $('#DrugCode').attr('readonly', "readonly");
+        $('#DrugSpec').attr('readonly', "readonly");
 
         trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
-        var Type = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
-        var Code = $("#TableBody tr:eq(" + trSeq + ") td:eq(1)").text().trim();
-        var TypeName = $("#TableBody tr:eq(" + trSeq + ") td:eq(2)").text().trim();
-        var Name = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
+        var DrugCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
+        var DrugName = $("#TableBody tr:eq(" + trSeq + ") td:eq(1)").text().trim();
+        var DrugSpec = $("#TableBody tr:eq(" + trSeq + ") td:eq(2)").text().trim();
+        var Units = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
         var InputCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(4)").text().trim();
-        var Description = $("#TableBody tr:eq(" + trSeq + ") td:eq(5)").text().trim();
-        EditData(Type, Code, TypeName, Name, InputCode, Description);
+        //alert(Units);
+        EditData(DrugCode, DrugName, DrugSpec, Units, InputCode);
     });
 
     //新增按钮触发
@@ -213,8 +217,8 @@
         enddateflag = 0;
         editType = 2;
 
-        $('#Type').removeAttr('readonly');
-        $('#Code').removeAttr('readonly');
+        $('#DrugCode').removeAttr('readonly');
+        $('#DrugSpec').removeAttr('readonly');
 
         InsertData();
     });
@@ -222,13 +226,13 @@
 
 
     //编辑数据
-    function EditData(Type, Code, TypeName, Name, InputCode, Description) {
-        document.getElementById("Type").value = Type;
-        document.getElementById("Code").value = Code;
-        document.getElementById("TypeName").value = TypeName;
-        document.getElementById("Name").value = Name;
+    function EditData(DrugCode, DrugName, DrugSpec, Units, InputCode) {
+        document.getElementById("DrugCode").value = DrugCode;
+        document.getElementById("DrugName").value = DrugName;
+        document.getElementById("DrugSpec").value = DrugSpec;
+        console.log(document.getElementById("Units"));
+        document.getElementById("Units").value = Units;
         document.getElementById("InputCode").value = InputCode;
-        document.getElementById("Description").value = Description;
 
         $('.save').removeAttr('disabled');
         $('#addDataDiv').modal({
@@ -239,12 +243,11 @@
 
     //新增数据
     function InsertData() {
-        document.getElementById("Type").value = "";
-        document.getElementById("Code").value = "";
-        document.getElementById("TypeName").value = "";
-        document.getElementById("Name").value = "";
+        document.getElementById("DrugCode").value = "";
+        document.getElementById("DrugName").value = "";
+        document.getElementById("DrugSpec").value = "";
+        document.getElementById("Units").value = "";
         document.getElementById("InputCode").value = "";
-        document.getElementById("Description").value = "";
 
         $('.save').attr('disabled', "disabled");
         $('#addDataDiv').modal({
@@ -256,23 +259,22 @@
 
     //编辑or新增提交
     function AddDataToDB() {
-        var Type = document.getElementById("Type").value;
-        var Code = document.getElementById("Code").value;
-        var TypeName = document.getElementById("TypeName").value;
-        var Name = document.getElementById("Name").value;
+        var DrugCode = document.getElementById("DrugCode").value;
+        var DrugName = document.getElementById("DrugName").value;
+        var DrugSpec = document.getElementById("DrugSpec").value;
+        var Units = document.getElementById("Units").value;
         var InputCode = document.getElementById("InputCode").value;
-        var Description = document.getElementById("Description").value;
+
         $.ajax({
-            url: "/Dict/DiagnosisEdit",
+            url: "/Dict/DrugEdit",
             type: "GET",
             dataType: "json",
             async: false,
-            data: { Type: Type,
-                Code: Code,
-                TypeName: TypeName,
-                Name: Name,
+            data: { DrugCode: DrugCode,
+                DrugName: DrugName,
+                DrugSpec: DrugSpec,
+                Units: Units,
                 InputCode: InputCode,
-                Description: Description
             },  //输入参数
             success: function (res) {
                 if (res == true) {
@@ -297,6 +299,9 @@
     function notice() {
         if (wait == 0) {
             window.location.reload();
+            console.log($("#tabs li:eq(2) a"));
+            $("#tabs li:eq(2) a").click();
+            //$("#tabs li:eq(2) a").attr("id", "current");
             $.modal.close();
             wait = 1.5
         }
@@ -325,21 +330,28 @@
         $('.save').attr('disabled', 'disabled');
         IsSaveOk(Type, Code);
         $('#TypeWrn').css("display", "none");
-        if (Type != "") {
-            $.ajax({
-                url: "/Dict/GetDiagnosisTypeNamebyType",
-                type: "GET",
-                dataType: "json",
-                async: false,
-                data: { Type: Type
-                },  //输入参数
-                success: function (res) {
-                    if (res != "") {
-                        document.getElementById("TypeName").value = res;
-                    }
+        if (!IsTypeLegal(Type)) {
+            var Text = "类型必须为整数！";
+            $('#TypeWrn').html(Text);
+            $('#TypeWrn').css("display", "block");
+        }
+        else {
+            if (Type != "") {
+                $.ajax({
+                    url: "/Dict/GetDivisionTypeNamebyType",
+                    type: "GET",
+                    dataType: "json",
+                    async: false,
+                    data: { Type: Type
+                    },  //输入参数
+                    success: function (res) {
+                        if (res != "") {
+                            document.getElementById("TypeName").value = res;
+                        }
 
-                }
-            });
+                    }
+                });
+            }
         }
     }
 
@@ -347,19 +359,19 @@
     function IsCodeOk() {
         $('#CodeWrn').css("display", "none");
         saveflag = 1;
-        var Type = document.getElementById("Type").value;
-        var Code = document.getElementById("Code").value;
+        var DrugCode = document.getElementById("DrugCode").value;
+        var DrugSpec = document.getElementById("DrugSpec").value;
 
 
-        if (Code != "") {
+        if (DrugCode != "" && DrugSpec != "") {
             $.ajax({
-                url: "/Dict/GetDiagnosisNamebyCode",
+                url: "/Dict/GetDrugName",
                 type: "GET",
                 dataType: "json",
                 async: false,
                 data: {
-                    Code: Code
-
+                    DrugCode: DrugCode,
+                    DrugSpec: DrugSpec
                 },  //输入参数
                 success: function (res) {
                     if (res != "") {
@@ -375,9 +387,10 @@
                 }
             });
 
+
         }
         $('.save').attr('disabled', 'disabled');
-        IsSaveOk(Type, Code);
+        IsSaveOk(DrugCode, DrugSpec);
     }
 
     function IsSaveOk(Type, Code) {
@@ -386,7 +399,7 @@
             $('.save').attr('disabled', 'disabled');
         }
         else {
-            if ((saveflag == 1)) {
+            if ((saveflag == 1) && (IsTypeLegal(Type))) {
                 $('.save').removeAttr('disabled');
             }
             else {

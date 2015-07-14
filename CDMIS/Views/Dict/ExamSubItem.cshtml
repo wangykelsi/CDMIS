@@ -1,8 +1,9 @@
-﻿@model IEnumerable<CDMIS.Models.Hospital>
+﻿@model IEnumerable<CDMIS.Models.ExamSubItem>
 
 @{
-    ViewBag.Title = "Diagnosis";
+    ViewBag.Title = "ExamSubItem";
 }
+
 <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
 <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
 <link href="../../Content/jquery.dataTables.css" rel="stylesheet" type="text/css" />
@@ -16,13 +17,14 @@
     #simplemodal-container {height:420px; width:400px;}
     #delete-container {height:320px; width:400px;}
 </style>
+
 <ul id="tabs" style="margin: 5px 0 20px 0;">
     <li>
-        @Html.ActionLink("未匹配诊断字典表", "UnCompDiagnosis", new { })</li>
+        @Html.ActionLink("未匹配检查子项目字典表", "UnCompExamSubItem", new { })</li>
     <li>
-        @Html.ActionLink("已匹配诊断字典表", "CompDiagnosis", new { })</li>
+        @Html.ActionLink("已匹配检查子项目字典表", "CompExamSubItem", new { })</li>
     <li>
-        @Html.ActionLink("诊断字典表", "Diagnosis", new { }, new { id = "current" })</li>
+        @Html.ActionLink("检查子项目字典表", "ExamSubItem", new { }, new { id = "current" })</li>
 </ul>
 <div style="text-align: right;">
     <input type="button" value="新增数据" class="btn btn-primary insertBtn" style="margin-right: 10px"/>
@@ -31,17 +33,14 @@
     <table width="100%" id="DataTable" class="display">
         <thead>
             <tr>
-                <th align="left" >
-                    类别
-                </th>
                 <th align="left">
                     编码
                 </th>
                 <th align="left">
-                    类别名称
-                </th>
-                <th align="left">
                     名称
+                </th>
+                <th align="left" style="display:none">
+                    序号
                 </th>
                 <th align="left" style="display:none">
                     输入码
@@ -59,16 +58,13 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Type)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.Code)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TypeName)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td style="display:none">
+                        @Html.DisplayFor(modelItem => item.SortNo)
                     </td>
                     <td style="display:none">
                         @Html.DisplayFor(modelItem => item.InputCode)
@@ -89,19 +85,10 @@
 @*编辑页面弹框*@
 <div id="addDataDiv" style="display: none;">
     <div class="modalHeader">
-        <span>诊断字典表编辑</span>
+        <span>检查项目子字典表编辑</span>
     </div>
     <div class="modalContent">
-        <form class="form-horizontal" role="form">
-            <div class="form-group">
-                <label for="Type" class="col-sm-3 control-label">
-                    类型
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" id="Type" value="" readonly="readonly"  onkeyup="GetTypeName();" />
-                    <p id="TypeWrn" style="font-size: 16px; color: #FF0000; font-weight: bold;display: none"></p>
-                </div>
-            </div>
+        <form class="form-horizontal" role="form"> 
             <div class="form-group">
                 <label for="Code" class="col-sm-3 control-label">
                     编码
@@ -112,19 +99,19 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="TypeName" class="col-sm-3 control-label">
-                    类别名称
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" id="TypeName" />
-                </div>
-            </div>
-            <div class="form-group">
                 <label for="Name" class="col-sm-3 control-label">
                     名称
                 </label>
                 <div class="col-sm-7">
                     <input type="text" class="form-control" id="Name" />
+                </div>
+            </div>
+            <div class="form-group" style="display:none">
+                <label for="InputCode" class="col-sm-3 control-label" >
+                    序号
+                </label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" id="SortNo"  />
                 </div>
             </div>
             <div class="form-group">
@@ -178,7 +165,6 @@
             "bFilter": true
         });
     })
-    $("#DataTable").attr("width", "auto");
 
     //编辑按钮触发
     $(".editBtn").click(function () {
@@ -190,17 +176,15 @@
         enddateflag = 1;
         editType = 1;
 
-        $('#Type').attr('readonly', "readonly");
         $('#Code').attr('readonly', "readonly");
 
         trSeq = $(this).parent().parent().parent().find("tr").index($(this).parent().parent());
-        var Type = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
-        var Code = $("#TableBody tr:eq(" + trSeq + ") td:eq(1)").text().trim();
-        var TypeName = $("#TableBody tr:eq(" + trSeq + ") td:eq(2)").text().trim();
-        var Name = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
-        var InputCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(4)").text().trim();
-        var Description = $("#TableBody tr:eq(" + trSeq + ") td:eq(5)").text().trim();
-        EditData(Type, Code, TypeName, Name, InputCode, Description);
+        var Code = $("#TableBody tr:eq(" + trSeq + ") td:eq(0)").text().trim();
+        var Name = $("#TableBody tr:eq(" + trSeq + ") td:eq(1)").text().trim();
+        var SortNo = $("#TableBody tr:eq(" + trSeq + ") td:eq(2)").text().trim();
+        var InputCode = $("#TableBody tr:eq(" + trSeq + ") td:eq(3)").text().trim();
+        var Description = $("#TableBody tr:eq(" + trSeq + ") td:eq(4)").text().trim();
+        EditData(Code, Name, SortNo, InputCode, Description);
     });
 
     //新增按钮触发
@@ -213,7 +197,7 @@
         enddateflag = 0;
         editType = 2;
 
-        $('#Type').removeAttr('readonly');
+        // $('#Type').removeAttr('readonly');
         $('#Code').removeAttr('readonly');
 
         InsertData();
@@ -222,10 +206,10 @@
 
 
     //编辑数据
-    function EditData(Type, Code, TypeName, Name, InputCode, Description) {
-        document.getElementById("Type").value = Type;
+    function EditData(Code, Name, SortNo, InputCode, Description) {
+        ///document.getElementById("Type").value = Type;
         document.getElementById("Code").value = Code;
-        document.getElementById("TypeName").value = TypeName;
+        document.getElementById("SortNo").value = SortNo;
         document.getElementById("Name").value = Name;
         document.getElementById("InputCode").value = InputCode;
         document.getElementById("Description").value = Description;
@@ -239,9 +223,9 @@
 
     //新增数据
     function InsertData() {
-        document.getElementById("Type").value = "";
+        //document.getElementById("Type").value = "";
         document.getElementById("Code").value = "";
-        document.getElementById("TypeName").value = "";
+        document.getElementById("SortNo").value = "0";
         document.getElementById("Name").value = "";
         document.getElementById("InputCode").value = "";
         document.getElementById("Description").value = "";
@@ -256,21 +240,21 @@
 
     //编辑or新增提交
     function AddDataToDB() {
-        var Type = document.getElementById("Type").value;
+        // var Type = document.getElementById("Type").value;
         var Code = document.getElementById("Code").value;
-        var TypeName = document.getElementById("TypeName").value;
+        var SortNo = document.getElementById("SortNo").value;
         var Name = document.getElementById("Name").value;
         var InputCode = document.getElementById("InputCode").value;
         var Description = document.getElementById("Description").value;
         $.ajax({
-            url: "/Dict/DiagnosisEdit",
+            url: "/Dict/ExamSubItemEdit",
             type: "GET",
             dataType: "json",
             async: false,
-            data: { Type: Type,
+            data: {
                 Code: Code,
-                TypeName: TypeName,
                 Name: Name,
+                SortNo: SortNo,
                 InputCode: InputCode,
                 Description: Description
             },  //输入参数
@@ -319,15 +303,21 @@
 
     //编辑or新增提交
     function GetTypeName() {
-        var Type = document.getElementById("Type").value;
+        //var Type = document.getElementById("Type").value;
         var Code = document.getElementById("Code").value;
         document.getElementById("TypeName").value = "";
         $('.save').attr('disabled', 'disabled');
-        IsSaveOk(Type, Code);
+        IsSaveOk(Code);
         $('#TypeWrn').css("display", "none");
+        //        if (!IsTypeLegal(Type)) {
+        //            var Text = "类型必须为整数！";
+        //            $('#TypeWrn').html(Text);
+        //            $('#TypeWrn').css("display", "block");
+        //        }
+        //        else {
         if (Type != "") {
             $.ajax({
-                url: "/Dict/GetDiagnosisTypeNamebyType",
+                url: "/Dict/GetLabItemTypeNamebyType",
                 type: "GET",
                 dataType: "json",
                 async: false,
@@ -340,6 +330,7 @@
 
                 }
             });
+            // }
         }
     }
 
@@ -347,13 +338,13 @@
     function IsCodeOk() {
         $('#CodeWrn').css("display", "none");
         saveflag = 1;
-        var Type = document.getElementById("Type").value;
+        //var Type = document.getElementById("Type").value;
         var Code = document.getElementById("Code").value;
 
 
         if (Code != "") {
             $.ajax({
-                url: "/Dict/GetDiagnosisNamebyCode",
+                url: "/Dict/GetExamSubItemName",
                 type: "GET",
                 dataType: "json",
                 async: false,
@@ -377,16 +368,16 @@
 
         }
         $('.save').attr('disabled', 'disabled');
-        IsSaveOk(Type, Code);
+        IsSaveOk(Code);
     }
 
-    function IsSaveOk(Type, Code) {
+    function IsSaveOk(Code) {
         //alert("test is save ok? Type:" + Type +" Code:"+ Code);
-        if ((Type == "") || (Code == "")) {
+        if (Code == "") {
             $('.save').attr('disabled', 'disabled');
         }
         else {
-            if ((saveflag == 1)) {
+            if (saveflag == 1) {
                 $('.save').removeAttr('disabled');
             }
             else {
